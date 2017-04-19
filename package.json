@@ -5,6 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
+    "highlightjs": "^9.10.0",
+    "highlightjs-line-numbers.js": "^1.1.0",
     "js-base64": "^2.1.9",
     "underscore": "^1.8.3",
     "vue": "^2.2.6"

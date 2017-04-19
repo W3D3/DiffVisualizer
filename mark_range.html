@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Range Marker Tool</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://bootswatch.com/simplex/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/prism.css">
+  <link rel="stylesheet" href="css/master.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+  <div class="box">
+    <div class="row header">
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Range Marker <span class="badge success">TOOL</span></a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+              <div class="navbar-form navbar-left">
+                <div class="form-group">
+                  <input id="from" type="number" class="form-control" placeholder="From">
+                  <input id="to" type="number" class="form-control" placeholder="To">
+                </div>
+                <button id="markRangeSrc" class="btn btn-default">MarkSrc</button>
+                <button id="markRange" class="btn btn-default">MarkDst</button>
+              </div>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+              <!-- <li>
+                                <a href="#">Filter</a>
+                            </li> -->
+
+
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+    </div>
+    <div class="row content">
+      <div class="col-md-6 codebox">
+        <pre class="line-numbers"><code class="language-java" id="src"></code></pre>
+      </div>
+      <div class="col-md-6 codebox">
+        <pre class="line-numbers"><code class="language-java" id="dst"></code></pre>
+      </div>
+    </div>
+    <div class="row footer">
+      <p><b>footer</b> (for metadata maybe) <span class="time"></span></p>
+    </div>
+  </div>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="scripts/prism.js"></script>
+  <script src="node_modules/js-base64/base64.js"></script>
+  <script src="node_modules/axios/dist/axios.js"></script>
+  <script src="node_modules/underscore/underscore.js" charset="utf-8"></script>
+  <!-- <script src="scripts/Marker.js"></script> -->
+  <script src="scripts/markrange.js"></script>
+</body>

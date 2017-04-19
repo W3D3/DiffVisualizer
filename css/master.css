@@ -52,28 +52,32 @@ html, body {
 }
 
 .INSERT {
-    background-color: rgb(155, 245, 144);
+    background-color: rgba(155, 245, 144, 0.5);
     /*color: white;*/
     text-shadow: none;
-    padding: 2px;
+    padding: 1px;
+    /*border: 1px dotted grey;*/
+    margin: 1px;
 }
 
 .MOVE {
-    background-color: rgb(238, 135, 244);
+    background-color: rgba(238, 135, 244, 0.5);
     /*color: white;*/
     text-shadow: none;
-    padding: 2px;
+    padding: 1px;
+    /*border: 1px dotted black;*/
+    margin: 1px;
 }
 
 .UPDATE {
-    background-color: rgb(222, 250, 110);
+    background-color: rgba(222, 250, 110, 0.5);
     /*color: white;*/
     text-shadow: none;
     padding: 2px;
 }
 
 .DELETE {
-    background-color: rgb(236, 78, 78);
+    background-color: rgba(236, 78, 78, 0.2);
     text-shadow: none;
     padding: 2px;
 }
