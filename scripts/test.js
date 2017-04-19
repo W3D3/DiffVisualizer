@@ -11,7 +11,22 @@ function Marker(id, position, type, isEndMarker) {
     if (isEndMarker) {
       return "</span>";
     } else {
-      return '<span class="change ' + type + ' ' + id + '">';
+      return '<span class="' + type + ' ' + id + '">';
+    }
+  };
+}
+
+function Marker(id, position, type, isEndMarker) {
+  this.id = id;
+  this.isEndMarker = isEndMarker;
+  this.type = type;
+  this.position = position;
+
+  this.generateTag = function() { // it can access private members
+    if (isEndMarker) {
+      return "</span>";
+    } else {
+      return '<span class="' + type + ' ' + id + '">';
     }
   };
 }
@@ -34,33 +49,42 @@ function insertMarkers(markersSorted, codeString) {
     if (marker.isEndMarker) {
       var range = splitValue(codeString, marker.position);
       codeString = range[0] + marker.generateTag() + range[1];
-      lastClosed.push(marker.id);
+      //fill the opening Marker into the last closed array for faster opening
+      lastClosed.push(new Marker(marker.id, marker.position, marker.type, false));
     } else {
       //startmarker
-      if (lastClosed[lastClosed.length - 1] === marker.id) {
+      if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
+        //can be inserted
         lastClosed.pop();
-        //just close it
         var range = splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];
-        stkMarker = stack.pop();
-        while (stkMarker != undefined) {
-          var range = splitValue(codeString, stkMarker.position);
-          codeString = range[0] + stkMarker.generateTag() + range[1];
-          console.log(stkMarker.generateTag());
-          stkMarker = stack.pop();
-        }
+
       } else {
-        stack.push(marker);
+        var markerNotYetOpened = false;
+        lastClosed.forEach(function(startmarker){
+          if(startmarker.id == marker.id)
+          {
+            markerNotYetOpened = true;
+          }
+        });
+        if (markerNotYetOpened) {
+          var openingMarker = lastClosed.pop();
+          while (openingMarker.id <= marker.id) {
+            var range = splitValue(codeString, marker.position);
+            codeString = range[0] + marker.generateTag() + range[1];
+            if(lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id)
+            {
+              openingMarker = lastClosed.pop();
+            }
+            else {
+              break;
+            }
+
+          }
+        }
       }
     }
   });
-  stkMarker = stack.pop();
-  while (stkMarker != undefined) {
-    var range = splitValue(codeString, stkMarker.position);
-    codeString = range[0] + stkMarker.generateTag() + range[1];
-    console.log(stkMarker.generateTag());
-    stkMarker = stack.pop();
-  }
 
   return codeString;
 }
@@ -78,122 +102,131 @@ DIFF_API.get('/matchers')
   });
 
 //sample data
+//var src = "cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHRvQmVEZWxldGVkID0gNTY2NzsNCiAgfQ0KfQ0K";
+//var dst = "";
 var src = "cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=";
 var dst = "cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K="
+//var dst = "cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oImFzZGYiKTsNCiAgfQ0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhclVwZCA9IDQ0NDQzMjE7DQogIH0NCn0=";
 
-var srcString = Base64.decode(src);
-var dstString = Base64.decode(dst);
+var editorSrc = ace.edit("editor");
+editorSrc.setTheme("ace/theme/monokai");
+editorSrc.getSession().setMode("ace/mode/java");
 
-const LINE_SEPARATOR = "\r\n";
-var srcString = Base64.decode(src).replace(new RegExp("(\\r)?\\n", "g"), LINE_SEPARATOR);
-var dstString = Base64.decode(dst).replace(new RegExp("(\\r)?\\n", "g"), LINE_SEPARATOR);
+var editorDst = ace.edit("editorDst");
+editorDst.setTheme("ace/theme/monokai");
+editorDst.getSession().setMode("ace/mode/java");
 
-$("#src").text(srcString);
-$("#dst").text(dstString);
+visualizeChanges(src, dst);
 
-DIFF_API.post('/changes', {
-    "src": this.src,
-    "dst": this.dst,
-    "matcher": 1
-  })
-  .then(function(response) {
-    $(".time").text(response.data.metrics.matchingTime + " ms to match, " + response.data.metrics.classificationTime + " ms to classify");
+function visualizeChanges(src, dst) {
 
-    var changes = response.data.results;
-    var dstMarkers = new Array();
-    var srcMarkers = new Array();
-
-    changes.forEach(function(entry) {
-      console.log(entry);
-      if (entry.actionType == "INSERT") {
-        var range = splitRange(dstString, entry.dstPos, entry.dstLength);
-        range[0] += '<span style="background-color:green; padding: 2px">';
-        range[2] = '</span>' + range[2];
-        console.log(range[1]);
+  const LINE_SEPARATOR = "\r\n";
+  var srcString = Base64.decode(src).replace(new RegExp("(\\r)?\\n", "g"), LINE_SEPARATOR);
+  var dstString = Base64.decode(dst).replace(new RegExp("(\\r)?\\n", "g"), LINE_SEPARATOR);
 
 
-        dstMarkers.push(new Marker(entry.dstId, entry.dstPos, "INSERT", false));
-        dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, "INSERT", true));
-        //dstString = range[0]+range[1]+range[2]
-        //$("#dst").html(dstString);
-        //console.log(splitValue(splitValue(dstString, entry.dstPos)[1], entry.dstPos+entry.dstLength)[0]);
-      }
 
-      if (entry.actionType == "MOVE") {
-        // var range = splitRange(dstString, entry.dstPos, entry.dstLength);
-        // range[0] += '<span style="background-color:green; padding: 2px">';
-        // range[2] = '</span>' + range[2];
-        console.log(splitRange(srcString, entry.srcPos, entry.srcLength)[1]);
-        console.log(splitRange(dstString, entry.dstPos, entry.dstLength)[1]);
+  editorSrc.setValue(srcString);
+  editorDst.setValue(dstString);
 
-        srcMarkers.push(new Marker(entry.srcId, entry.srcPos, "MOVE", false));
-        srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, "MOVE", true));
+  DIFF_API.post('/changes', {
+      "src": src,
+      "dst": dst,
+      "matcher": 1
+    })
+    .then(function(response) {
+      $(".time").text(response.data.metrics.matchingTime + " ms to match, " + response.data.metrics.classificationTime + " ms to classify");
 
-        dstMarkers.push(new Marker(entry.dstId, entry.dstPos, "MOVE", false));
-        dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, "MOVE", true));
-      }
+      var changes = response.data.results;
+      var dstMarkers = new Array();
+      var srcMarkers = new Array();
 
-      if (entry.actionType == "UPDATE") {
+      changes.forEach(function(entry) {
+        console.log(entry);
 
-        console.log(splitRange(srcString, entry.srcPos, entry.srcLength)[1]);
-        console.log(splitRange(dstString, entry.dstPos, entry.dstLength)[1]);
+        if (entry.actionType == "INSERT") {
+          dstMarkers.push(new Marker(entry.dstId, entry.dstPos, "INSERT", false));
+          dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, "INSERT", true));
+        }
 
-        srcMarkers.push(new Marker(entry.srcId, entry.srcPos, "UPDATE", false));
-        srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, "UPDATE", true));
+        if (entry.actionType == "MOVE") {
+          console.log(splitRange(srcString, entry.srcPos, entry.srcLength)[1]);
+          console.log(splitRange(dstString, entry.dstPos, entry.dstLength)[1]);
 
-        dstMarkers.push(new Marker(entry.dstId, entry.dstPos, "UPDATE", false));
-        dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, "UPDATE", true));
-      }
+          srcMarkers.push(new Marker(entry.srcId, entry.srcPos, "MOVE", false));
+          srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, "MOVE", true));
 
-      if (entry.actionType == "DELETE") {
+          dstMarkers.push(new Marker(entry.dstId, entry.dstPos, "MOVE", false));
+          dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, "MOVE", true));
+        }
 
-        console.log(splitRange(srcString, entry.srcPos, entry.srcLength)[1]);
+        if (entry.actionType == "UPDATE") {
 
-        srcMarkers.push(new Marker(entry.srcId, entry.srcPos, "DELETE", false));
-        srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, "DELETE", true));
-      }
+          console.log(splitRange(srcString, entry.srcPos, entry.srcLength)[1]);
+          console.log(splitRange(dstString, entry.dstPos, entry.dstLength)[1]);
 
+          srcMarkers.push(new Marker(entry.srcId, entry.srcPos, "UPDATE", false));
+          srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, "UPDATE", true));
+
+          dstMarkers.push(new Marker(entry.dstId, entry.dstPos, "UPDATE", false));
+          dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, "UPDATE", true));
+        }
+
+        if (entry.actionType == "DELETE") {
+
+          console.log(splitRange(srcString, entry.srcPos, entry.srcLength)[1]);
+
+          srcMarkers.push(new Marker(entry.srcId, entry.srcPos, "DELETE", false));
+          srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, "DELETE", true));
+        }
+
+      });
+
+      //markers are now full, sort them
+      var dstMarkersSorted = _(dstMarkers).chain()
+        .sortBy('id')
+        .sortBy('position')
+        .reverse()
+        .value();
+
+      var srcMarkersSorted = _(srcMarkers).chain()
+        .sortBy('id')
+        .sortBy('position')
+        .reverse()
+        .value();
+
+      console.log(srcMarkersSorted);
+      console.log(dstMarkersSorted);
+
+      dstString = insertMarkers(dstMarkersSorted, dstString)
+      srcString = insertMarkers(srcMarkersSorted, srcString)
+
+      $("#dst").html(dstString);
+      $("#src").html(srcString);
+
+      $("pre code").each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+
+      $('code.hljs-line-numbers').remove();
+
+      $('code.hljs#src').each(function(i, block) {
+        hljs.lineNumbersBlock(block);
+      });
+      $('code.hljs#dst').each(function(i, block) {
+        hljs.lineNumbersBlock(block);
+      });
+
+
+    })
+    .catch(function(error) {
+      console.log(error);
     });
-
-    //markers are now full, sort them
-    var dstMarkersSorted = _(dstMarkers).chain()
-      .sortBy('id')
-      .sortBy('position')
-      .reverse()
-      .value();
-
-    var srcMarkersSorted = _(srcMarkers).chain()
-      .sortBy('id')
-      .sortBy('position')
-      .reverse()
-      .value();
-
-    console.log(srcMarkersSorted);
-    console.log(dstMarkersSorted);
+}
 
 
-    dstString = insertMarkers(dstMarkersSorted, dstString)
-    srcString = insertMarkers(srcMarkersSorted, srcString)
-
-    $("#dst").html(dstString);
-    $("#src").html(srcString);
-
-    $("pre code").each(function(i, block) {
-      hljs.highlightBlock(block);
-    });
-
-    $('code.hljs').each(function(i, block) {
-      hljs.lineNumbersBlock(block);
-    });
 
 
-    // $(document).ready(function() {
-    //   $('pre code').each(function(i, block) {
-    //     hljs.highlightBlock(block);
-    //   });
-    // });
-
-  })
-  .catch(function(error) {
-    console.log(error);
-  });
+$("#saveSource").click(function() {
+  visualizeChanges(Base64.encode(editorSrc.getValue()), Base64.encode(editorDst.getValue()))
+});
