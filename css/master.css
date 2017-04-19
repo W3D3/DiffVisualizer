@@ -41,7 +41,8 @@ html, body {
 }
 
 .box .row.footer {
-  flex: 0 1 40px;
+  flex: 0 1 1.5em; /*RESIZE HERE IF NEEDED*/
+  background-color: rgb(98, 98, 98);
 }
 
 
