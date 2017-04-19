@@ -55,8 +55,7 @@ function insertMarkers(markersSorted, codeString) {
     }
   });
   stkMarker = stack.pop();
-  while (stkMarker != undefined)
-  {
+  while (stkMarker != undefined) {
     var range = splitValue(codeString, stkMarker.position);
     codeString = range[0] + stkMarker.generateTag() + range[1];
     console.log(stkMarker.generateTag());
@@ -98,7 +97,7 @@ DIFF_API.post('/changes', {
     "matcher": 1
   })
   .then(function(response) {
-    $(".time").text(response.data.metrics.matchingTime + " ms to match");
+    $(".time").text(response.data.metrics.matchingTime + " ms to match, " + response.data.metrics.classificationTime + " ms to classify");
 
     var changes = response.data.results;
     var dstMarkers = new Array();
@@ -181,6 +180,10 @@ DIFF_API.post('/changes', {
 
     $("pre code").each(function(i, block) {
       hljs.highlightBlock(block);
+    });
+
+    $('code.hljs').each(function(i, block) {
+      hljs.lineNumbersBlock(block);
     });
 
 
