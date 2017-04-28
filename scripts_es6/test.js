@@ -61,8 +61,9 @@ function insertMarkers(markersSorted, codeString) {
 
 			} else {
 				var markerNotYetOpened = false;
-				lastClosed.forEach(function(startmarker) {
-					if (startmarker.id == marker.id) {
+				lastClosed.forEach(function(startmarker){
+					if(startmarker.id == marker.id)
+          {
 						markerNotYetOpened = true;
 					}
 				});
@@ -71,9 +72,11 @@ function insertMarkers(markersSorted, codeString) {
 					while (openingMarker.id <= marker.id) {
 						var range = splitValue(codeString, marker.position);
 						codeString = range[0] + marker.generateTag() + range[1];
-						if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
+						if(lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id)
+            {
 							openingMarker = lastClosed.pop();
-						} else {
+						}
+						else {
 							break;
 						}
 

@@ -10,5 +10,8 @@
     "js-base64": "^2.1.9",
     "underscore": "^1.8.3",
     "vue": "^2.2.6"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0"
   }
 }
