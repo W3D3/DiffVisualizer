@@ -7,11 +7,17 @@
     "axios": "^0.16.1",
     "highlightjs": "^9.10.0",
     "highlightjs-line-numbers.js": "^1.1.0",
+    "jquery": "^3.2.1",
     "js-base64": "^2.1.9",
+    "lodash": "^4.17.4",
     "underscore": "^1.8.3",
     "vue": "^2.2.6"
   },
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "eslint": "^3.19.0",
+    "uglify-js": "^2.8.22"
+  },
+  "scripts": {
+    "uglify": "uglifyjs scripts/DiffVisualizer.js -o dist/diffvisualizer.min.js"
   }
 }

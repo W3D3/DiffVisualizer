@@ -1,9 +1,17 @@
 var path = require('path');
 module.exports = {
-	entry: './es6/main.js',
+	entry: './lib/DiffVisualizer.js',
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: 'bundle.js'
+		filename: 'diffvisualizer.js',
+		library: 'DiffVisualizer',
+		libraryTarget: 'var'
+	},
+	externals: {
+        // require("jquery") is external and available
+        //  on the global var jQuery
+		'jquery': 'jQuery',
+		'base64' : 'Base64'
 	},
 	module: {
 		loaders: [

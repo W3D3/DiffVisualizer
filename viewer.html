@@ -2,22 +2,22 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Diff Visualizer</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diff Visualizer</title>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://bootswatch.com/simplex/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <!-- code highlighting style -->
-    <link rel="stylesheet" href="node_modules/highlightjs/styles/default.css">
-    <!-- master style -->
-    <link rel="stylesheet" href="css/master.css">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://bootswatch.com/simplex/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- code highlighting style -->
+  <link rel="stylesheet" href="node_modules/highlightjs/styles/default.css">
+  <!-- master style -->
+  <link rel="stylesheet" href="css/master.css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
@@ -25,90 +25,91 @@
 </head>
 
 <body>
-    <div class="box">
-        <div class="row header">
-            <nav class="navbar navbar-default" role="navigation">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="#">Diff Visualizer <span class="badge">ALPHA 0.3</span></a>
-                    </div>
+  <div class="box">
+    <div class="row header">
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Diff Visualizer <span class="badge">ALPHA 0.3</span></a>
+          </div>
 
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="navbar">
-                        <ul class="nav navbar-nav">
-                            <!-- <li class="active"><a href="#">Home</a></li> -->
-                            <!-- <li><a href="#"></a></li> -->
-                        </ul>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+              <!-- <li class="active"><a href="#">Home</a></li> -->
+              <!-- <li><a href="#"></a></li> -->
+            </ul>
 
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a id="changeSource" class="btn" data-toggle="modal" data-target="#myModal">Change code</a>
-                            </li>
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <a id="changeSource" class="btn" data-toggle="modal" data-target="#myModal">Change code</a>
+              </li>
 
-                        </ul>
-                    </div>
-                    <!-- /.navbar-collapse -->
-                </div>
-                <!-- /.container-fluid -->
-            </nav>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
         </div>
-        <div class="row content">
-            <div class="col-sm-6 codebox">
-                <pre><code class="language-java" id="src"></code></pre>
-            </div>
-            <div class="col-sm-6 codebox">
-                <pre><code class="language-java" id="dst"></code></pre>
-            </div>
-        </div>
-        <div class="row footer">
-          <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1</span>
-          <span class="label label-info" style="position: absolute; right:0; bottom: 0"><b>Metrics: </b><span class="time"></span></span>
-
-        </div>
+        <!-- /.container-fluid -->
+      </nav>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document" style="width: 100%">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Change source code</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row content">
-                <div class="col-sm-6 codebox" style="height: 500px">
-                  <h3>Source code</h3>
-                  <hr />
-                  <div id="editor" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-                  <!-- <textarea name="srcInput" rows="25" style="width:100%"></textarea> -->
-                </div>
-                <div class="col-sm-6 codebox" style="height: 500px">
-                  <h3>Destination code</h3>
-                  <hr />
-                  <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-                    <!-- <textarea name="dstInput" rows="25" style="width:100%"></textarea> -->
-                </div>
+    <div class="row content">
+      <div class="col-sm-6 codebox">
+        <pre><code class="language-java" id="src"></code></pre>
+      </div>
+      <div class="col-sm-6 codebox">
+        <pre><code class="language-java" id="dst"></code></pre>
+      </div>
+    </div>
+    <div class="row footer">
+      <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1</span>
+      <span class="label label-info" style="position: absolute; right:0; bottom: 0"><b>Metrics: </b><span class="time"></span></span>
+
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width: 100%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Change source code</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row content">
+            <div class="col-sm-6 codebox" style="height: 500px">
+              <h3>Source code</h3>
+              <hr />
+              <div id="editor" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
+              <!-- <textarea name="srcInput" rows="25" style="width:100%"></textarea> -->
+            </div>
+            <div class="col-sm-6 codebox" style="height: 500px">
+              <h3>Destination code</h3>
+              <hr />
+              <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
+              <!-- <textarea name="dstInput" rows="25" style="width:100%"></textarea> -->
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="node_modules/js-base64/base64.js"></script>
-    <script src="node_modules/axios/dist/axios.js"></script>
-    <script src="node_modules/underscore/underscore.js" charset="utf-8"></script>
-    <script src="node_modules/highlightjs/highlight.pack.js"></script>
-    <script src="node_modules/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js" charset="utf-8"></script>
-    <!-- <script src="scripts/Marker.js"></script> -->
-    <script src="node_modules\alter\alter.js" charset="utf-8"></script>
-    <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
-    <script src="scripts/test.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="node_modules/js-base64/base64.js"></script>
+  <script src="node_modules/axios/dist/axios.js"></script>
+  <script src="node_modules/underscore/underscore.js" charset="utf-8"></script>
+  <script src="node_modules/highlightjs/highlight.pack.js"></script>
+  <script src="node_modules/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js" charset="utf-8"></script>
+  <!-- EDITOR -->
+  <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
+  <!-- <script src="scripts/DiffVisualizer.js"></script> -->
+  <script src="dist/diffvisualizer.min.js"></script>
+  <script src="scripts/example.js"></script>
 </body>
