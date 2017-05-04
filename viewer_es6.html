@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Diff Visualizer</title>
+  <title>Diff Visualizer ES6</title>
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://bootswatch.com/simplex/bootstrap.min.css">
@@ -30,7 +30,7 @@
       <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">Diff Visualizer <span class="badge">ALPHA 0.3</span></a>
+            <a class="navbar-brand" href="#">Diff Visualizer <span class="badge">1.0 ES6 version</span></a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -53,12 +53,19 @@
       </nav>
     </div>
     <div class="row content">
-      <div class="col-sm-6 codebox">
-        <pre><code class="language-java" id="src"></code></pre>
+      <div class="col-sm-3">
       </div>
-      <div class="col-sm-6 codebox">
-        <pre><code class="language-java" id="dst"></code></pre>
+      <div class="col-sm-9 box">
+        <div class="row content">
+          <div class="col-sm-6 codebox src">
+            <pre><code class="language-java" id="src"></code></pre>
+          </div>
+          <div class="col-sm-6 codebox dst">
+            <pre><code class="language-java" id="dst"></code></pre>
+          </div>
+        </div>
       </div>
+
     </div>
     <div class="row footer">
       <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1</span>
@@ -76,13 +83,13 @@
         </div>
         <div class="modal-body">
           <div class="row content">
-            <div class="col-sm-6 codebox" style="height: 500px">
+            <div class="col-sm-6" style="height: 500px">
               <h3>Source code</h3>
               <hr />
               <div id="editor" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
               <!-- <textarea name="srcInput" rows="25" style="width:100%"></textarea> -->
             </div>
-            <div class="col-sm-6 codebox" style="height: 500px">
+            <div class="col-sm-6" style="height: 500px">
               <h3>Destination code</h3>
               <hr />
               <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>

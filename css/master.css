@@ -5,17 +5,20 @@
 
 html, body {
   height: 100%;
-  margin: 0
+  margin: 0;
+  overflow: hidden; /*workaround for windows scrollbars adding to the height*/
 }
 
 .row {
   margin: 0;
+
 }
 
 .box {
   display: flex;
   flex-flow: column;
   height: 100%;
+  padding: 0;
 }
 
 .box .row.header {
@@ -95,6 +98,7 @@ html, body {
   text-shadow: none;
   padding: 1px;
   margin: 1px;
+  cursor: pointer;
 }
 
 .DELETE {
@@ -111,4 +115,10 @@ html, body {
 
 pre {
   padding: 0;
+}
+
+/* selected element style */
+
+.selected {
+  border: 2px solid black;
 }

@@ -3113,22 +3113,29 @@ class DiffDrawer {
 
 		if (entry.actionType == 'MOVE') {
 
-			srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, 'MOVE', false, 'src'));
+      var moveStartingMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, 'MOVE', false, 'src');
+      moveStartingMarker.bindToId(entry.dstId); //bind to destination
+			srcMarkers.push(moveStartingMarker);
 			srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, 'MOVE', true, 'src'));
 
-			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, 'MOVE', false, 'dst'));
+      var updateDstMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, 'MOVE', false, 'dst');
+      updateDstMarker.bindToId(entry.srcId);
+			dstMarkers.push(updateDstMarker);
 			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, 'MOVE', true, 'dst'));
 		}
 
-		if (entry.actionType == 'UPDATE') {
+		if (entry.actionType == 'UPDATE' || entry.actionType == 'DELETE') {
 
-      var updateStartingMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, 'UPDATE', false, 'src');
-      updateStartingMarker.bindToId(entry.dstId); //bind to destination
-			srcMarkers.push(updateStartingMarker);
-			srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, 'UPDATE', true, 'src'));
+      var srcMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, entry.actionType, false, 'src');
+      srcMarker.bindToId(entry.dstId); //bind to destination
+			srcMarkers.push(srcMarker);
+      //add closing tag
+			srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src'));
 
-			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, 'UPDATE', false, 'dst'));
-			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, 'UPDATE', true));
+      var dstMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
+      dstMarker.bindToId(entry.srcId);
+			dstMarkers.push(dstMarker);
+			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true));
 		}
 
 		if (entry.actionType == 'DELETE') {
@@ -3440,7 +3447,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DiffDrawer__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_js_base64_Base64__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_js_base64_Base64___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_js_base64_Base64__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Utility__ = __webpack_require__(18);
 /* global $ ace */
+
 
 
 var base64 = __WEBPACK_IMPORTED_MODULE_1_js_base64_Base64___default.a.Base64; //very nice packaging indeed.
@@ -3470,11 +3479,41 @@ dv.visualizeChanges();
 editorSrc.setValue(dv.getSource());
 editorDst.setValue(dv.getDestination());
 
-$('body').on('click', '.UPDATE', function() {
-    console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
-    var selector = $(this).data('boundto');
-    $('#'+selector).css('border', '3px solid red');
-    console.log($('#'+selector).text());
+var lastSelectedThis;
+var lastSelectedBound;
+//register clickhandler for all the UPDATEs and MOVEs
+$('body').on('click', 'span[data-boundto]', function() {
+  //reset old selected node
+    $('#'+lastSelectedThis).removeClass('selected');
+    $('#'+lastSelectedBound).removeClass('selected');
+
+    if(lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id'))
+    {
+      lastSelectedThis = null;
+      lastSelectedBound = null;
+      return false;
+    }
+
+    //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
+    lastSelectedBound = $(this).data('boundto');
+    var boundElem = $('#'+$(this).data('boundto'));
+    lastSelectedThis = $(this).attr('id');
+
+    //set style
+    boundElem.addClass('selected');
+    $(this).addClass('selected');
+
+    var boundCodebox;
+    if($(this).data('sourcetype') == 'src') { //this is a src element
+      boundCodebox = $('.codebox.dst');
+    }
+    else if($(this).data('sourcetype') == 'dst') { //this is a src element
+      boundCodebox = $('.codebox.src');
+    }
+    __WEBPACK_IMPORTED_MODULE_2__Utility__["a" /* default */].scrollToElementRelativeTo(boundElem, boundCodebox);
+
+    //stop propagation by returning
+    return false;
 });
 
 
@@ -3538,6 +3577,20 @@ class Utility {
 	static splitRange(value, start, length) {
 		var arr = [value.substring(0, start), value.substring(start, start + length), value.substring(start + length)];
 		return arr;
+	}
+
+// Scrolls to elem inside main
+	static scrollToElementRelativeTo(elem, main)
+	{
+		if(elem)
+		{
+         var t = main.offset().top;
+				 //console.log('main offset' + t);
+         main.animate({scrollTop: elem.offset().top - t}, 500);
+		}
+		else {
+			console.error('No element found');
+		}
 	}
 }
 /* harmony default export */ __webpack_exports__["a"] = (Utility);
