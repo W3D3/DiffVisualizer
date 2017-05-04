@@ -85,24 +85,30 @@ html, body {
 
 .MOVE {
   background-color: rgba(238, 135, 244, 0.7);
-  /*color: white;*/
-  text-shadow: none;
-  padding: 1px;
-  margin: 1px;
-  /*border: 1px dotted black;*/
-}
-
-.UPDATE {
-  background-color: rgba(222, 250, 110, 0.7);
-  /*color: white;*/
   text-shadow: none;
   padding: 1px;
   margin: 1px;
   cursor: pointer;
 }
 
+.MOVE:hover:not(.selected) {
+  border: 1px dotted rgba(192, 5, 203, 1);
+}
+
+.UPDATE {
+  background-color: rgba(222, 250, 110, 0.7);
+  text-shadow: none;
+  padding: 1px;
+  margin: 1px;
+  cursor: pointer;
+}
+
+.UPDATE:hover:not(.selected) {
+  border: 1px dotted rgba(204, 255, 0, 1);
+}
+
 .DELETE {
-  background-color: rgba(236, 78, 78, 0.7);
+  background-color: rgba(232, 118, 118, 0.7);
   text-shadow: none;
   padding: 1px;
   margin: 1px;
@@ -121,4 +127,6 @@ pre {
 
 .selected {
   border: 2px solid black;
+  z-index: 100;
+  position:relative;
 }
