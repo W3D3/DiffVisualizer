@@ -3,20 +3,16 @@ module.exports = {
 	entry: './lib/DiffVisualizer.js',
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: 'diffvisualizer.js',
-		library: 'DiffVisualizer',
-		libraryTarget: 'var'
-	},
-	externals: {
-        // require("jquery") is external and available
-        //  on the global var jQuery
-		'jquery': 'jQuery',
-		'base64' : 'Base64'
+		filename: 'diffvisualizer.js'
 	},
 	module: {
-		loaders: [
-			{ test: path.join(__dirname, 'es6'),
-				loader: 'babel-loader' }
-		]
-	}
+		loaders: [{
+			test: path.join(__dirname, 'es6'),
+			loader: 'babel-loader'
+		}]
+	},
+	'env': {
+      'browser': true,
+      'jquery': true
+  }
 };
