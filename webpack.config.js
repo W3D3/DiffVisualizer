@@ -10,9 +10,5 @@ module.exports = {
 			test: path.join(__dirname, 'es6'),
 			loader: 'babel-loader'
 		}]
-	},
-	'env': {
-      'browser': true,
-      'jquery': true
-  }
+	}
 };
