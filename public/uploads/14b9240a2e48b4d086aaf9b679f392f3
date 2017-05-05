@@ -1,0 +1,8 @@
+[
+	{
+		"BaseUrl" : "http://github.com/user/repo",
+		"Commit" : "commitsha1",
+		"SrcFileName" : "fileOld.txt",
+		"DstFileName" : "fileNew.txt",
+	}
+]

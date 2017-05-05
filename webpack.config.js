@@ -2,7 +2,7 @@ var path = require('path');
 module.exports = {
 	entry: './lib/DiffVisualizer.js',
 	output: {
-		path: path.join(__dirname, 'dist'),
+		path: path.join(__dirname, 'public/js'),
 		filename: 'diffvisualizer.js'
 	},
 	module: {
