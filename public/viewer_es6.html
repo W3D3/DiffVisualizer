@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Diff Visualizer ES6</title>
+  <title>Diff Visualizer 1.2</title>
 
   <!-- Bootstrap -->
   <!-- <link rel="stylesheet" href="https://bootswatch.com/united/bootstrap.min.css"> -->
@@ -32,7 +32,7 @@
       <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#"> <i class="mega-octicon octicon-diff"></i> Diff Visualizer <span class="badge">1.0 ES6 version</span></a>
+            <a class="navbar-brand" href="#"> <i class="mega-octicon octicon-diff"></i> Diff Visualizer <span class="badge">1.2</span></a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -94,29 +94,14 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-file">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#diffsViewer"><span class="glyphicon glyphicon-file">
                   </span>Diffs</a>
                 </h4>
               </div>
-              <div id="collapseFour" class="panel-collapse collapse">
-                <div class="list-group">
-                  <a href="#" class="list-group-item">
-                    Cras justo odio <span class="badge">42</span>
-                  </a>
-                  <div class="list-group">
-                    <a href="#" class="list-group-item">
-                      Cras justo odio
-                    </a>
-                    <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                    <a href="#" class="list-group-item">Morbi leo risus</a>
-                    <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                    <a href="#" class="list-group-item">Vestibulum at eros</a>
-                  </div>
-                  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                  <a href="#" class="list-group-item">Morbi leo risus</a>
-                  <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                  <a href="#" class="list-group-item">Vestibulum at eros</a>
+              <div id="diffsViewer" class="panel-collapse collapse">
+                <div class="list-group" id="diffsList">
                 </div>
+
               </div>
             </div>
             <div class="panel panel-default">
