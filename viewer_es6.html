@@ -44,34 +44,12 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Filter <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a>
-                    <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> INSERT
-                        </label>
-                      </div>
-                  </a></li>
-                  <li><a  id="filter">
-                    <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> DELETE
-                        </label>
-                      </div>
-                  </a></li>
-                  <li><a>
-                    <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> UPDATE
-                        </label>
-                      </div>
-                  </a></li>
-                  <li><a>
-                    <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> MOVE
-                        </label>
-                      </div>
-                  </a></li>
+                  <li><a href="#" class="small" data-value="INSERT" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;INSERT</a></li>
+                  <li><a href="#" class="small" data-value="DELETE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;DELETE</a></li>
+                  <li><a href="#" class="small" data-value="UPDATE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;UPDATE</a></li>
+                  <li><a href="#" class="small" data-value="MOVE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;MOVE</a></li>
+                  <!-- Following button may be reenabled when files get too big? -->
+                  <!-- <li><a href="#" id="applyFilter">Apply filter</a></li> -->
                 </ul>
               </li>
               <li>
@@ -87,6 +65,86 @@
     </div>
     <div class="row content">
       <div class="col-sm-3">
+        <!-- START ACCORDION NAV  -->
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                <h4 class="panel-title">
+                  <a ><span class="glyphicon glyphicon-upload">
+                  </span>Upload</a>
+                </h4>
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse in">
+                <ul class="list-group">
+                  <li class="list-group-item"><span class="glyphicon glyphicon-flash text-success"></span>
+
+                  </li>
+
+                  <li class="list-group-item"><span class="glyphicon glyphicon-file text-info"></span><a href="http://fb.com/moinakbarali">Newsletters</a></li>
+
+                  <li class="list-group-item"> <span class="glyphicon glyphicon-comment text-success"></span><a href="http://fb.com/moinakbarali">Comments</a><span class="badge">42</span></li>
+
+                </ul>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-file">
+                  </span>Diffs</a>
+                </h4>
+              </div>
+              <div id="collapseFour" class="panel-collapse collapse">
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    Cras justo odio <span class="badge">42</span>
+                  </a>
+                  <div class="list-group">
+                    <a href="#" class="list-group-item">
+                      Cras justo odio
+                    </a>
+                    <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+                    <a href="#" class="list-group-item">Morbi leo risus</a>
+                    <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                    <a href="#" class="list-group-item">Vestibulum at eros</a>
+                  </div>
+                  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+                  <a href="#" class="list-group-item">Morbi leo risus</a>
+                  <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                  <a href="#" class="list-group-item">Vestibulum at eros</a>
+                </div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive"><span class="glyphicon glyphicon-heart">
+                    </span>Reports</a>
+                </h4>
+              </div>
+              <div id="collapseFive" class="panel-collapse collapse">
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">List group item heading</h4>
+                    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                  </a>
+                </div>
+                <div class="list-group">
+                  <a href="#" class="list-group-item active">
+                    <h4 class="list-group-item-heading">List group item heading</h4>
+                    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                  </a>
+                </div>
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">List group item heading</h4>
+                    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- END ACCORDION NAV -->
       </div>
       <div class="col-sm-9 box">
         <div class="row content">

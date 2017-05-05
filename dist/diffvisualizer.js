@@ -510,7 +510,6 @@ class Utility {
 		if(elem)
 		{
          var t = main.offset().top;
-				 //console.log('main offset' + t);
          main.animate({scrollTop: elem.offset().top - t}, 500);
 		}
 		else {
@@ -3079,17 +3078,44 @@ class DiffDrawer {
       //return;
     }
 
-    var filteredSrcMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.srcMarkersSorted, function(o) { return filterArray.includes(o.type); });
-    var filteredDstMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.dstMarkersSorted, function(o) { return filterArray.includes(o.type); });
+		var filteredSrcMarkers;
+		var filteredDstMarkers;
+
+		if(filterArray.length < 4)
+		{
+			filteredSrcMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.srcMarkersSorted, function(o) { return filterArray.includes(o.type); });
+			filteredDstMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.dstMarkersSorted, function(o) { return filterArray.includes(o.type); });
+		}
+		else {
+			filteredSrcMarkers = this.srcMarkersSorted;
+			filteredDstMarkers = this.dstMarkersSorted;
+		}
 
     //redraw
     var srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
     var dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
 
 
-  	$('#dst').html(dstString);
-  	$('#src').html(srcString);
+		$('#dst').html(dstString);
+		$('#src').html(srcString);
+		this.enableSyntaxHighlighting();
   }
+
+	enableSyntaxHighlighting()
+	{
+		$('pre code').each(function(i, block) {
+			hljs.highlightBlock(block);
+		});
+
+		$('code.hljs-line-numbers').remove();
+
+		$('code.hljs#src').each(function(i, block) {
+			hljs.lineNumbersBlock(block);
+		});
+		$('code.hljs#dst').each(function(i, block) {
+			hljs.lineNumbersBlock(block);
+		});
+	}
 
 	static insertMarkers(markersSorted, codeString) {
 		var lastClosed = [];
@@ -3210,18 +3236,7 @@ class DiffDrawer {
 	$('#dst').html(dstString);
 	$('#src').html(srcString);
 
-	$('pre code').each(function(i, block) {
-		hljs.highlightBlock(block);
-	});
-
-	$('code.hljs-line-numbers').remove();
-
-	$('code.hljs#src').each(function(i, block) {
-		hljs.lineNumbersBlock(block);
-	});
-	$('code.hljs#dst').each(function(i, block) {
-		hljs.lineNumbersBlock(block);
-	});
+	diffdrawer.enableSyntaxHighlighting();
 
 
 })
@@ -3565,6 +3580,40 @@ $('body').on('click', 'span[data-boundto]', function() {
 
     //stop propagation by returning
     return false;
+});
+
+//start unfiltered
+var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+
+$( '.dropdown-menu a' ).on( 'click', function( event ) {
+
+  if($( event.currentTarget ).attr('id') == 'applyFilter')
+  {
+    //clear last selected
+    lastSelectedThis = null;
+    lastSelectedBound = null;
+    dv.filterBy(options);
+  }
+  else {
+    var $target = $( event.currentTarget ),
+        val = $target.attr( 'data-value' ),
+        $inp = $target.find( 'input' ),
+        idx;
+
+    if ( ( idx = options.indexOf( val ) ) > -1 ) {
+       options.splice( idx, 1 );
+       setTimeout( function() { $inp.prop( 'checked', false ); }, 0);
+    } else {
+       options.push( val );
+       setTimeout( function() { $inp.prop( 'checked', true ); }, 0);
+    }
+
+    $( event.target ).blur();
+    lastSelectedThis = null;
+    lastSelectedBound = null;
+    dv.filterBy(options);
+    return false;
+  }
 });
 
 

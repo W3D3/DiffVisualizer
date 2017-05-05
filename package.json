@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
+    "dropzone": "^4.3.0",
     "highlightjs": "^9.10.0",
     "highlightjs-line-numbers.js": "^1.1.0",
     "jquery": "^3.2.1",
