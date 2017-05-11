@@ -163,3 +163,15 @@ pre {
   min-height: 100%;
   border-radius: 0;
 }
+
+.panel-heading {
+  cursor: pointer;
+}
+
+.skill-unit .bar .progress { background: #24ff09; }
+.skill-unit .bar .progress span { color: #24ff09; background: #24ff09 );
+
+#diffsViewer
+{
+  max-height: 500px !important
+}

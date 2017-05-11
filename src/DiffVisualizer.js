@@ -37,8 +37,10 @@ $('#toggleSidebar').click(function() {
   //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
 
   $('#accordion').toggle();
+  // $('.sidebar').toggleClass('col-sm-3');
+  // $('.sidebar').toggleClass('col-sm-1')
   $('#codeView').toggleClass('col-sm-9');
-  $('#codeView').toggleClass('col-sm-12');
+  $('#codeView').toggleClass('col-sm-11');
 });
 
 //enables uploading json files
@@ -55,9 +57,8 @@ var lastSelectedThis;
 var lastSelectedBound;
 //register clickhandler for all the UPDATEs and MOVEs
 $('body').on('click', 'span[data-boundto]', function() {
-  //reset old selected node
-  $('#' + lastSelectedThis).removeClass('selected');
-  $('#' + lastSelectedBound).removeClass('selected');
+  //reset old selected nodes
+  $('.codebox').find('*').removeClass('selected');
 
   if (lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id')) {
     lastSelectedThis = null;
@@ -108,6 +109,9 @@ $('body').on('click', '#diffItem', function() {
     }
   };
   //Loading div from proxy
+  NProgress.configure({
+    parent: '#codeView'
+  });
   NProgress.start();
   axios.get(srcUrl, config)
     .then(function(src) {

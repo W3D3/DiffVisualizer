@@ -72,7 +72,7 @@
       </nav>
     </div>
     <div class="row content">
-      <div class="col-sm-3">
+      <div class="col-sm-3 sidebar">
         <!-- START ACCORDION NAV  -->
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
@@ -92,20 +92,19 @@
                 <ul class="list-group">
                   <li class="list-group-item">
                     Uploaded files have to be .json and follow a pattern.
-
                   </li>
                 </ul>
               </div>
             </div>
             <div class="panel panel-default">
-              <div class="panel-heading">
+              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#diffsViewer"><span class="glyphicon glyphicon-file">
+                  <a><span class="glyphicon glyphicon-file">
                   </span>Diffs</a>
                 </h4>
               </div>
               <div id="diffsViewer" class="panel-collapse collapse box">
-                <div class="list-group" id="diffsList" style="overflow: scroll; max-height: 700px">
+                <div class="list-group" id="diffsList" style="overflow: scroll;">
                 </div>
 
               </div>
