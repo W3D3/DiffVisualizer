@@ -6,8 +6,6 @@ import Utility from './Utility';
 import axios from 'axios';
 var base64 = Base64.Base64; //very nice packaging indeed.
 
-//highlightjs = new highlightjs();
-
 var editorSrc = ace.edit('editorSrc');
 editorSrc.setTheme('ace/theme/monokai');
 editorSrc.getSession().setMode('ace/mode/java');
@@ -41,8 +39,8 @@ var loader = new Loader();
 var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
 var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
 
-var dv = new DiffDrawer(mysrc, mydst);
-dv.visualizeChanges();
+var dv = new DiffDrawer();
+//dv.visualizeChanges();
 
 
 
@@ -51,86 +49,95 @@ var lastSelectedBound;
 //register clickhandler for all the UPDATEs and MOVEs
 $('body').on('click', 'span[data-boundto]', function() {
   //reset old selected node
-    $('#'+lastSelectedThis).removeClass('selected');
-    $('#'+lastSelectedBound).removeClass('selected');
+  $('#' + lastSelectedThis).removeClass('selected');
+  $('#' + lastSelectedBound).removeClass('selected');
 
-    if(lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id'))
-    {
-      lastSelectedThis = null;
-      lastSelectedBound = null;
-      return false;
-    }
-
-    //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
-    lastSelectedBound = $(this).data('boundto');
-    var boundElem = $('#'+$(this).data('boundto'));
-    lastSelectedThis = $(this).attr('id');
-
-    //set style
-    boundElem.addClass('selected');
-    $(this).addClass('selected');
-
-    var boundCodebox;
-    if($(this).data('sourcetype') == 'src') { //this is a src element
-      boundCodebox = $('.codebox.dst');
-    }
-    else if($(this).data('sourcetype') == 'dst') { //this is a src element
-      boundCodebox = $('.codebox.src');
-    }
-    Utility.scrollToElementRelativeTo(boundElem, boundCodebox);
-
-    //stop propagation by returning
+  if (lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id')) {
+    lastSelectedThis = null;
+    lastSelectedBound = null;
     return false;
+  }
+
+  //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
+  lastSelectedBound = $(this).data('boundto');
+  var boundElem = $('#' + $(this).data('boundto'));
+  lastSelectedThis = $(this).attr('id');
+
+  //set style
+  boundElem.addClass('selected');
+  $(this).addClass('selected');
+
+  var boundCodebox;
+  var localOffset;
+  if ($(this).data('sourcetype') == 'src') { //this is a src element
+    boundCodebox = $('.codebox.dst');
+    localOffset = $(this).offset().top;
+  } else if ($(this).data('sourcetype') == 'dst') { //this is a src element
+    boundCodebox = $('.codebox.src');
+    localOffset = $(this).offset().top;
+  }
+  console.log(localOffset);
+  $(boundCodebox).scrollTo(boundElem, 300, {
+    offset: 0 - localOffset + $('.codebox.src').offset().top
+  });
+  //Utility.scrollToElementRelativeTo(boundElem, boundCodebox);
+
+  //stop propagation by returning
+  return false;
 });
 
 //register clickhandler for all diffItems
 $('body').on('click', '#diffItem', function() {
 
-    //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
-    var srcUrl = $(this).data('rawsrcurl');
-    var dstUrl =  $(this).data('rawdsturl');
+  //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
+  $(this).parents().children().removeClass('active');
+  $(this).addClass('active');
+  var srcUrl = $(this).data('rawsrcurl');
+  var dstUrl = $(this).data('rawdsturl');
 
-    axios.get(srcUrl)
-    .then(function (src) {
+  axios.get(srcUrl)
+    .then(function(src) {
       dv.setSource(src.data);
       axios.get(dstUrl)
-      .then(function (dst) {
-        dv.setDestination(dst.data);
-        dv.visualizeChanges();
-      });
+        .then(function(dst) {
+          dv.setDestination(dst.data);
+          dv.visualizeChanges();
+        });
     });
 
-    //stop propagation by returning
-    return false;
+  //stop propagation by returning
+  return false;
 });
 
 //start unfiltered
 var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
-$( '.dropdown-menu a' ).on( 'click', function( event ) {
+$('.dropdown-menu a').on('click', function(event) {
 
-  if($( event.currentTarget ).attr('id') == 'applyFilter')
-  {
+  if ($(event.currentTarget).attr('id') == 'applyFilter') {
     //clear last selected
     lastSelectedThis = null;
     lastSelectedBound = null;
     dv.filterBy(options);
-  }
-  else {
-    var $target = $( event.currentTarget ),
-        val = $target.attr( 'data-value' ),
-        $inp = $target.find( 'input' ),
-        idx;
+  } else {
+    var $target = $(event.currentTarget),
+      val = $target.attr('data-value'),
+      $inp = $target.find('input'),
+      idx;
 
-    if ( ( idx = options.indexOf( val ) ) > -1 ) {
-       options.splice( idx, 1 );
-       setTimeout( function() { $inp.prop( 'checked', false ); }, 0);
+    if ((idx = options.indexOf(val)) > -1) {
+      options.splice(idx, 1);
+      setTimeout(function() {
+        $inp.prop('checked', false);
+      }, 0);
     } else {
-       options.push( val );
-       setTimeout( function() { $inp.prop( 'checked', true ); }, 0);
+      options.push(val);
+      setTimeout(function() {
+        $inp.prop('checked', true);
+      }, 0);
     }
 
-    $( event.target ).blur();
+    $(event.target).blur();
     lastSelectedThis = null;
     lastSelectedBound = null;
     dv.filterBy(options);

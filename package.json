@@ -26,7 +26,7 @@
   },
   "scripts": {
     "uglify": "uglifyjs scripts/DiffVisualizer.js -o library/diffvisualizer.min.js",
-    "fileserver": "nodemon fileserver/index.js",
-    "clean": "rm public/uploads/*"
+    "dev": "nodemon server/index.js",
+    "start": "node server/index.js"
   }
 }
