@@ -23,5 +23,24 @@ class Utility {
       console.error('No element found');
     }
   }
+
+  static getProgressBarConfig() {
+    let config = {
+      onUploadProgress: progressEvent => {
+        let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+        // do whatever you like with the percentage complete
+        // maybe dispatch an action that will update a progress bar or something
+      }
+    }
+    return config;
+  }
+
+  static getOpponent(input) {
+    if (input == "src") {
+      return "dst";
+    } else if (input == "dst") {
+      return 'src';
+    }
+  }
 }
 export default Utility;

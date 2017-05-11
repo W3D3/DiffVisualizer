@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 38);
+/******/ 	return __webpack_require__(__webpack_require__.s = 39);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -390,17 +390,70 @@ module.exports = {
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(20);
+module.exports = __webpack_require__(21);
 
 /***/ }),
 /* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Utility {
+
+  //utility functions
+  static splitValue(value, index) {
+    var arr = [value.substring(0, index), value.substring(index)];
+    return arr;
+  }
+
+  static splitRange(value, start, length) {
+    var arr = [value.substring(0, start), value.substring(start, start + length), value.substring(start + length)];
+    return arr;
+  }
+
+  // Scrolls to elem inside main
+  static scrollToElementRelativeTo(elem, main) {
+    console.log('main:' + main.offset().top + '-elem:' + elem.offset().top);
+    if (elem) {
+      var t = main.offset().top;
+      main.animate({
+        scrollTop: elem.offset().top - t
+      }, 500);
+    } else {
+      console.error('No element found');
+    }
+  }
+
+  static getProgressBarConfig() {
+    let config = {
+      onUploadProgress: progressEvent => {
+        let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+        // do whatever you like with the percentage complete
+        // maybe dispatch an action that will update a progress bar or something
+      }
+    }
+    return config;
+  }
+
+  static getOpponent(input) {
+    if (input == "src") {
+      return "dst";
+    } else if (input == "dst") {
+      return 'src';
+    }
+  }
+}
+/* harmony default export */ __webpack_exports__["a"] = (Utility);
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(34);
+var normalizeHeaderName = __webpack_require__(35);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -493,7 +546,7 @@ module.exports = defaults;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -693,40 +746,6 @@ module.exports = defaults;
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-class Utility {
-
-  //utility functions
-  static splitValue(value, index) {
-    var arr = [value.substring(0, index), value.substring(index)];
-    return arr;
-  }
-
-  static splitRange(value, start, length) {
-    var arr = [value.substring(0, start), value.substring(start, start + length), value.substring(start + length)];
-    return arr;
-  }
-
-  // Scrolls to elem inside main
-  static scrollToElementRelativeTo(elem, main) {
-    console.log('main:' + main.offset().top + '-elem:' + elem.offset().top);
-    if (elem) {
-      var t = main.offset().top;
-      main.animate({
-        scrollTop: elem.offset().top - t
-      }, 500);
-    } else {
-      console.error('No element found');
-    }
-  }
-}
-/* harmony default export */ __webpack_exports__["a"] = (Utility);
-
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
@@ -796,9 +815,9 @@ module.exports = function(module) {
 
 
 
-var base64 = __webpack_require__(16)
-var ieee754 = __webpack_require__(17)
-var isArray = __webpack_require__(18)
+var base64 = __webpack_require__(17)
+var ieee754 = __webpack_require__(18)
+var isArray = __webpack_require__(19)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2776,12 +2795,12 @@ process.umask = function() { return 0; };
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(26);
-var buildURL = __webpack_require__(29);
-var parseHeaders = __webpack_require__(35);
-var isURLSameOrigin = __webpack_require__(33);
+var settle = __webpack_require__(27);
+var buildURL = __webpack_require__(30);
+var parseHeaders = __webpack_require__(36);
+var isURLSameOrigin = __webpack_require__(34);
 var createError = __webpack_require__(12);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(28);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(29);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -2877,7 +2896,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(31);
+      var cookies = __webpack_require__(32);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -3000,7 +3019,7 @@ module.exports = function isCancel(value) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(25);
+var enhanceError = __webpack_require__(26);
 
 /**
  * Create an Error with the specified message, config, error code, and response.
@@ -3037,16 +3056,502 @@ module.exports = function bind(fn, thisArg) {
 
 /***/ }),
 /* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
+ * @license MIT */
+
+;(function(root, factory) {
+
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.NProgress = factory();
+  }
+
+})(this, function() {
+  var NProgress = {};
+
+  NProgress.version = '0.2.0';
+
+  var Settings = NProgress.settings = {
+    minimum: 0.08,
+    easing: 'ease',
+    positionUsing: '',
+    speed: 200,
+    trickle: true,
+    trickleRate: 0.02,
+    trickleSpeed: 800,
+    showSpinner: true,
+    barSelector: '[role="bar"]',
+    spinnerSelector: '[role="spinner"]',
+    parent: 'body',
+    template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+  };
+
+  /**
+   * Updates configuration.
+   *
+   *     NProgress.configure({
+   *       minimum: 0.1
+   *     });
+   */
+  NProgress.configure = function(options) {
+    var key, value;
+    for (key in options) {
+      value = options[key];
+      if (value !== undefined && options.hasOwnProperty(key)) Settings[key] = value;
+    }
+
+    return this;
+  };
+
+  /**
+   * Last number.
+   */
+
+  NProgress.status = null;
+
+  /**
+   * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+   *
+   *     NProgress.set(0.4);
+   *     NProgress.set(1.0);
+   */
+
+  NProgress.set = function(n) {
+    var started = NProgress.isStarted();
+
+    n = clamp(n, Settings.minimum, 1);
+    NProgress.status = (n === 1 ? null : n);
+
+    var progress = NProgress.render(!started),
+        bar      = progress.querySelector(Settings.barSelector),
+        speed    = Settings.speed,
+        ease     = Settings.easing;
+
+    progress.offsetWidth; /* Repaint */
+
+    queue(function(next) {
+      // Set positionUsing if it hasn't already been set
+      if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
+
+      // Add transition
+      css(bar, barPositionCSS(n, speed, ease));
+
+      if (n === 1) {
+        // Fade out
+        css(progress, { 
+          transition: 'none', 
+          opacity: 1 
+        });
+        progress.offsetWidth; /* Repaint */
+
+        setTimeout(function() {
+          css(progress, { 
+            transition: 'all ' + speed + 'ms linear', 
+            opacity: 0 
+          });
+          setTimeout(function() {
+            NProgress.remove();
+            next();
+          }, speed);
+        }, speed);
+      } else {
+        setTimeout(next, speed);
+      }
+    });
+
+    return this;
+  };
+
+  NProgress.isStarted = function() {
+    return typeof NProgress.status === 'number';
+  };
+
+  /**
+   * Shows the progress bar.
+   * This is the same as setting the status to 0%, except that it doesn't go backwards.
+   *
+   *     NProgress.start();
+   *
+   */
+  NProgress.start = function() {
+    if (!NProgress.status) NProgress.set(0);
+
+    var work = function() {
+      setTimeout(function() {
+        if (!NProgress.status) return;
+        NProgress.trickle();
+        work();
+      }, Settings.trickleSpeed);
+    };
+
+    if (Settings.trickle) work();
+
+    return this;
+  };
+
+  /**
+   * Hides the progress bar.
+   * This is the *sort of* the same as setting the status to 100%, with the
+   * difference being `done()` makes some placebo effect of some realistic motion.
+   *
+   *     NProgress.done();
+   *
+   * If `true` is passed, it will show the progress bar even if its hidden.
+   *
+   *     NProgress.done(true);
+   */
+
+  NProgress.done = function(force) {
+    if (!force && !NProgress.status) return this;
+
+    return NProgress.inc(0.3 + 0.5 * Math.random()).set(1);
+  };
+
+  /**
+   * Increments by a random amount.
+   */
+
+  NProgress.inc = function(amount) {
+    var n = NProgress.status;
+
+    if (!n) {
+      return NProgress.start();
+    } else {
+      if (typeof amount !== 'number') {
+        amount = (1 - n) * clamp(Math.random() * n, 0.1, 0.95);
+      }
+
+      n = clamp(n + amount, 0, 0.994);
+      return NProgress.set(n);
+    }
+  };
+
+  NProgress.trickle = function() {
+    return NProgress.inc(Math.random() * Settings.trickleRate);
+  };
+
+  /**
+   * Waits for all supplied jQuery promises and
+   * increases the progress as the promises resolve.
+   *
+   * @param $promise jQUery Promise
+   */
+  (function() {
+    var initial = 0, current = 0;
+
+    NProgress.promise = function($promise) {
+      if (!$promise || $promise.state() === "resolved") {
+        return this;
+      }
+
+      if (current === 0) {
+        NProgress.start();
+      }
+
+      initial++;
+      current++;
+
+      $promise.always(function() {
+        current--;
+        if (current === 0) {
+            initial = 0;
+            NProgress.done();
+        } else {
+            NProgress.set((initial - current) / initial);
+        }
+      });
+
+      return this;
+    };
+
+  })();
+
+  /**
+   * (Internal) renders the progress bar markup based on the `template`
+   * setting.
+   */
+
+  NProgress.render = function(fromStart) {
+    if (NProgress.isRendered()) return document.getElementById('nprogress');
+
+    addClass(document.documentElement, 'nprogress-busy');
+    
+    var progress = document.createElement('div');
+    progress.id = 'nprogress';
+    progress.innerHTML = Settings.template;
+
+    var bar      = progress.querySelector(Settings.barSelector),
+        perc     = fromStart ? '-100' : toBarPerc(NProgress.status || 0),
+        parent   = document.querySelector(Settings.parent),
+        spinner;
+    
+    css(bar, {
+      transition: 'all 0 linear',
+      transform: 'translate3d(' + perc + '%,0,0)'
+    });
+
+    if (!Settings.showSpinner) {
+      spinner = progress.querySelector(Settings.spinnerSelector);
+      spinner && removeElement(spinner);
+    }
+
+    if (parent != document.body) {
+      addClass(parent, 'nprogress-custom-parent');
+    }
+
+    parent.appendChild(progress);
+    return progress;
+  };
+
+  /**
+   * Removes the element. Opposite of render().
+   */
+
+  NProgress.remove = function() {
+    removeClass(document.documentElement, 'nprogress-busy');
+    removeClass(document.querySelector(Settings.parent), 'nprogress-custom-parent');
+    var progress = document.getElementById('nprogress');
+    progress && removeElement(progress);
+  };
+
+  /**
+   * Checks if the progress bar is rendered.
+   */
+
+  NProgress.isRendered = function() {
+    return !!document.getElementById('nprogress');
+  };
+
+  /**
+   * Determine which positioning CSS rule to use.
+   */
+
+  NProgress.getPositioningCSS = function() {
+    // Sniff on document.body.style
+    var bodyStyle = document.body.style;
+
+    // Sniff prefixes
+    var vendorPrefix = ('WebkitTransform' in bodyStyle) ? 'Webkit' :
+                       ('MozTransform' in bodyStyle) ? 'Moz' :
+                       ('msTransform' in bodyStyle) ? 'ms' :
+                       ('OTransform' in bodyStyle) ? 'O' : '';
+
+    if (vendorPrefix + 'Perspective' in bodyStyle) {
+      // Modern browsers with 3D support, e.g. Webkit, IE10
+      return 'translate3d';
+    } else if (vendorPrefix + 'Transform' in bodyStyle) {
+      // Browsers without 3D support, e.g. IE9
+      return 'translate';
+    } else {
+      // Browsers without translate() support, e.g. IE7-8
+      return 'margin';
+    }
+  };
+
+  /**
+   * Helpers
+   */
+
+  function clamp(n, min, max) {
+    if (n < min) return min;
+    if (n > max) return max;
+    return n;
+  }
+
+  /**
+   * (Internal) converts a percentage (`0..1`) to a bar translateX
+   * percentage (`-100%..0%`).
+   */
+
+  function toBarPerc(n) {
+    return (-1 + n) * 100;
+  }
+
+
+  /**
+   * (Internal) returns the correct CSS for changing the bar's
+   * position given an n percentage, and speed and ease from Settings
+   */
+
+  function barPositionCSS(n, speed, ease) {
+    var barCSS;
+
+    if (Settings.positionUsing === 'translate3d') {
+      barCSS = { transform: 'translate3d('+toBarPerc(n)+'%,0,0)' };
+    } else if (Settings.positionUsing === 'translate') {
+      barCSS = { transform: 'translate('+toBarPerc(n)+'%,0)' };
+    } else {
+      barCSS = { 'margin-left': toBarPerc(n)+'%' };
+    }
+
+    barCSS.transition = 'all '+speed+'ms '+ease;
+
+    return barCSS;
+  }
+
+  /**
+   * (Internal) Queues a function to be executed.
+   */
+
+  var queue = (function() {
+    var pending = [];
+    
+    function next() {
+      var fn = pending.shift();
+      if (fn) {
+        fn(next);
+      }
+    }
+
+    return function(fn) {
+      pending.push(fn);
+      if (pending.length == 1) next();
+    };
+  })();
+
+  /**
+   * (Internal) Applies css properties to an element, similar to the jQuery 
+   * css method.
+   *
+   * While this helper does assist with vendor prefixed property names, it 
+   * does not perform any manipulation of values prior to setting styles.
+   */
+
+  var css = (function() {
+    var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
+        cssProps    = {};
+
+    function camelCase(string) {
+      return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function(match, letter) {
+        return letter.toUpperCase();
+      });
+    }
+
+    function getVendorProp(name) {
+      var style = document.body.style;
+      if (name in style) return name;
+
+      var i = cssPrefixes.length,
+          capName = name.charAt(0).toUpperCase() + name.slice(1),
+          vendorName;
+      while (i--) {
+        vendorName = cssPrefixes[i] + capName;
+        if (vendorName in style) return vendorName;
+      }
+
+      return name;
+    }
+
+    function getStyleProp(name) {
+      name = camelCase(name);
+      return cssProps[name] || (cssProps[name] = getVendorProp(name));
+    }
+
+    function applyCss(element, prop, value) {
+      prop = getStyleProp(prop);
+      element.style[prop] = value;
+    }
+
+    return function(element, properties) {
+      var args = arguments,
+          prop, 
+          value;
+
+      if (args.length == 2) {
+        for (prop in properties) {
+          value = properties[prop];
+          if (value !== undefined && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
+        }
+      } else {
+        applyCss(element, args[1], args[2]);
+      }
+    }
+  })();
+
+  /**
+   * (Internal) Determines if an element or space separated list of class names contains a class name.
+   */
+
+  function hasClass(element, name) {
+    var list = typeof element == 'string' ? element : classList(element);
+    return list.indexOf(' ' + name + ' ') >= 0;
+  }
+
+  /**
+   * (Internal) Adds a class to an element.
+   */
+
+  function addClass(element, name) {
+    var oldList = classList(element),
+        newList = oldList + name;
+
+    if (hasClass(oldList, name)) return; 
+
+    // Trim the opening space.
+    element.className = newList.substring(1);
+  }
+
+  /**
+   * (Internal) Removes a class from an element.
+   */
+
+  function removeClass(element, name) {
+    var oldList = classList(element),
+        newList;
+
+    if (!hasClass(element, name)) return;
+
+    // Replace the class name.
+    newList = oldList.replace(' ' + name + ' ', ' ');
+
+    // Trim the opening and closing spaces.
+    element.className = newList.substring(1, newList.length - 1);
+  }
+
+  /**
+   * (Internal) Gets a space separated list of the class names on the element. 
+   * The list is wrapped with a single space on each end to facilitate finding 
+   * matches within the list.
+   */
+
+  function classList(element) {
+    return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
+  }
+
+  /**
+   * (Internal) Removes an element from the DOM.
+   */
+
+  function removeElement(element) {
+    element && element.parentNode && element.parentNode.removeChild(element);
+  }
+
+  return NProgress;
+});
+
+
+
+/***/ }),
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Marker__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Utility__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Marker__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Utility__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_js_base64_Base64__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_js_base64_Base64__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_js_base64_Base64___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_js_base64_Base64__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_lodash__);
 /* global $ hljs */
 
@@ -3060,10 +3565,9 @@ var base64 = __WEBPACK_IMPORTED_MODULE_3_js_base64_Base64___default.a.Base64; //
 //import hljs from 'highlightjs-line-numbers/dist/highlightjs-line-numbers';
 
 class DiffDrawer {
-	constructor(src, dst)
-  {
-		this.src = src;
-		this.dst = dst;
+  constructor(src, dst) {
+    this.src = src;
+    this.dst = dst;
 
     this.srcMarkersSorted = [];
     this.dstMarkersSorted = [];
@@ -3072,229 +3576,241 @@ class DiffDrawer {
     this.DIFF_API = __WEBPACK_IMPORTED_MODULE_2_axios___default.a.create({
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:5000/v1/',
     });
-	}
+  }
 
 
-  setEditorTheme(theme)
-  {
+  setEditorTheme(theme) {
     this.editorSrc.setTheme(`ace/theme/${theme}`);
     this.editorDst.setTheme(`ace/theme/${theme}`);
   }
 
-	setBaseUrl(newBase) {
-		this.DIFF_API = __WEBPACK_IMPORTED_MODULE_2_axios___default.a.create({
-			baseURL: newBase,
-		});
-	}
+  setBaseUrl(newBase) {
+    this.DIFF_API = __WEBPACK_IMPORTED_MODULE_2_axios___default.a.create({
+      baseURL: newBase,
+    });
+  }
 
-	setSource(newSrc) {
-		this.src = newSrc;
-	}
+  setSource(newSrc) {
+    this.src = newSrc;
+  }
 
   getSource() {
     console.log(this.src);
-		return this.src;
-	}
+    return this.src;
+  }
 
-	setDestination(newDst) {
-		this.dst = newDst;
-	}
+  setDestination(newDst) {
+    this.dst = newDst;
+  }
 
   getDestination() {
-		return this.dst;
-	}
+    return this.dst;
+  }
 
-  filterBy(filterArray)
-  {
+  filterBy(filterArray) {
     console.log(this.srcMarkersSorted);
-    if(this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
+    if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
       console.error('call visualizeChanges first before setting a filter!');
       //return;
     }
 
-		var filteredSrcMarkers;
-		var filteredDstMarkers;
+    var filteredSrcMarkers;
+    var filteredDstMarkers;
 
-		if(filterArray.length < 4)
-		{
-			filteredSrcMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.srcMarkersSorted, function(o) { return filterArray.includes(o.type); });
-			filteredDstMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.dstMarkersSorted, function(o) { return filterArray.includes(o.type); });
-		}
-		else {
-			filteredSrcMarkers = this.srcMarkersSorted;
-			filteredDstMarkers = this.dstMarkersSorted;
-		}
+    if (filterArray.length < 4) {
+      filteredSrcMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.srcMarkersSorted, function(o) {
+        return filterArray.includes(o.type);
+      });
+      filteredDstMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.dstMarkersSorted, function(o) {
+        return filterArray.includes(o.type);
+      });
+    } else {
+      filteredSrcMarkers = this.srcMarkersSorted;
+      filteredDstMarkers = this.dstMarkersSorted;
+    }
 
     //redraw
     var srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
     var dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
 
 
-		$('#dst').html(dstString);
-		$('#src').html(srcString);
-		this.enableSyntaxHighlighting();
+    $('#dst').html(dstString);
+    $('#src').html(srcString);
+    this.enableSyntaxHighlighting();
   }
 
-	enableSyntaxHighlighting()
-	{
-		$('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
-		});
+  enableSyntaxHighlighting() {
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
 
-		$('code.hljs-line-numbers').remove();
+    $('code.hljs-line-numbers').remove();
 
-		$('code.hljs#src').each(function(i, block) {
-			hljs.lineNumbersBlock(block);
-		});
-		$('code.hljs#dst').each(function(i, block) {
-			hljs.lineNumbersBlock(block);
-		});
-	}
+    $('code.hljs#src').each(function(i, block) {
+      hljs.lineNumbersBlock(block);
+    });
+    $('code.hljs#dst').each(function(i, block) {
+      hljs.lineNumbersBlock(block);
+    });
+  }
 
-	static insertMarkers(markersSorted, codeString) {
-		var lastClosed = [];
+  static insertMarkers(markersSorted, codeString) {
+    var lastClosed = [];
 
-		markersSorted.forEach(function(marker) {
-			if (marker.isEndMarker) {
-				var range = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].splitValue(codeString, marker.position);
-				codeString = range[0] + marker.generateTag() + range[1];
+    markersSorted.forEach(function(marker) {
+      if (marker.id <= 17)
+        debugger;
+      if (marker.isEndMarker) {
+        var range = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].splitValue(codeString, marker.position);
+        codeString = range[0] + marker.generateTag() + range[1];
         //fill the opening Marker into the last closed array for faster opening
-				lastClosed.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](marker.id, marker.position, marker.type, false));
-			} else {
+        var closingMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](marker.id, marker.position, marker.type, false, marker.sourceType);
+        if (marker.bind)
+          closingMarker.bindToId(marker.bind);
+        lastClosed.push(closingMarker);
+      } else {
         //startmarker
-				if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
+        if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
           //can be inserted
-					lastClosed.pop();
-					range = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].splitValue(codeString, marker.position);
-					codeString = range[0] + marker.generateTag() + range[1];
+          lastClosed.pop();
+          range = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].splitValue(codeString, marker.position);
+          codeString = range[0] + marker.generateTag() + range[1];
 
-				} else {
-					var markerNotYetOpened = false;
-					lastClosed.forEach(function(startmarker) {
-						if (startmarker.id == marker.id) {
-							markerNotYetOpened = true;
-						}
-					});
-					if (markerNotYetOpened) {
-						var openingMarker = lastClosed.pop();
-						while (openingMarker.id <= marker.id) {
-							range = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].splitValue(codeString, marker.position);
-							codeString = range[0] + marker.generateTag() + range[1];
-							if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
-								openingMarker = lastClosed.pop();
-							} else {
-								break;
-							}
-						}
-					}
-				}
-			}
-		});
+        } else {
+          var markerNotYetOpened = false;
+          lastClosed.forEach(function(startmarker) {
+            if (startmarker.id == marker.id) {
+              markerNotYetOpened = true;
+            }
+          });
+          if (markerNotYetOpened) {
+            var openingMarker = lastClosed.pop();
+            while (openingMarker.id <= marker.id) {
+              range = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].splitValue(codeString, marker.position);
+              codeString = range[0] + openingMarker.generateTag() + range[1];
+              if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
+                openingMarker = lastClosed.pop();
+              } else {
+                break;
+              }
+            }
+          }
+        }
+      }
+    });
     //formatted string
-		return codeString;
-	}
+    return codeString;
+  }
 
-	visualizeChanges() {
+  visualizeChanges() {
 
-		if (this.src == null || this.dst == null) {
-			console.error('src and dst must be set for changes to appear.');
-			return;
-		}
+    if (this.src == null || this.dst == null) {
+      console.error('src and dst must be set for changes to appear.');
+      return;
+    }
 
-console.log(this.src);
-		const LINE_SEPARATOR = '\r\n';
-		var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
-		var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
+    console.log(this.src);
+    const LINE_SEPARATOR = '\r\n';
+    var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
+    var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
 
     this.src = srcString;
     this.dst = dstString;
-		//this.editorSrc.setValue(srcString);
-		//this.editorDst.setValue(dstString);
+    //this.editorSrc.setValue(srcString);
+    //this.editorDst.setValue(dstString);
     var diffdrawer = this;
-		this.DIFF_API.post('/changes', {
-			'src': base64.encode(srcString),
-			'dst': base64.encode(dstString),
-			'matcher': 1
-		})
-    .then(function(response) {
-      $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
+    this.DIFF_API.post('/changes', {
+        'src': base64.encode(srcString),
+        'dst': base64.encode(dstString),
+        'matcher': 1
+      })
+      .then(function(response) {
+        $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
 
-      var changes = response.data.results;
-      var dstMarkers = new Array();
-      var srcMarkers = new Array();
+        var changes = response.data.results;
+        console.log(changes);
+        var dstMarkers = new Array();
+        var srcMarkers = new Array();
 
-      changes.forEach(function(entry) {
+        changes.forEach(function(entry) {
 
-		if (entry.actionType == 'INSERT') {
-			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, 'INSERT', false, 'dst'));
-			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, 'INSERT', true, 'dst'));
-		}
+          if (entry.actionType == 'INSERT') {
+            dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, 'INSERT', false, 'dst'));
+            dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, 'INSERT', true, 'dst'));
+          }
 
-		if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
+          if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
 
-      var srcMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, entry.actionType, false, 'src');
-      srcMarker.bindToId(entry.dstId); //bind to destination
-			srcMarkers.push(srcMarker);
-      //add closing tag
-			srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src'));
+            var srcMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, entry.actionType, false, 'src');
+            srcMarker.bindToId(entry.dstId); //bind to destination
+            srcMarkers.push(srcMarker);
+            //add closing tag
+            var srcClosing = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src');
+            srcClosing.bindToId(entry.dstId);
+            srcMarkers.push(srcClosing);
 
-      var dstMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
-      dstMarker.bindToId(entry.srcId);
-			dstMarkers.push(dstMarker);
-			dstMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true));
-		}
+            var dstMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
+            dstMarker.bindToId(entry.srcId);
+            dstMarkers.push(dstMarker);
 
-		if (entry.actionType == 'DELETE') {
+            var dstClosing = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true, 'dst');
+            dstClosing.bindToId(entry.srcId);
+            dstMarkers.push(dstClosing);
+          }
 
-			srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, 'DELETE', false, 'src'));
-			srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, 'DELETE', true));
-		}
+          if (entry.actionType == 'DELETE') {
 
-	});
+            srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, 'DELETE', false, 'src'));
+            srcMarkers.push(new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, 'DELETE', true, 'src'));
+          }
 
-  //markers are now full, sort them
+        });
+        console.log(srcMarkers);
 
-	diffdrawer.dstMarkersSorted = __WEBPACK_IMPORTED_MODULE_4_lodash___default()(dstMarkers).chain()
+        //markers are now full, sort them
+
+        diffdrawer.dstMarkersSorted = __WEBPACK_IMPORTED_MODULE_4_lodash___default()(dstMarkers).chain()
           .sortBy('id')
           .sortBy('position')
           .reverse()
           .value();
 
-	diffdrawer.srcMarkersSorted = __WEBPACK_IMPORTED_MODULE_4_lodash___default()(srcMarkers).chain()
+        diffdrawer.srcMarkersSorted = __WEBPACK_IMPORTED_MODULE_4_lodash___default()(srcMarkers).chain()
           .sortBy('id')
           .sortBy('position')
           .reverse()
           .value();
+        console.log(diffdrawer.srcMarkersSorted);
+        dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
+        srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
+        $('#dst').html(dstString);
+        $('#src').html(srcString);
 
-	dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
-	srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
-	$('#dst').html(dstString);
-	$('#src').html(srcString);
-
-	diffdrawer.enableSyntaxHighlighting();
+        diffdrawer.enableSyntaxHighlighting();
 
 
-})
-.catch(function(error) {
-	console.log(error);
-});
-	}
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
 }
 /* harmony default export */ __webpack_exports__["a"] = (DiffDrawer);
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_Dropzone__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_Dropzone__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_Dropzone___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_Dropzone__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
 /*global $ */
 
 
+//import NProgress from 'NProgress';
 
 class Loader {
   constructor() {
@@ -3321,13 +3837,10 @@ class Loader {
   }
 
   loadDiffsFromFile(file, filename) {
-    console.log(filename);
     __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/uploads/' + filename)
       .then(function(response) {
-        console.log(response.data);
 
         response.data.forEach(function(diff) {
-          console.log(diff);
 
           var userRepo = diff.BaseUrl.replace(/\/$/, '').replace(/^(https?:\/\/)?(github\.com\/)/, '');
           var localBaseURl = `http://localhost/github/${userRepo}`;
@@ -3340,9 +3853,6 @@ class Loader {
             diffTitle += "</br> >> " + diff.DstFileName.replace(/^.*[\\\/]/, '')
           }
 
-          console.log(rawSrcUrl);
-          console.log(rawDstUrl);
-
           $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}"><b>${diffTitle}</b><br /><small>${userRepo}</small></a>`);
           // axios.get('/uploads/'+filename)
           //   .then(function (apires) {
@@ -3352,12 +3862,6 @@ class Loader {
 
 
         });
-        // for(var diff in response.data)
-        // {
-        //   console.log(diff);
-        //
-        // }
-
       })
       .catch(function(error) {
         console.log(error);
@@ -3369,7 +3873,7 @@ class Loader {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3490,7 +3994,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -3580,7 +4084,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -3591,7 +4095,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {
@@ -5365,7 +5869,7 @@ module.exports = Array.isArray || function (arr) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5373,8 +5877,8 @@ module.exports = Array.isArray || function (arr) {
 
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(13);
-var Axios = __webpack_require__(22);
-var defaults = __webpack_require__(2);
+var Axios = __webpack_require__(23);
+var defaults = __webpack_require__(3);
 
 /**
  * Create an instance of Axios
@@ -5408,14 +5912,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(10);
-axios.CancelToken = __webpack_require__(21);
+axios.CancelToken = __webpack_require__(22);
 axios.isCancel = __webpack_require__(11);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(36);
+axios.spread = __webpack_require__(37);
 
 module.exports = axios;
 
@@ -5424,7 +5928,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5488,18 +5992,18 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(3);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(23);
-var dispatchRequest = __webpack_require__(24);
-var isAbsoluteURL = __webpack_require__(32);
-var combineURLs = __webpack_require__(30);
+var InterceptorManager = __webpack_require__(24);
+var dispatchRequest = __webpack_require__(25);
+var isAbsoluteURL = __webpack_require__(33);
+var combineURLs = __webpack_require__(31);
 
 /**
  * Create a new instance of Axios
@@ -5580,7 +6084,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5639,16 +6143,16 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(27);
+var transformData = __webpack_require__(28);
 var isCancel = __webpack_require__(11);
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(3);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -5725,7 +6229,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5751,7 +6255,7 @@ module.exports = function enhanceError(error, config, code, response) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5783,7 +6287,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5810,7 +6314,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5853,7 +6357,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5928,7 +6432,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5949,7 +6453,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6009,7 +6513,7 @@ module.exports = (
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6030,7 +6534,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6105,7 +6609,7 @@ module.exports = (
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6124,7 +6628,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6168,7 +6672,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6202,7 +6706,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -23294,19 +23798,22 @@ module.exports = function spread(callback) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(6)(module)))
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DiffDrawer__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Loader__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_js_base64_Base64__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DiffDrawer__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Loader__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_js_base64_Base64__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_js_base64_Base64___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_js_base64_Base64__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Utility__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Utility__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_NProgress__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_NProgress___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_NProgress__);
 /* global $ ace */
+
 
 
 
@@ -23330,6 +23837,9 @@ $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
   dv.visualizeChanges();
+  dv.filterBy(options);
+  //dv.visualizeChanges();
+  //NProgress.done();
 });
 
 $('#changeSource').click(function() {
@@ -23337,20 +23847,23 @@ $('#changeSource').click(function() {
   editorDst.setValue(dv.getDestination());
 });
 
-$('#filter').click(function() {
-  dv.filterBy(['DELETE']);
+$('#toggleSidebar').click(function() {
+  //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
+
+  $('#accordion').toggle();
+  $('#codeView').toggleClass('col-sm-9');
+  $('#codeView').toggleClass('col-sm-12');
 });
 
 //enables uploading json files
 var loader = new __WEBPACK_IMPORTED_MODULE_1__Loader__["a" /* default */]();
 
+//TODO (christoph) remove test data!
 var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
 var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
 
 var dv = new __WEBPACK_IMPORTED_MODULE_0__DiffDrawer__["a" /* default */]();
 //dv.visualizeChanges();
-
-
 
 var lastSelectedThis;
 var lastSelectedBound;
@@ -23384,7 +23897,6 @@ $('body').on('click', 'span[data-boundto]', function() {
     boundCodebox = $('.codebox.src');
     localOffset = $(this).offset().top;
   }
-  console.log(localOffset);
   $(boundCodebox).scrollTo(boundElem, 300, {
     offset: 0 - localOffset + $('.codebox.src').offset().top
   });
@@ -23403,13 +23915,23 @@ $('body').on('click', '#diffItem', function() {
   var srcUrl = $(this).data('rawsrcurl');
   var dstUrl = $(this).data('rawdsturl');
 
-  __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(srcUrl)
+  var config = {
+    onUploadProgress: progressEvent => {
+      let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+      __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.set(percentCompleted);
+    }
+  };
+  //Loading div from proxy
+  __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.start();
+  __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(srcUrl, config)
     .then(function(src) {
       dv.setSource(src.data);
-      __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(dstUrl)
+      __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.set(0.5);
+      __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(dstUrl, config)
         .then(function(dst) {
           dv.setDestination(dst.data);
           dv.visualizeChanges();
+          __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.done();
         });
     });
 
@@ -23420,6 +23942,7 @@ $('body').on('click', '#diffItem', function() {
 //start unfiltered
 var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
+//filter on click
 $('.dropdown-menu a').on('click', function(event) {
 
   if ($(event.currentTarget).attr('id') == 'applyFilter') {
@@ -23448,52 +23971,46 @@ $('.dropdown-menu a').on('click', function(event) {
     $(event.target).blur();
     lastSelectedThis = null;
     lastSelectedBound = null;
-    dv.filterBy(options);
     return false;
   }
 });
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Utility__ = __webpack_require__(2);
+
+
 class Marker {
-	constructor(id, position, type, isEndMarker, sourceType) {
-		this.id = id;
-		this.isEndMarker = isEndMarker;
-		this.type = type;
-		this.position = position;
+  constructor(id, position, type, isEndMarker, sourceType) {
+    this.id = id;
+    this.isEndMarker = isEndMarker;
+    this.type = type;
+    this.position = position;
     this.sourceType = sourceType;
-	}
+  }
 
   bindToId(bindingId) //type = src, dst
   {
-    if(this.sourceType == 'src') {
-      this.bind = 'dst'+bindingId;
-    }
-    else if (this.sourceType == 'dst'){
-      this.bind = 'src'+bindingId;
-    }
-    else {
-      console.error('Invalid sourceType for marker!');
-    }
+    this.bind = bindingId;
   }
 
-	generateTag() {
-		if (this.isEndMarker) {
-			return '</span>';
-		} else {
-      if(this.bind != null) {
-        return `<span data-sourcetype="${this.sourceType}" data-boundto="${this.bind}" class="${this.type}" id="${this.sourceType}${this.id}">`;
-      }
-      else {
+  generateTag() {
+    if (this.isEndMarker) {
+      return '</span>';
+    } else {
+      if (this.bind != null) {
+        var bindingId = __WEBPACK_IMPORTED_MODULE_0__Utility__["a" /* default */].getOpponent(this.sourceType) + this.bind;
+        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type}" id="${this.sourceType}${this.id}">`;
+      } else {
         return `<span class="${this.type}"  id="${this.sourceType}${this.id}">`;
       }
 
-		}
-	}
+    }
+  }
 }
 /* harmony default export */ __webpack_exports__["a"] = (Marker);
 

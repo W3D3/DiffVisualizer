@@ -10,10 +10,9 @@ import _ from 'lodash';
 //import hljs from 'highlightjs-line-numbers/dist/highlightjs-line-numbers';
 
 class DiffDrawer {
-	constructor(src, dst)
-  {
-		this.src = src;
-		this.dst = dst;
+  constructor(src, dst) {
+    this.src = src;
+    this.dst = dst;
 
     this.srcMarkersSorted = [];
     this.dstMarkersSorted = [];
@@ -22,212 +21,223 @@ class DiffDrawer {
     this.DIFF_API = axios.create({
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:5000/v1/',
     });
-	}
+  }
 
 
-  setEditorTheme(theme)
-  {
+  setEditorTheme(theme) {
     this.editorSrc.setTheme(`ace/theme/${theme}`);
     this.editorDst.setTheme(`ace/theme/${theme}`);
   }
 
-	setBaseUrl(newBase) {
-		this.DIFF_API = axios.create({
-			baseURL: newBase,
-		});
-	}
+  setBaseUrl(newBase) {
+    this.DIFF_API = axios.create({
+      baseURL: newBase,
+    });
+  }
 
-	setSource(newSrc) {
-		this.src = newSrc;
-	}
+  setSource(newSrc) {
+    this.src = newSrc;
+  }
 
   getSource() {
     console.log(this.src);
-		return this.src;
-	}
+    return this.src;
+  }
 
-	setDestination(newDst) {
-		this.dst = newDst;
-	}
+  setDestination(newDst) {
+    this.dst = newDst;
+  }
 
   getDestination() {
-		return this.dst;
-	}
+    return this.dst;
+  }
 
-  filterBy(filterArray)
-  {
+  filterBy(filterArray) {
     console.log(this.srcMarkersSorted);
-    if(this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
+    if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
       console.error('call visualizeChanges first before setting a filter!');
       //return;
     }
 
-		var filteredSrcMarkers;
-		var filteredDstMarkers;
+    var filteredSrcMarkers;
+    var filteredDstMarkers;
 
-		if(filterArray.length < 4)
-		{
-			filteredSrcMarkers = _.filter(this.srcMarkersSorted, function(o) { return filterArray.includes(o.type); });
-			filteredDstMarkers = _.filter(this.dstMarkersSorted, function(o) { return filterArray.includes(o.type); });
-		}
-		else {
-			filteredSrcMarkers = this.srcMarkersSorted;
-			filteredDstMarkers = this.dstMarkersSorted;
-		}
+    if (filterArray.length < 4) {
+      filteredSrcMarkers = _.filter(this.srcMarkersSorted, function(o) {
+        return filterArray.includes(o.type);
+      });
+      filteredDstMarkers = _.filter(this.dstMarkersSorted, function(o) {
+        return filterArray.includes(o.type);
+      });
+    } else {
+      filteredSrcMarkers = this.srcMarkersSorted;
+      filteredDstMarkers = this.dstMarkersSorted;
+    }
 
     //redraw
     var srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
     var dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
 
 
-		$('#dst').html(dstString);
-		$('#src').html(srcString);
-		this.enableSyntaxHighlighting();
+    $('#dst').html(dstString);
+    $('#src').html(srcString);
+    this.enableSyntaxHighlighting();
   }
 
-	enableSyntaxHighlighting()
-	{
-		$('pre code').each(function(i, block) {
-			hljs.highlightBlock(block);
-		});
+  enableSyntaxHighlighting() {
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
 
-		$('code.hljs-line-numbers').remove();
+    $('code.hljs-line-numbers').remove();
 
-		$('code.hljs#src').each(function(i, block) {
-			hljs.lineNumbersBlock(block);
-		});
-		$('code.hljs#dst').each(function(i, block) {
-			hljs.lineNumbersBlock(block);
-		});
-	}
+    $('code.hljs#src').each(function(i, block) {
+      hljs.lineNumbersBlock(block);
+    });
+    $('code.hljs#dst').each(function(i, block) {
+      hljs.lineNumbersBlock(block);
+    });
+  }
 
-	static insertMarkers(markersSorted, codeString) {
-		var lastClosed = [];
+  static insertMarkers(markersSorted, codeString) {
+    var lastClosed = [];
 
-		markersSorted.forEach(function(marker) {
-			if (marker.isEndMarker) {
-				var range = Utility.splitValue(codeString, marker.position);
-				codeString = range[0] + marker.generateTag() + range[1];
+    markersSorted.forEach(function(marker) {
+      if (marker.id <= 17)
+        debugger;
+      if (marker.isEndMarker) {
+        var range = Utility.splitValue(codeString, marker.position);
+        codeString = range[0] + marker.generateTag() + range[1];
         //fill the opening Marker into the last closed array for faster opening
-				lastClosed.push(new Marker(marker.id, marker.position, marker.type, false));
-			} else {
+        var closingMarker = new Marker(marker.id, marker.position, marker.type, false, marker.sourceType);
+        if (marker.bind)
+          closingMarker.bindToId(marker.bind);
+        lastClosed.push(closingMarker);
+      } else {
         //startmarker
-				if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
+        if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
           //can be inserted
-					lastClosed.pop();
-					range = Utility.splitValue(codeString, marker.position);
-					codeString = range[0] + marker.generateTag() + range[1];
+          lastClosed.pop();
+          range = Utility.splitValue(codeString, marker.position);
+          codeString = range[0] + marker.generateTag() + range[1];
 
-				} else {
-					var markerNotYetOpened = false;
-					lastClosed.forEach(function(startmarker) {
-						if (startmarker.id == marker.id) {
-							markerNotYetOpened = true;
-						}
-					});
-					if (markerNotYetOpened) {
-						var openingMarker = lastClosed.pop();
-						while (openingMarker.id <= marker.id) {
-							range = Utility.splitValue(codeString, marker.position);
-							codeString = range[0] + marker.generateTag() + range[1];
-							if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
-								openingMarker = lastClosed.pop();
-							} else {
-								break;
-							}
-						}
-					}
-				}
-			}
-		});
+        } else {
+          var markerNotYetOpened = false;
+          lastClosed.forEach(function(startmarker) {
+            if (startmarker.id == marker.id) {
+              markerNotYetOpened = true;
+            }
+          });
+          if (markerNotYetOpened) {
+            var openingMarker = lastClosed.pop();
+            while (openingMarker.id <= marker.id) {
+              range = Utility.splitValue(codeString, marker.position);
+              codeString = range[0] + openingMarker.generateTag() + range[1];
+              if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
+                openingMarker = lastClosed.pop();
+              } else {
+                break;
+              }
+            }
+          }
+        }
+      }
+    });
     //formatted string
-		return codeString;
-	}
+    return codeString;
+  }
 
-	visualizeChanges() {
+  visualizeChanges() {
 
-		if (this.src == null || this.dst == null) {
-			console.error('src and dst must be set for changes to appear.');
-			return;
-		}
+    if (this.src == null || this.dst == null) {
+      console.error('src and dst must be set for changes to appear.');
+      return;
+    }
 
-console.log(this.src);
-		const LINE_SEPARATOR = '\r\n';
-		var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
-		var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
+    console.log(this.src);
+    const LINE_SEPARATOR = '\r\n';
+    var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
+    var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
 
     this.src = srcString;
     this.dst = dstString;
-		//this.editorSrc.setValue(srcString);
-		//this.editorDst.setValue(dstString);
+    //this.editorSrc.setValue(srcString);
+    //this.editorDst.setValue(dstString);
     var diffdrawer = this;
-		this.DIFF_API.post('/changes', {
-			'src': base64.encode(srcString),
-			'dst': base64.encode(dstString),
-			'matcher': 1
-		})
-    .then(function(response) {
-      $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
+    this.DIFF_API.post('/changes', {
+        'src': base64.encode(srcString),
+        'dst': base64.encode(dstString),
+        'matcher': 1
+      })
+      .then(function(response) {
+        $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
 
-      var changes = response.data.results;
-      var dstMarkers = new Array();
-      var srcMarkers = new Array();
+        var changes = response.data.results;
+        console.log(changes);
+        var dstMarkers = new Array();
+        var srcMarkers = new Array();
 
-      changes.forEach(function(entry) {
+        changes.forEach(function(entry) {
 
-		if (entry.actionType == 'INSERT') {
-			dstMarkers.push(new Marker(entry.dstId, entry.dstPos, 'INSERT', false, 'dst'));
-			dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, 'INSERT', true, 'dst'));
-		}
+          if (entry.actionType == 'INSERT') {
+            dstMarkers.push(new Marker(entry.dstId, entry.dstPos, 'INSERT', false, 'dst'));
+            dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, 'INSERT', true, 'dst'));
+          }
 
-		if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
+          if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
 
-      var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
-      srcMarker.bindToId(entry.dstId); //bind to destination
-			srcMarkers.push(srcMarker);
-      //add closing tag
-			srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src'));
+            var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
+            srcMarker.bindToId(entry.dstId); //bind to destination
+            srcMarkers.push(srcMarker);
+            //add closing tag
+            var srcClosing = new Marker(entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src');
+            srcClosing.bindToId(entry.dstId);
+            srcMarkers.push(srcClosing);
 
-      var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
-      dstMarker.bindToId(entry.srcId);
-			dstMarkers.push(dstMarker);
-			dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true));
-		}
+            var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
+            dstMarker.bindToId(entry.srcId);
+            dstMarkers.push(dstMarker);
 
-		if (entry.actionType == 'DELETE') {
+            var dstClosing = new Marker(entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true, 'dst');
+            dstClosing.bindToId(entry.srcId);
+            dstMarkers.push(dstClosing);
+          }
 
-			srcMarkers.push(new Marker(entry.srcId, entry.srcPos, 'DELETE', false, 'src'));
-			srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, 'DELETE', true));
-		}
+          if (entry.actionType == 'DELETE') {
 
-	});
+            srcMarkers.push(new Marker(entry.srcId, entry.srcPos, 'DELETE', false, 'src'));
+            srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, 'DELETE', true, 'src'));
+          }
 
-  //markers are now full, sort them
+        });
+        console.log(srcMarkers);
 
-	diffdrawer.dstMarkersSorted = _(dstMarkers).chain()
+        //markers are now full, sort them
+
+        diffdrawer.dstMarkersSorted = _(dstMarkers).chain()
           .sortBy('id')
           .sortBy('position')
           .reverse()
           .value();
 
-	diffdrawer.srcMarkersSorted = _(srcMarkers).chain()
+        diffdrawer.srcMarkersSorted = _(srcMarkers).chain()
           .sortBy('id')
           .sortBy('position')
           .reverse()
           .value();
+        console.log(diffdrawer.srcMarkersSorted);
+        dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
+        srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
+        $('#dst').html(dstString);
+        $('#src').html(srcString);
 
-	dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
-	srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
-	$('#dst').html(dstString);
-	$('#src').html(srcString);
-
-	diffdrawer.enableSyntaxHighlighting();
+        diffdrawer.enableSyntaxHighlighting();
 
 
-})
-.catch(function(error) {
-	console.log(error);
-});
-	}
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
 }
 export default DiffDrawer;

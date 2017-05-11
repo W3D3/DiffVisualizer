@@ -1,50 +1,51 @@
 /* global require */
 var express = require('express');
-var multer  = require('multer');
-var upload = multer({ dest: 'public/uploads/' });
+var multer = require('multer');
+var upload = multer({
+  dest: 'public/uploads/'
+});
 var fs = require('fs');
 var request = require('request');
 var cors = require('cors');
 
 var app = express();
 
-//TODO (christoph) actually check for file type/size etc
-app.post('/diffjson', upload.single('file'), function (req, res) {
+app.post('/diffjson', upload.single('file'), function(req, res) {
   // req.file is the file
   // req.body will hold the text fields, if there were any (nope)
-  if(req.file.size > 2000000) //2MB
+  if (req.file.size > 2000000) //2MB
   {
-    res.status(500).send({ error: 'File too big!' });
+    res.status(500).send({
+      error: 'File too big!'
+    });
     return;
   }
-  fs.readFile('public/uploads/'+req.file.filename, 'utf8', function (err,data) {
+  fs.readFile('public/uploads/' + req.file.filename, 'utf8', function(err, data) {
     // if (err) {
     //   console.log(err);
     //   res.status(500).send({ error: 'There was a problem uploading the file.' });
     //   return;
     // }
-    if(validateJSON(data) == false)
-    {
-      res.status(500).send({ error: 'Not a valid json file!' });
+    if (validateJSON(data) == false) {
+      res.status(500).send({
+        error: 'Not a valid json file!'
+      });
       return;
-    }
-    else {
-      console.log(req.file.originalname +  ' - ' + req.file.mimetype);
+    } else {
+      console.log(req.file.originalname + ' - ' + req.file.mimetype);
       res.send(req.file.filename);
       return;
     }
   });
 });
 
-app.get('/github/*', cors(), function(req, res){
+app.get('/github/*', cors(), function(req, res) {
   var url = 'https://raw.github.com/' + req.params[0].replace('blob/', '');
 
-// https://github.com/bestiejs/lodash/blob/master/package.json
-// https://raw.github.com/bestiejs/lodash/master/package.json
-// https://raw.github.com/bestiejs/lodash/blob/master/package.json
-
-  console.log(url);
-  request.get({url:url, json:false}, function(err, resp, body) {
+  request.get({
+    url: url,
+    json: false
+  }, function(err, resp, body) {
     res.send(body);
   });
 });
@@ -59,7 +60,7 @@ function validateJSON(body) {
     JSON.parse(body);
     // if came to here, then valid
     return true;
-  } catch(e) {
+  } catch (e) {
     // failed to parse
     return false;
   }

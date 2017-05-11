@@ -4,6 +4,7 @@ import Loader from './Loader';
 import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
+import NProgress from 'NProgress';
 var base64 = Base64.Base64; //very nice packaging indeed.
 
 var editorSrc = ace.edit('editorSrc');
@@ -22,6 +23,9 @@ $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
   dv.visualizeChanges();
+  dv.filterBy(options);
+  //dv.visualizeChanges();
+  //NProgress.done();
 });
 
 $('#changeSource').click(function() {
@@ -29,20 +33,23 @@ $('#changeSource').click(function() {
   editorDst.setValue(dv.getDestination());
 });
 
-$('#filter').click(function() {
-  dv.filterBy(['DELETE']);
+$('#toggleSidebar').click(function() {
+  //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
+
+  $('#accordion').toggle();
+  $('#codeView').toggleClass('col-sm-9');
+  $('#codeView').toggleClass('col-sm-12');
 });
 
 //enables uploading json files
 var loader = new Loader();
 
+//TODO (christoph) remove test data!
 var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
 var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
 
 var dv = new DiffDrawer();
 //dv.visualizeChanges();
-
-
 
 var lastSelectedThis;
 var lastSelectedBound;
@@ -76,7 +83,6 @@ $('body').on('click', 'span[data-boundto]', function() {
     boundCodebox = $('.codebox.src');
     localOffset = $(this).offset().top;
   }
-  console.log(localOffset);
   $(boundCodebox).scrollTo(boundElem, 300, {
     offset: 0 - localOffset + $('.codebox.src').offset().top
   });
@@ -95,13 +101,23 @@ $('body').on('click', '#diffItem', function() {
   var srcUrl = $(this).data('rawsrcurl');
   var dstUrl = $(this).data('rawdsturl');
 
-  axios.get(srcUrl)
+  var config = {
+    onUploadProgress: progressEvent => {
+      let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+      NProgress.set(percentCompleted);
+    }
+  };
+  //Loading div from proxy
+  NProgress.start();
+  axios.get(srcUrl, config)
     .then(function(src) {
       dv.setSource(src.data);
-      axios.get(dstUrl)
+      NProgress.set(0.5);
+      axios.get(dstUrl, config)
         .then(function(dst) {
           dv.setDestination(dst.data);
           dv.visualizeChanges();
+          NProgress.done();
         });
     });
 
@@ -112,6 +128,7 @@ $('body').on('click', '#diffItem', function() {
 //start unfiltered
 var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
+//filter on click
 $('.dropdown-menu a').on('click', function(event) {
 
   if ($(event.currentTarget).attr('id') == 'applyFilter') {
@@ -140,7 +157,6 @@ $('.dropdown-menu a').on('click', function(event) {
     $(event.target).blur();
     lastSelectedThis = null;
     lastSelectedBound = null;
-    dv.filterBy(options);
     return false;
   }
 });

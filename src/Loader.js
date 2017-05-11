@@ -1,6 +1,7 @@
 /*global $ */
 import Dropzone from 'Dropzone';
 import axios from 'axios';
+//import NProgress from 'NProgress';
 
 class Loader {
   constructor() {
@@ -27,13 +28,10 @@ class Loader {
   }
 
   loadDiffsFromFile(file, filename) {
-    console.log(filename);
     axios.get('/uploads/' + filename)
       .then(function(response) {
-        console.log(response.data);
 
         response.data.forEach(function(diff) {
-          console.log(diff);
 
           var userRepo = diff.BaseUrl.replace(/\/$/, '').replace(/^(https?:\/\/)?(github\.com\/)/, '');
           var localBaseURl = `http://localhost/github/${userRepo}`;
@@ -46,9 +44,6 @@ class Loader {
             diffTitle += "</br> >> " + diff.DstFileName.replace(/^.*[\\\/]/, '')
           }
 
-          console.log(rawSrcUrl);
-          console.log(rawDstUrl);
-
           $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}"><b>${diffTitle}</b><br /><small>${userRepo}</small></a>`);
           // axios.get('/uploads/'+filename)
           //   .then(function (apires) {
@@ -58,12 +53,6 @@ class Loader {
 
 
         });
-        // for(var diff in response.data)
-        // {
-        //   console.log(diff);
-        //
-        // }
-
       })
       .catch(function(error) {
         console.log(error);
