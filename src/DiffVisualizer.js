@@ -24,8 +24,6 @@ $('#saveSource').click(function() {
   dv.setDestination(editorDst.getValue());
   dv.visualizeChanges();
   dv.filterBy(options);
-  //dv.visualizeChanges();
-  //NProgress.done();
 });
 
 $('#changeSource').click(function() {
@@ -96,7 +94,8 @@ $('body').on('click', 'span[data-boundto]', function() {
 
 //register clickhandler for all diffItems
 $('body').on('click', '#diffItem', function() {
-
+  $('code').html('');
+  $('.codebox').scrollTo(0);
   $(this).parents().children().removeClass('active');
   $(this).addClass('active');
   var srcUrl = $(this).data('rawsrcurl');

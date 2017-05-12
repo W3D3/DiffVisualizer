@@ -5,6 +5,7 @@ import axios from 'axios';
 import Base64 from 'js-base64/Base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
+import escape from 'escape-html';
 
 class DiffDrawer {
   constructor(src, dst) {
@@ -150,10 +151,10 @@ class DiffDrawer {
     var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
     var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
 
+    console.log(srcString);
     this.src = srcString;
     this.dst = dstString;
-    //this.editorSrc.setValue(srcString);
-    //this.editorDst.setValue(dstString);
+
     var diffdrawer = this;
     this.DIFF_API.post('/changes', {
         'src': base64.encode(srcString),
@@ -164,7 +165,7 @@ class DiffDrawer {
         $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
 
         var changes = response.data.results;
-
+        console.log(changes);
         var dstMarkers = new Array();
         var srcMarkers = new Array();
 
