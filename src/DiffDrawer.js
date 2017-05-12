@@ -1,13 +1,10 @@
 /* global $ hljs */
 import Marker from './Marker';
 import Utility from './Utility';
-
 import axios from 'axios';
 import Base64 from 'js-base64/Base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
-//import hljs from 'highlightjs/highlight.pack.js';
-//import hljs from 'highlightjs-line-numbers/dist/highlightjs-line-numbers';
 
 class DiffDrawer {
   constructor(src, dst) {
@@ -22,7 +19,6 @@ class DiffDrawer {
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:5000/v1/',
     });
   }
-
 
   setEditorTheme(theme) {
     this.editorSrc.setTheme(`ace/theme/${theme}`);
@@ -40,7 +36,6 @@ class DiffDrawer {
   }
 
   getSource() {
-    console.log(this.src);
     return this.src;
   }
 
@@ -53,7 +48,6 @@ class DiffDrawer {
   }
 
   filterBy(filterArray) {
-    console.log(this.srcMarkersSorted);
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
       console.error('call visualizeChanges first before setting a filter!');
       //return;
@@ -75,9 +69,8 @@ class DiffDrawer {
     }
 
     //redraw
-    var srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
-    var dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
-
+    let srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
+    let dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
 
     $('#dst').html(dstString);
     $('#src').html(srcString);
@@ -103,8 +96,6 @@ class DiffDrawer {
     var lastClosed = [];
 
     markersSorted.forEach(function(marker) {
-      if (marker.id <= 17)
-        debugger;
       if (marker.isEndMarker) {
         var range = Utility.splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];

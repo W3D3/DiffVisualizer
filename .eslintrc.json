@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jquery": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -24,6 +25,8 @@
             "error",
             "always"
         ],
-        "no-console": 1
+        "no-console": 1,
+        "camelcase": 0,
+        "brace-style": 0
     }
 }

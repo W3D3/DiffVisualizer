@@ -5,7 +5,7 @@ import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
 import NProgress from 'NProgress';
-var base64 = Base64.Base64; //very nice packaging indeed.
+//var base64 = Base64.Base64; //very nice packaging indeed.
 
 var editorSrc = ace.edit('editorSrc');
 editorSrc.setTheme('ace/theme/monokai');
@@ -47,14 +47,15 @@ $('#toggleSidebar').click(function() {
 var loader = new Loader();
 
 //TODO (christoph) remove test data!
-var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
-var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
+//var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
+//var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
 
 var dv = new DiffDrawer();
 //dv.visualizeChanges();
 
 var lastSelectedThis;
 var lastSelectedBound;
+
 //register clickhandler for all the UPDATEs and MOVEs
 $('body').on('click', 'span[data-boundto]', function() {
   //reset old selected nodes
@@ -84,10 +85,10 @@ $('body').on('click', 'span[data-boundto]', function() {
     boundCodebox = $('.codebox.src');
     localOffset = $(this).offset().top;
   }
+  //scroll the other view to the same height
   $(boundCodebox).scrollTo(boundElem, 300, {
     offset: 0 - localOffset + $('.codebox.src').offset().top
   });
-  //Utility.scrollToElementRelativeTo(boundElem, boundCodebox);
 
   //stop propagation by returning
   return false;
@@ -96,7 +97,6 @@ $('body').on('click', 'span[data-boundto]', function() {
 //register clickhandler for all diffItems
 $('body').on('click', '#diffItem', function() {
 
-  //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
   $(this).parents().children().removeClass('active');
   $(this).addClass('active');
   var srcUrl = $(this).data('rawsrcurl');
@@ -104,6 +104,7 @@ $('body').on('click', '#diffItem', function() {
 
   var config = {
     onUploadProgress: progressEvent => {
+      //TODO (christoph) make sure this gets run
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
       NProgress.set(percentCompleted);
     }
