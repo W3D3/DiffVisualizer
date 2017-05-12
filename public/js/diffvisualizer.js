@@ -3595,6 +3595,7 @@ class DiffDrawer {
   }
 
   setDestination(newDst) {
+    console.log(newDst);
     this.dst = newDst;
   }
 
@@ -3700,7 +3701,6 @@ class DiffDrawer {
       return;
     }
 
-    console.log(this.src);
     const LINE_SEPARATOR = '\r\n';
     var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
     var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
@@ -3719,7 +3719,7 @@ class DiffDrawer {
         $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
 
         var changes = response.data.results;
-        console.log(changes);
+
         var dstMarkers = new Array();
         var srcMarkers = new Array();
 
@@ -3756,10 +3756,8 @@ class DiffDrawer {
           }
 
         });
-        console.log(srcMarkers);
 
         //markers are now full, sort them
-
         diffdrawer.dstMarkersSorted = __WEBPACK_IMPORTED_MODULE_4_lodash___default()(dstMarkers).chain()
           .sortBy('id')
           .sortBy('position')
@@ -3771,18 +3769,17 @@ class DiffDrawer {
           .sortBy('position')
           .reverse()
           .value();
-        console.log(diffdrawer.srcMarkersSorted);
+
         dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
         srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
+        console.log(srcString);
         $('#dst').html(dstString);
         $('#src').html(srcString);
 
         diffdrawer.enableSyntaxHighlighting();
-
-
       })
       .catch(function(error) {
-        console.log(error);
+        console.error(error);
       });
   }
 }
@@ -3828,6 +3825,7 @@ class Loader {
   }
 
   loadDiffsFromFile(file, filename) {
+    $('#diffsList').html('')
     __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/uploads/' + filename)
       .then(function(response) {
 
@@ -3841,10 +3839,10 @@ class Loader {
 
           var diffTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '')
           if (diff.SrcFileName != diff.DstFileName) {
-            diffTitle += "</br> >> " + diff.DstFileName.replace(/^.*[\\\/]/, '')
+            diffTitle += '</br> >> ' + diff.DstFileName.replace(/^.*[\\\/]/, '')
           }
 
-          $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}"><b>${diffTitle}</b><br /><small>${userRepo}</small></a>`);
+          $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}"><span class="label label-default">${diff.Id}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
           // axios.get('/uploads/'+filename)
           //   .then(function (apires) {
           //
@@ -23845,7 +23843,7 @@ $('#toggleSidebar').click(function() {
   // $('.sidebar').toggleClass('col-sm-3');
   // $('.sidebar').toggleClass('col-sm-1')
   $('#codeView').toggleClass('col-sm-9');
-  $('#codeView').toggleClass('col-sm-11');
+  $('#codeView').toggleClass('col-sm-12');
 });
 
 //enables uploading json files
@@ -23911,6 +23909,7 @@ $('body').on('click', '#diffItem', function() {
     onUploadProgress: progressEvent => {
       //TODO (christoph) make sure this gets run
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+      console.log(percentCompleted);
       __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.set(percentCompleted);
     }
   };
@@ -23926,7 +23925,9 @@ $('body').on('click', '#diffItem', function() {
       __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(dstUrl, config)
         .then(function(dst) {
           dv.setDestination(dst.data);
+          console.log('start visualizeChanges');
           dv.visualizeChanges();
+          //dv.enableSyntaxHighlighting();
           __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.done();
         });
     });

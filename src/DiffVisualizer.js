@@ -40,7 +40,7 @@ $('#toggleSidebar').click(function() {
   // $('.sidebar').toggleClass('col-sm-3');
   // $('.sidebar').toggleClass('col-sm-1')
   $('#codeView').toggleClass('col-sm-9');
-  $('#codeView').toggleClass('col-sm-11');
+  $('#codeView').toggleClass('col-sm-12');
 });
 
 //enables uploading json files
@@ -106,6 +106,7 @@ $('body').on('click', '#diffItem', function() {
     onUploadProgress: progressEvent => {
       //TODO (christoph) make sure this gets run
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+      console.log(percentCompleted);
       NProgress.set(percentCompleted);
     }
   };
@@ -121,7 +122,9 @@ $('body').on('click', '#diffItem', function() {
       axios.get(dstUrl, config)
         .then(function(dst) {
           dv.setDestination(dst.data);
+          console.log('start visualizeChanges');
           dv.visualizeChanges();
+          //dv.enableSyntaxHighlighting();
           NProgress.done();
         });
     });

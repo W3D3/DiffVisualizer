@@ -40,6 +40,7 @@ class DiffDrawer {
   }
 
   setDestination(newDst) {
+    console.log(newDst);
     this.dst = newDst;
   }
 
@@ -145,7 +146,6 @@ class DiffDrawer {
       return;
     }
 
-    console.log(this.src);
     const LINE_SEPARATOR = '\r\n';
     var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
     var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
@@ -164,7 +164,7 @@ class DiffDrawer {
         $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
 
         var changes = response.data.results;
-        console.log(changes);
+
         var dstMarkers = new Array();
         var srcMarkers = new Array();
 
@@ -201,10 +201,8 @@ class DiffDrawer {
           }
 
         });
-        console.log(srcMarkers);
 
         //markers are now full, sort them
-
         diffdrawer.dstMarkersSorted = _(dstMarkers).chain()
           .sortBy('id')
           .sortBy('position')
@@ -216,18 +214,17 @@ class DiffDrawer {
           .sortBy('position')
           .reverse()
           .value();
-        console.log(diffdrawer.srcMarkersSorted);
+
         dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
         srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
+        console.log(srcString);
         $('#dst').html(dstString);
         $('#src').html(srcString);
 
         diffdrawer.enableSyntaxHighlighting();
-
-
       })
       .catch(function(error) {
-        console.log(error);
+        console.error(error);
       });
   }
 }

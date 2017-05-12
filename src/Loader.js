@@ -28,6 +28,7 @@ class Loader {
   }
 
   loadDiffsFromFile(file, filename) {
+    $('#diffsList').html('')
     axios.get('/uploads/' + filename)
       .then(function(response) {
 
@@ -41,10 +42,10 @@ class Loader {
 
           var diffTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '')
           if (diff.SrcFileName != diff.DstFileName) {
-            diffTitle += "</br> >> " + diff.DstFileName.replace(/^.*[\\\/]/, '')
+            diffTitle += '</br> >> ' + diff.DstFileName.replace(/^.*[\\\/]/, '')
           }
 
-          $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}"><b>${diffTitle}</b><br /><small>${userRepo}</small></a>`);
+          $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}"><span class="label label-default">${diff.Id}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
           // axios.get('/uploads/'+filename)
           //   .then(function (apires) {
           //
