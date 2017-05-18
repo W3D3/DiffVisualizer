@@ -2,7 +2,7 @@
 import Marker from './Marker';
 import Utility from './Utility';
 import axios from 'axios';
-import Base64 from 'js-base64/Base64';
+import Base64 from 'js-base64/base64';
 import Utility from './Utility';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';

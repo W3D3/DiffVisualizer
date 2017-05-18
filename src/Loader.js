@@ -1,6 +1,6 @@
 /*global $ */
 import Utility from './Utility';
-import Dropzone from 'Dropzone';
+import Dropzone from 'dropzone';
 import axios from 'axios';
 //import NProgress from 'NProgress';
 

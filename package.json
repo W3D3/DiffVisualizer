@@ -22,6 +22,7 @@
     "eslint": "^3.19.0",
     "mikro-config": "^1.1.0",
     "nodemon": "^1.11.0",
+    "pm2": "^2.4.6",
     "uglify-js": "^2.8.22",
     "webpack": "^2.5.1"
   },

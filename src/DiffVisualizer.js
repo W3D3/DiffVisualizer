@@ -4,7 +4,7 @@ import Loader from './Loader';
 // import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
-import NProgress from 'NProgress';
+import NProgress from 'nprogress';
 import _ from 'lodash';
 //var base64 = Base64.Base64; //very nice packaging indeed.
 
