@@ -20755,7 +20755,7 @@ class DiffDrawer {
 
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError("call visualizeChanges first before setting a filter!");
+      __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError("call visualizeChanges first to generate Data before showing Changes!");
       //return;
     }
 
@@ -20926,15 +20926,8 @@ class DiffDrawer {
           .reverse()
           .value();
 
-        //dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
-        //srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
-
-        //$('#dst').html(dstString);
-        //$('#src').html(srcString);
         diffdrawer.showChanges();
 
-
-        //diffdrawer.enableSyntaxHighlighting();
       })
       .catch(function(error) {
         __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError(error);

@@ -55,7 +55,7 @@ class DiffDrawer {
 
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      Utility.showError("call visualizeChanges first before setting a filter!");
+      Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
       //return;
     }
 
@@ -226,15 +226,8 @@ class DiffDrawer {
           .reverse()
           .value();
 
-        //dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
-        //srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
-
-        //$('#dst').html(dstString);
-        //$('#src').html(srcString);
         diffdrawer.showChanges();
 
-
-        //diffdrawer.enableSyntaxHighlighting();
       })
       .catch(function(error) {
         Utility.showError(error);
