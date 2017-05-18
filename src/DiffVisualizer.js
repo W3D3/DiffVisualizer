@@ -1,7 +1,7 @@
 /* global $ ace */
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
-import Base64 from 'js-base64/Base64';
+// import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
 import NProgress from 'NProgress';
@@ -43,7 +43,7 @@ $('#toggleSidebar').click(function() {
 });
 
 //enables uploading json files
-var loader = new Loader();
+new Loader();
 
 //TODO (christoph) remove test data!
 //var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
@@ -121,8 +121,9 @@ $('body').on('click', '#diffItem', _.debounce(function() {
       axios.get(dstUrl, config)
         .then(function(dst) {
           dv.setDestination(dst.data);
+          dv.setFilter(options);
           dv.visualizeChanges();
-          //dv.enableSyntaxHighlighting();
+          //Utility.showMessage(options.join());
           NProgress.done();
         });
     });
@@ -144,7 +145,9 @@ $('.dropdown-menu a').on('click', function(event) {
     //clear last selected
     lastSelectedThis = null;
     lastSelectedBound = null;
-    dv.filterBy(options);
+    dv.setFilter(options);
+    dv.showChanges();
+    Utility.showSuccess('Now only showing nodes of type: ' + options.join(', '));
   } else {
     var $target = $(event.currentTarget),
       val = $target.attr('data-value'),

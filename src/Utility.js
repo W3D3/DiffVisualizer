@@ -50,6 +50,48 @@ class Utility {
     }
   }
 
+  static showError(message) {
+    $.notify({
+      // options
+      message: message
+    }, {
+      // settings
+      type: 'danger',
+      animate: {
+        enter: 'animated fadeInDown',
+        exit: 'animated fadeOutUp'
+      }
+    });
+    console.error(message);
+  }
+
+  static showMessage(message) {
+    $.notify({
+      // options
+      message: message
+    }, {
+      // settings
+      type: 'info',
+      animate: {
+        enter: 'animated fadeInDown',
+        exit: 'animated fadeOutUp'
+      }
+    });
+  }
+
+  static showSuccess(message) {
+    $.notify({
+      // options
+      message: message
+    }, {
+      // settings
+      type: 'success',
+      animate: {
+        enter: 'animated fadeInDown',
+        exit: 'animated fadeOutUp'
+      }
+    });
+  }
 
 }
 export default Utility;

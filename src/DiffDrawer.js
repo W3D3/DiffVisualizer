@@ -3,6 +3,7 @@ import Marker from './Marker';
 import Utility from './Utility';
 import axios from 'axios';
 import Base64 from 'js-base64/Base64';
+import Utility from './Utility';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
 
@@ -13,6 +14,8 @@ class DiffDrawer {
 
     this.srcMarkersSorted = [];
     this.dstMarkersSorted = [];
+
+    this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
     //set default base URL
     this.DIFF_API = axios.create({
@@ -42,14 +45,23 @@ class DiffDrawer {
     return this.dst;
   }
 
-  filterBy(filterArray) {
+  setFilter(filterarray) {
+    this.filterArray = filterarray;
+  }
+
+  getFilter() {
+    return this.filterArray;
+  }
+
+  showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      console.error('call visualizeChanges first before setting a filter!');
+      Utility.showError("call visualizeChanges first before setting a filter!");
       //return;
     }
 
     var filteredSrcMarkers;
     var filteredDstMarkers;
+    var filterArray = this.filterArray;
 
     if (filterArray.length < 4) {
       filteredSrcMarkers = _.filter(this.srcMarkersSorted, function(o) {
@@ -143,7 +155,7 @@ class DiffDrawer {
   visualizeChanges() {
 
     if (this.src == null || this.dst == null) {
-      console.error('src and dst must be set for changes to appear.');
+      Utility.showError('src and dst must be set for changes to appear.');
       return;
     }
 
@@ -214,16 +226,18 @@ class DiffDrawer {
           .reverse()
           .value();
 
-        dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
-        srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
+        //dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
+        //srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
 
-        $('#dst').html(dstString);
-        $('#src').html(srcString);
+        //$('#dst').html(dstString);
+        //$('#src').html(srcString);
+        diffdrawer.showChanges();
 
-        diffdrawer.enableSyntaxHighlighting();
+
+        //diffdrawer.enableSyntaxHighlighting();
       })
       .catch(function(error) {
-        console.error(error);
+        Utility.showError(error);
       });
   }
 }

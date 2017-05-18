@@ -1,4 +1,5 @@
 /*global $ */
+import Utility from './Utility';
 import Dropzone from 'Dropzone';
 import axios from 'axios';
 //import NProgress from 'NProgress';
@@ -14,6 +15,7 @@ class Loader {
         //   done('Naha, you don\'t.');
         // }
         // else { done(); }
+        // Utility.showSuccess('Valid JSON file added.');
         done();
       },
       acceptedFiles: '.json',
@@ -56,7 +58,7 @@ class Loader {
         });
       })
       .catch(function(error) {
-        console.log(error);
+        Utility.showError(error);
       });
   }
 

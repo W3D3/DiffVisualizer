@@ -451,6 +451,48 @@ class Utility {
     }
   }
 
+  static showError(message) {
+    $.notify({
+      // options
+      message: message
+    }, {
+      // settings
+      type: 'danger',
+      animate: {
+        enter: 'animated fadeInDown',
+        exit: 'animated fadeOutUp'
+      }
+    });
+    console.error(message);
+  }
+
+  static showMessage(message) {
+    $.notify({
+      // options
+      message: message
+    }, {
+      // settings
+      type: 'info',
+      animate: {
+        enter: 'animated fadeInDown',
+        exit: 'animated fadeOutUp'
+      }
+    });
+  }
+
+  static showSuccess(message) {
+    $.notify({
+      // options
+      message: message
+    }, {
+      // settings
+      type: 'success',
+      animate: {
+        enter: 'animated fadeInDown',
+        exit: 'animated fadeOutUp'
+      }
+    });
+  }
 
 }
 /* harmony default export */ __webpack_exports__["a"] = (Utility);
@@ -20661,6 +20703,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, 
 
 
 
+
 var base64 = __WEBPACK_IMPORTED_MODULE_3_js_base64_Base64___default.a.Base64; //very nice packaging indeed.
 
 
@@ -20671,6 +20714,8 @@ class DiffDrawer {
 
     this.srcMarkersSorted = [];
     this.dstMarkersSorted = [];
+
+    this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
     //set default base URL
     this.DIFF_API = __WEBPACK_IMPORTED_MODULE_2_axios___default.a.create({
@@ -20700,14 +20745,23 @@ class DiffDrawer {
     return this.dst;
   }
 
-  filterBy(filterArray) {
+  setFilter(filterarray) {
+    this.filterArray = filterarray;
+  }
+
+  getFilter() {
+    return this.filterArray;
+  }
+
+  showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      console.error('call visualizeChanges first before setting a filter!');
+      __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError("call visualizeChanges first before setting a filter!");
       //return;
     }
 
     var filteredSrcMarkers;
     var filteredDstMarkers;
+    var filterArray = this.filterArray;
 
     if (filterArray.length < 4) {
       filteredSrcMarkers = __WEBPACK_IMPORTED_MODULE_4_lodash___default.a.filter(this.srcMarkersSorted, function(o) {
@@ -20801,7 +20855,7 @@ class DiffDrawer {
   visualizeChanges() {
 
     if (this.src == null || this.dst == null) {
-      console.error('src and dst must be set for changes to appear.');
+      __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError('src and dst must be set for changes to appear.');
       return;
     }
 
@@ -20872,16 +20926,18 @@ class DiffDrawer {
           .reverse()
           .value();
 
-        dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
-        srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
+        //dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
+        //srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
 
-        $('#dst').html(dstString);
-        $('#src').html(srcString);
+        //$('#dst').html(dstString);
+        //$('#src').html(srcString);
+        diffdrawer.showChanges();
 
-        diffdrawer.enableSyntaxHighlighting();
+
+        //diffdrawer.enableSyntaxHighlighting();
       })
       .catch(function(error) {
-        console.error(error);
+        __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError(error);
       });
   }
 }
@@ -20893,11 +20949,13 @@ class DiffDrawer {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_Dropzone__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_Dropzone___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_Dropzone__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Utility__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_Dropzone__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_Dropzone___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_Dropzone__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
 /*global $ */
+
 
 
 //import NProgress from 'NProgress';
@@ -20905,7 +20963,7 @@ class DiffDrawer {
 class Loader {
   constructor() {
     //Configure dropzone
-    __WEBPACK_IMPORTED_MODULE_0_Dropzone___default.a.options.jsonUploader = {
+    __WEBPACK_IMPORTED_MODULE_1_Dropzone___default.a.options.jsonUploader = {
       paramName: 'file', // The name that will be used to transfer the file
       maxFilesize: 2, // MB
       accept: function(file, done) {
@@ -20913,6 +20971,7 @@ class Loader {
         //   done('Naha, you don\'t.');
         // }
         // else { done(); }
+        // Utility.showSuccess('Valid JSON file added.');
         done();
       },
       acceptedFiles: '.json',
@@ -20928,7 +20987,7 @@ class Loader {
 
   loadDiffsFromFile(file, filename) {
     $('#diffsList').html('')
-    __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get('/uploads/' + filename)
+    __WEBPACK_IMPORTED_MODULE_2_axios___default.a.get('/uploads/' + filename)
       .then(function(response) {
 
         response.data.forEach(function(diff) {
@@ -20955,7 +21014,7 @@ class Loader {
         });
       })
       .catch(function(error) {
-        console.log(error);
+        __WEBPACK_IMPORTED_MODULE_0__Utility__["a" /* default */].showError(error);
       });
   }
 
@@ -23805,19 +23864,17 @@ module.exports = Array.isArray || function (arr) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DiffDrawer__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Loader__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_js_base64_Base64__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_js_base64_Base64___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_js_base64_Base64__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Utility__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_NProgress__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_NProgress___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_NProgress__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Utility__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_NProgress__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_NProgress___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_NProgress__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_lodash__);
 /* global $ ace */
 
 
-
+// import Base64 from 'js-base64/Base64';
 
 
 
@@ -23859,7 +23916,7 @@ $('#toggleSidebar').click(function() {
 });
 
 //enables uploading json files
-var loader = new __WEBPACK_IMPORTED_MODULE_1__Loader__["a" /* default */]();
+new __WEBPACK_IMPORTED_MODULE_1__Loader__["a" /* default */]();
 
 //TODO (christoph) remove test data!
 //var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
@@ -23910,7 +23967,7 @@ $('body').on('click', 'span[data-boundto]', function() {
 });
 
 //register clickhandler for all diffItems
-$('body').on('click', '#diffItem', __WEBPACK_IMPORTED_MODULE_6_lodash___default.a.debounce(function() {
+$('body').on('click', '#diffItem', __WEBPACK_IMPORTED_MODULE_5_lodash___default.a.debounce(function() {
   $('code').html('');
   $('.codebox').scrollTo(0);
   $(this).parents().children().removeClass('active');
@@ -23922,24 +23979,25 @@ $('body').on('click', '#diffItem', __WEBPACK_IMPORTED_MODULE_6_lodash___default.
     onUploadProgress: progressEvent => {
       //TODO (christoph) make sure this gets run
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-      __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.set(percentCompleted);
+      __WEBPACK_IMPORTED_MODULE_4_NProgress___default.a.set(percentCompleted);
     }
   };
   //Loading div from proxy
-  __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.configure({
+  __WEBPACK_IMPORTED_MODULE_4_NProgress___default.a.configure({
     parent: '#codeView'
   });
-  __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.start();
-  __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(srcUrl, config)
+  __WEBPACK_IMPORTED_MODULE_4_NProgress___default.a.start();
+  __WEBPACK_IMPORTED_MODULE_3_axios___default.a.get(srcUrl, config)
     .then(function(src) {
       dv.setSource(src.data);
-      __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.set(0.5);
-      __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(dstUrl, config)
+      __WEBPACK_IMPORTED_MODULE_4_NProgress___default.a.set(0.5);
+      __WEBPACK_IMPORTED_MODULE_3_axios___default.a.get(dstUrl, config)
         .then(function(dst) {
           dv.setDestination(dst.data);
+          dv.setFilter(options);
           dv.visualizeChanges();
-          //dv.enableSyntaxHighlighting();
-          __WEBPACK_IMPORTED_MODULE_5_NProgress___default.a.done();
+          //Utility.showMessage(options.join());
+          __WEBPACK_IMPORTED_MODULE_4_NProgress___default.a.done();
         });
     });
 
@@ -23960,7 +24018,9 @@ $('.dropdown-menu a').on('click', function(event) {
     //clear last selected
     lastSelectedThis = null;
     lastSelectedBound = null;
-    dv.filterBy(options);
+    dv.setFilter(options);
+    dv.showChanges();
+    __WEBPACK_IMPORTED_MODULE_2__Utility__["a" /* default */].showSuccess('Now only showing nodes of type: ' + options.join(', '));
   } else {
     var $target = $(event.currentTarget),
       val = $target.attr('data-value'),
