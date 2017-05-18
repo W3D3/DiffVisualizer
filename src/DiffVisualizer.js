@@ -5,6 +5,7 @@ import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
 import NProgress from 'NProgress';
+import _ from 'lodash';
 //var base64 = Base64.Base64; //very nice packaging indeed.
 
 var editorSrc = ace.edit('editorSrc');
@@ -93,7 +94,7 @@ $('body').on('click', 'span[data-boundto]', function() {
 });
 
 //register clickhandler for all diffItems
-$('body').on('click', '#diffItem', function() {
+$('body').on('click', '#diffItem', _.debounce(function() {
   $('code').html('');
   $('.codebox').scrollTo(0);
   $(this).parents().children().removeClass('active');
@@ -128,7 +129,10 @@ $('body').on('click', '#diffItem', function() {
 
   //stop propagation by returning
   return false;
-});
+}, 1000, {
+  'leading': true,
+  'trailing': false
+}));
 
 //start unfiltered
 var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];

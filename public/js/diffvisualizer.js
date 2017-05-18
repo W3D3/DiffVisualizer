@@ -416,8 +416,6 @@ class Utility {
 
   static escapeSubpart(value, start, end) {
     var arr = [value.substring(0, start), __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.escape(value.substring(start, end)), value.substring(end)];
-    if (arr[0].includes('IIIIIINPUT'))
-      debugger;
     return arr.join('');
   }
 
@@ -20936,7 +20934,7 @@ class Loader {
         response.data.forEach(function(diff) {
 
           var userRepo = diff.BaseUrl.replace(/\/$/, '').replace(/^(https?:\/\/)?(github\.com\/)/, '');
-          var localBaseURl = `http://localhost/github/${userRepo}`;
+          var localBaseURl = `http://${window.location.host}/github/${userRepo}`;
 
           var rawSrcUrl = localBaseURl + '/' + diff.ParentCommit + '/' + diff.SrcFileName;
           var rawDstUrl = localBaseURl + '/' + diff.Commit + '/' + diff.DstFileName;
@@ -23814,7 +23812,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_NProgress__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_NProgress___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_NProgress__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_lodash__);
 /* global $ ace */
+
 
 
 
@@ -23909,7 +23910,7 @@ $('body').on('click', 'span[data-boundto]', function() {
 });
 
 //register clickhandler for all diffItems
-$('body').on('click', '#diffItem', function() {
+$('body').on('click', '#diffItem', __WEBPACK_IMPORTED_MODULE_6_lodash___default.a.debounce(function() {
   $('code').html('');
   $('.codebox').scrollTo(0);
   $(this).parents().children().removeClass('active');
@@ -23944,7 +23945,10 @@ $('body').on('click', '#diffItem', function() {
 
   //stop propagation by returning
   return false;
-});
+}, 1000, {
+  'leading': true,
+  'trailing': false
+}));
 
 //start unfiltered
 var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];

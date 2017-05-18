@@ -15,8 +15,6 @@ class Utility {
 
   static escapeSubpart(value, start, end) {
     var arr = [value.substring(0, start), _.escape(value.substring(start, end)), value.substring(end)];
-    if (arr[0].includes('IIIIIINPUT'))
-      debugger;
     return arr.join('');
   }
 

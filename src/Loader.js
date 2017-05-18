@@ -35,7 +35,7 @@ class Loader {
         response.data.forEach(function(diff) {
 
           var userRepo = diff.BaseUrl.replace(/\/$/, '').replace(/^(https?:\/\/)?(github\.com\/)/, '');
-          var localBaseURl = `http://localhost/github/${userRepo}`;
+          var localBaseURl = `http://${window.location.host}/github/${userRepo}`;
 
           var rawSrcUrl = localBaseURl + '/' + diff.ParentCommit + '/' + diff.SrcFileName;
           var rawDstUrl = localBaseURl + '/' + diff.Commit + '/' + diff.DstFileName;

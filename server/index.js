@@ -7,6 +7,7 @@ var upload = multer({
 var fs = require('fs');
 var request = require('request');
 var cors = require('cors');
+const config = require('mikro-config');
 
 var app = express();
 
@@ -53,7 +54,7 @@ app.get('/github/*', cors(), function(req, res) {
 app.use(express.static('public'));
 //serve uploaded files
 app.use(express.static('uploads'));
-app.listen(80);
+app.listen(config.get('server.port'));
 
 function validateJSON(body) {
   try {
