@@ -4,7 +4,7 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 
 */
 
-.hljs {
+.codebox, .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
@@ -14,7 +14,7 @@ Original highlight.js style (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
 
 /* Base color: saturation 0; */
 
-.hljs,
+.codebox, .hljs,
 .hljs-subst {
   color: #444;
 }

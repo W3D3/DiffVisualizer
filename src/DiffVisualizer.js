@@ -105,7 +105,6 @@ $('body').on('click', '#diffItem', function() {
     onUploadProgress: progressEvent => {
       //TODO (christoph) make sure this gets run
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-      console.log(percentCompleted);
       NProgress.set(percentCompleted);
     }
   };
@@ -121,7 +120,6 @@ $('body').on('click', '#diffItem', function() {
       axios.get(dstUrl, config)
         .then(function(dst) {
           dv.setDestination(dst.data);
-          console.log('start visualizeChanges');
           dv.visualizeChanges();
           //dv.enableSyntaxHighlighting();
           NProgress.done();

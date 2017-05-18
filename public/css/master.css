@@ -127,11 +127,18 @@ pre, code {
 .codebox {
   padding-right: 0;
   padding-left: 0;
+  border: 1px solid #CCC;
 }
 
-.pre {
+.codebox pre {
   padding-top: 0;
   padding-bottom: 0;
+  overflow: visible;
+  border: none;
+}
+
+.codebox pre code {
+  overflow: visible;
 }
 
 /* selected element style */

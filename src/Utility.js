@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class Utility {
 
   //utility functions
@@ -9,6 +11,13 @@ class Utility {
   static splitRange(value, start, length) {
     var arr = [value.substring(0, start), value.substring(start, start + length), value.substring(start + length)];
     return arr;
+  }
+
+  static escapeSubpart(value, start, end) {
+    var arr = [value.substring(0, start), _.escape(value.substring(start, end)), value.substring(end)];
+    if (arr[0].includes('IIIIIINPUT'))
+      debugger;
+    return arr.join('');
   }
 
   // Scrolls to elem inside main
@@ -42,5 +51,7 @@ class Utility {
       return 'src';
     }
   }
+
+
 }
 export default Utility;

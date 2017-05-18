@@ -7,7 +7,6 @@
     "axios": "^0.16.1",
     "cors": "^2.8.3",
     "dropzone": "^4.3.0",
-    "escape-html": "^1.0.3",
     "express": "^4.15.2",
     "highlightjs": "^9.10.0",
     "highlightjs-line-numbers.js": "^1.1.0",

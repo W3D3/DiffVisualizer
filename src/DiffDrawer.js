@@ -5,7 +5,6 @@ import axios from 'axios';
 import Base64 from 'js-base64/Base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
-import escape from 'escape-html';
 
 class DiffDrawer {
   constructor(src, dst) {
@@ -19,11 +18,6 @@ class DiffDrawer {
     this.DIFF_API = axios.create({
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:5000/v1/',
     });
-  }
-
-  setEditorTheme(theme) {
-    this.editorSrc.setTheme(`ace/theme/${theme}`);
-    this.editorDst.setTheme(`ace/theme/${theme}`);
   }
 
   setBaseUrl(newBase) {
@@ -41,7 +35,6 @@ class DiffDrawer {
   }
 
   setDestination(newDst) {
-    console.log(newDst);
     this.dst = newDst;
   }
 
@@ -96,8 +89,13 @@ class DiffDrawer {
 
   static insertMarkers(markersSorted, codeString) {
     var lastClosed = [];
+    var escapeUntilPos = codeString.length;
 
     markersSorted.forEach(function(marker) {
+      //Before inserting marker, escape everything up to this point
+      codeString = Utility.escapeSubpart(codeString, marker.position, escapeUntilPos);
+      escapeUntilPos = marker.position;
+
       if (marker.isEndMarker) {
         var range = Utility.splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];
@@ -136,6 +134,8 @@ class DiffDrawer {
         }
       }
     });
+    //after all markers, escape the rest of the string
+    codeString = Utility.escapeSubpart(codeString, 0, escapeUntilPos);
     //formatted string
     return codeString;
   }
@@ -151,7 +151,6 @@ class DiffDrawer {
     var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
     var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
 
-    console.log(srcString);
     this.src = srcString;
     this.dst = dstString;
 
@@ -165,7 +164,6 @@ class DiffDrawer {
         $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
 
         var changes = response.data.results;
-        console.log(changes);
         var dstMarkers = new Array();
         var srcMarkers = new Array();
 
@@ -218,7 +216,7 @@ class DiffDrawer {
 
         dstString = DiffDrawer.insertMarkers(diffdrawer.dstMarkersSorted, dstString);
         srcString = DiffDrawer.insertMarkers(diffdrawer.srcMarkersSorted, srcString);
-        console.log(srcString);
+
         $('#dst').html(dstString);
         $('#src').html(srcString);
 
