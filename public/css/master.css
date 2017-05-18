@@ -33,7 +33,7 @@ html, body {
 .box .row.content {
   position: relative;
   flex: 1 1 1px;
-  overflow-y: auto;
+  overflow: hidden; /* fixes hover scrollbar on windows... */
 }
 
 @media (min-width: 768px) {
@@ -108,11 +108,11 @@ pre, code {
   padding: 1px;
   margin: 1px;
   cursor: pointer;
-  border: 2px solid rgba(222, 250, 110, 0.7);
+  border: 2px solid rgba(231, 194, 3, 0.7);
 }
 
 .UPDATE:hover:not(.selected) {
-  border: 2px dashed rgba(204, 255, 0, 1);
+  border: 2px dashed rgba(231, 194, 3, 1);
 }
 
 .DELETE {
