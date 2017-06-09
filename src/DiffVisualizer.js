@@ -7,6 +7,8 @@ import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
 //var base64 = Base64.Base64; //very nice packaging indeed.
+import {version} from '../package.json';
+$('.versionNumber').text('v'+version);
 
 var editorSrc = ace.edit('editorSrc');
 editorSrc.setTheme('ace/theme/monokai');
@@ -50,7 +52,10 @@ new Loader();
 //var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
 
 var dv = new DiffDrawer();
-//dv.visualizeChanges();
+dv.getAvailableMatchers().then(response => {
+  console.log(response);
+});
+
 
 var lastSelectedThis;
 var lastSelectedBound;

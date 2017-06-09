@@ -17,6 +17,8 @@ class DiffDrawer {
 
     this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
+    this.matcherID = 1; //default to first matcher (ClassicGumtree)
+
     //set default base URL
     this.DIFF_API = axios.create({
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/',
@@ -51,6 +53,21 @@ class DiffDrawer {
 
   getFilter() {
     return this.filterArray;
+  }
+
+  getAvailableMatchers()
+  {
+    return this.DIFF_API.get('/matchers');
+  }
+
+  setMatcher(id)
+  {
+    this.matcherID = id;
+  }
+
+  getMatcher()
+  {
+    return this.matcherID;
   }
 
   showChanges() {
@@ -170,7 +187,7 @@ class DiffDrawer {
     this.DIFF_API.post('/changes', {
         'src': base64.encode(srcString),
         'dst': base64.encode(dstString),
-        'matcher': 1
+        'matcher': this.getMatcher()
       })
       .then(function(response) {
         $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
