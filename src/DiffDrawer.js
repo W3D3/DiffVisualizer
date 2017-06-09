@@ -19,7 +19,7 @@ class DiffDrawer {
 
     //set default base URL
     this.DIFF_API = axios.create({
-      baseURL: 'http://swdyn.isys.uni-klu.ac.at:5000/v1/',
+      baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/',
     });
   }
 
