@@ -147,15 +147,14 @@ class DiffDrawer {
       //Before inserting marker, escape everything up to this point
       codeString = Utility.escapeSubpart(codeString, marker.position, escapeUntilPos);
       escapeUntilPos = marker.position;
-      if(marker.id == 212)
+      if(marker.id == 387)
         debugger;
       if (marker.isEndMarker) {
         var range = Utility.splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];
         //fill the opening Marker into the last closed array for faster opening
-        var closingMarker = new Marker(marker.id, marker.position, marker.type, false, marker.sourceType);
-        if (marker.bind)
-          closingMarker.bindToId(marker.bind);
+        var closingMarker = marker;
+        closingMarker.setIsEndMarker(false);
         lastClosed.push(closingMarker);
       } else {
         //startmarker
@@ -238,22 +237,18 @@ class DiffDrawer {
           if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
             var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
             srcMarker.bindToId(entry.dstId); //bind to destination
-            srcMarker.addToolTip('ID' + entry.dstId, 'This is an '+ entry.actionType);
+            srcMarker.addToolTip('ID' + entry.srcId, 'This is a '+ entry.actionType);
             srcMarkers.push(srcMarker);
             //add closing tag
-            var srcClosing = new Marker(entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src');
-            srcClosing.bindToId(entry.dstId);
-            if(entry.dstId == '330')
-              debugger;
-            srcClosing.addToolTip('CLOSING COPY ID' + entry.dstId, ' This is an '+ entry.actionType);
+            var srcClosing = srcMarker.createEndMarker(entry.srcLength);
             srcMarkers.push(srcClosing);
 
             var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
             dstMarker.bindToId(entry.srcId);
+            dstMarker.addToolTip('ID' + entry.dstId, 'This is a '+ entry.actionType);
             dstMarkers.push(dstMarker);
 
-            var dstClosing = new Marker(entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true, 'dst');
-            dstClosing.bindToId(entry.srcId);
+            var dstClosing = dstMarker.createEndMarker(entry.dstLength);
             dstMarkers.push(dstClosing);
           }
 

@@ -20478,7 +20478,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, 
 
 module.exports = {
 	"name": "DiffVisualizer",
-	"version": "1.4.2",
+	"version": "1.5.0",
 	"main": "server/index.js",
 	"license": "MIT",
 	"dependencies": {
@@ -20673,15 +20673,14 @@ class DiffDrawer {
       //Before inserting marker, escape everything up to this point
       codeString = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].escapeSubpart(codeString, marker.position, escapeUntilPos);
       escapeUntilPos = marker.position;
-      if(marker.id == 212)
+      if(marker.id == 387)
         debugger;
       if (marker.isEndMarker) {
         var range = __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];
         //fill the opening Marker into the last closed array for faster opening
-        var closingMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](marker.id, marker.position, marker.type, false, marker.sourceType);
-        if (marker.bind)
-          closingMarker.bindToId(marker.bind);
+        var closingMarker = marker;
+        closingMarker.setIsEndMarker(false);
         lastClosed.push(closingMarker);
       } else {
         //startmarker
@@ -20764,22 +20763,18 @@ class DiffDrawer {
           if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
             var srcMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos, entry.actionType, false, 'src');
             srcMarker.bindToId(entry.dstId); //bind to destination
-            srcMarker.addToolTip('ID' + entry.dstId, 'This is an '+ entry.actionType);
+            srcMarker.addToolTip('ID' + entry.srcId, 'This is a '+ entry.actionType);
             srcMarkers.push(srcMarker);
             //add closing tag
-            var srcClosing = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src');
-            srcClosing.bindToId(entry.dstId);
-            if(entry.dstId == '330')
-              debugger;
-            srcClosing.addToolTip('CLOSING COPY ID' + entry.dstId, ' This is an '+ entry.actionType);
+            var srcClosing = srcMarker.createEndMarker(entry.srcLength);
             srcMarkers.push(srcClosing);
 
             var dstMarker = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
             dstMarker.bindToId(entry.srcId);
+            dstMarker.addToolTip('ID' + entry.dstId, 'This is a '+ entry.actionType);
             dstMarkers.push(dstMarker);
 
-            var dstClosing = new __WEBPACK_IMPORTED_MODULE_0__Marker__["a" /* default */](entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true, 'dst');
-            dstClosing.bindToId(entry.srcId);
+            var dstClosing = dstMarker.createEndMarker(entry.dstLength);
             dstMarkers.push(dstClosing);
           }
 
@@ -24001,10 +23996,11 @@ var lastSelectedThis;
 var lastSelectedBound;
 
 //register clickhandler for all the UPDATEs and MOVEs
-$('body').on('click', 'span[data-boundto]', function() {
+$('body').on('click', 'span[data-boundto]', function(e) {
   //reset old selected nodes
   // $('#'+lastSelectedThis).popover('hide');
   // lastSelectedThis = $(this).attr('id');
+  e.preventDefault();
   $('[data-toggle="popover"]').popover('destroy');
 
   $('.codebox').find('*').removeClass('selected');
@@ -24045,6 +24041,9 @@ $('body').on('click', 'span[data-boundto]', function() {
   //stop propagation by returning
   return false;
 });
+
+//disable selection
+$('.codebox').mousedown(function(e){ e.preventDefault(); });
 
 //register clickhandler for all diffItems
 $('body').on('click', '#diffItem', __WEBPACK_IMPORTED_MODULE_5_lodash___default.a.debounce(function() {
@@ -24153,6 +24152,20 @@ class Marker {
   addToolTip(title, content)
   {
     this.toolTipMarkup = `data-toggle="popover" title="${title}" data-content="${content}" data-container="#${this.sourceType}"`;
+  }
+
+  setIsEndMarker(isEndMarker)
+  {
+    this.isEndMarker = isEndMarker;
+  }
+
+  createEndMarker(length)
+  {
+    var endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
+    endmarker.position = endmarker.position + length;
+    endmarker.bind = this.bind;
+    endmarker.toolTipMarkup = this.toolTipMarkup;
+    return endmarker;
   }
 
   generateTag() {

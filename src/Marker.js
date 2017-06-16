@@ -20,6 +20,20 @@ class Marker {
     this.toolTipMarkup = `data-toggle="popover" title="${title}" data-content="${content}" data-container="#${this.sourceType}"`;
   }
 
+  setIsEndMarker(isEndMarker)
+  {
+    this.isEndMarker = isEndMarker;
+  }
+
+  createEndMarker(length)
+  {
+    var endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
+    endmarker.position = endmarker.position + length;
+    endmarker.bind = this.bind;
+    endmarker.toolTipMarkup = this.toolTipMarkup;
+    return endmarker;
+  }
+
   generateTag() {
     if (this.isEndMarker) {
       return '</span>';

@@ -67,10 +67,11 @@ var lastSelectedThis;
 var lastSelectedBound;
 
 //register clickhandler for all the UPDATEs and MOVEs
-$('body').on('click', 'span[data-boundto]', function() {
+$('body').on('click', 'span[data-boundto]', function(e) {
   //reset old selected nodes
   // $('#'+lastSelectedThis).popover('hide');
   // lastSelectedThis = $(this).attr('id');
+  e.preventDefault();
   $('[data-toggle="popover"]').popover('destroy');
 
   $('.codebox').find('*').removeClass('selected');
@@ -111,6 +112,9 @@ $('body').on('click', 'span[data-boundto]', function() {
   //stop propagation by returning
   return false;
 });
+
+//disable selection
+$('.codebox').mousedown(function(e){ e.preventDefault(); });
 
 //register clickhandler for all diffItems
 $('body').on('click', '#diffItem', _.debounce(function() {
