@@ -1,12 +1,11 @@
 /* global $ ace */
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
-// import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
-//var base64 = Base64.Base64; //very nice packaging indeed.
+
 import {version} from '../package.json';
 $('.versionNumber').text('v'+version);
 
@@ -25,8 +24,8 @@ editorDst.$blockScrolling = Infinity;
 $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
-  dv.visualizeChanges();
-  dv.filterBy(options);
+  dv.setFilter(options);
+  dv.diffAndDraw();
 });
 
 $('#changeSource').click(function() {
@@ -47,14 +46,21 @@ $('#toggleSidebar').click(function() {
 //enables uploading json files
 new Loader();
 
-//TODO (christoph) remove test data!
-//var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
-//var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
-
 var dv = new DiffDrawer();
 dv.getAvailableMatchers().then(response => {
-  console.log(response);
+  for (let item of response.data.matchers) {
+    console.log(item);
+    $('#matcherID')
+         .append($('<option></option>')
+                    .attr('value',item.id)
+                    .text(item.name));
+  }
 });
+
+$( '#matcherID' )
+  .change(function () {
+    dv.setMatcher($( 'select option:selected' ).attr('value'));
+  });
 
 
 var lastSelectedThis;
@@ -63,12 +69,20 @@ var lastSelectedBound;
 //register clickhandler for all the UPDATEs and MOVEs
 $('body').on('click', 'span[data-boundto]', function() {
   //reset old selected nodes
+  // $('#'+lastSelectedThis).popover('hide');
+  // lastSelectedThis = $(this).attr('id');
+  $('[data-toggle="popover"]').popover('destroy');
+
   $('.codebox').find('*').removeClass('selected');
 
   if (lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id')) {
-    lastSelectedThis = null;
-    lastSelectedBound = null;
-    return false;
+    $(this).popover({
+      trigger: 'manual',
+      placement: 'bottom'
+    });
+    $(this).popover('show');
+    // $(this).addClass('selected');
+    // return false;
   }
 
   //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
@@ -127,7 +141,7 @@ $('body').on('click', '#diffItem', _.debounce(function() {
         .then(function(dst) {
           dv.setDestination(dst.data);
           dv.setFilter(options);
-          dv.visualizeChanges();
+          dv.diffAndDraw();
           //Utility.showMessage(options.join());
           NProgress.done();
         });

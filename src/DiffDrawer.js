@@ -147,7 +147,8 @@ class DiffDrawer {
       //Before inserting marker, escape everything up to this point
       codeString = Utility.escapeSubpart(codeString, marker.position, escapeUntilPos);
       escapeUntilPos = marker.position;
-
+      if(marker.id == 212)
+        debugger;
       if (marker.isEndMarker) {
         var range = Utility.splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];
@@ -237,10 +238,14 @@ class DiffDrawer {
           if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
             var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
             srcMarker.bindToId(entry.dstId); //bind to destination
+            srcMarker.addToolTip('ID' + entry.dstId, 'This is an '+ entry.actionType);
             srcMarkers.push(srcMarker);
             //add closing tag
             var srcClosing = new Marker(entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src');
             srcClosing.bindToId(entry.dstId);
+            if(entry.dstId == '330')
+              debugger;
+            srcClosing.addToolTip('CLOSING COPY ID' + entry.dstId, ' This is an '+ entry.actionType);
             srcMarkers.push(srcClosing);
 
             var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');

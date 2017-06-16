@@ -7,11 +7,17 @@ class Marker {
     this.type = type;
     this.position = position;
     this.sourceType = sourceType;
+    this.toolTipMarkup = '';
   }
 
   bindToId(bindingId) //type = src, dst
   {
     this.bind = bindingId;
+  }
+
+  addToolTip(title, content)
+  {
+    this.toolTipMarkup = `data-toggle="popover" title="${title}" data-content="${content}" data-container="#${this.sourceType}"`;
   }
 
   generateTag() {
@@ -20,7 +26,7 @@ class Marker {
     } else {
       if (this.bind != null) {
         var bindingId = Utility.getOpponent(this.sourceType) + this.bind;
-        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type}" id="${this.sourceType}${this.id}">`;
+        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type}" id="${this.sourceType}${this.id}" ${this.toolTipMarkup}>`;
       } else {
         return `<span class="${this.type}"  id="${this.sourceType}${this.id}">`;
       }
