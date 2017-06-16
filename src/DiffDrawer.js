@@ -2,12 +2,26 @@
 import Marker from './Marker';
 import Utility from './Utility';
 import axios from 'axios';
-import Base64 from 'js-base64/base64';
-import Utility from './Utility';
+import Base64 from 'js-base64/Base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
+
 import _ from 'lodash';
 
+/**
+ * Used to fetch diff data from a webservice and show it on screen
+ * @example var dd = new DiffDrawer(mySrc, myDst); dd.diffAndDraw();
+ * @constructor
+ * @param {string} src - source code string
+ * @param {string} dst - destination code string
+ */
 class DiffDrawer {
+  
+  /**
+   * sets up reasonable defaults for filtering and API endpoint
+   * @constructor
+   * @param {string} src - source code string
+   * @param {string} dst - destination code string
+   */
   constructor(src, dst) {
     this.src = src;
     this.dst = dst;
@@ -17,7 +31,7 @@ class DiffDrawer {
 
     this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
-    //set default base URL
+    // set default base URL
     this.DIFF_API = axios.create({
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:5000/v1/',
     });
@@ -53,10 +67,13 @@ class DiffDrawer {
     return this.filterArray;
   }
 
+  /**
+   * Takes the calculated and sorted markers, filters them and inserts them into the DOM with syntax highlighting
+   */
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
-      //return;
+      Utility.showError('Cannot show changes with no calculated changes.');
+      return;
     }
 
     var filteredSrcMarkers;
@@ -84,6 +101,9 @@ class DiffDrawer {
     this.enableSyntaxHighlighting();
   }
 
+  /**
+   * Enables/refreshes syntax highlighting and line numbers for all code blocks
+   */
   enableSyntaxHighlighting() {
     $('pre code').each(function(i, block) {
       hljs.highlightBlock(block);
@@ -99,6 +119,12 @@ class DiffDrawer {
     });
   }
 
+  /**
+   * Takes a codestring and their already sorted markers and generates a string with all the inserted markers added
+   * @param {Marker[]} markersSorted - sorted marker array of the given code string
+   * @param {string} codeString - code string to be used, contained html tags will be escaped
+   * @return {string} - code string with all the markers added as span tags
+   */
   static insertMarkers(markersSorted, codeString) {
     var lastClosed = [];
     var escapeUntilPos = codeString.length;
@@ -152,7 +178,15 @@ class DiffDrawer {
     return codeString;
   }
 
-  visualizeChanges() {
+  /**
+   * Takes src and dst and send them to the webservice to get diffing information
+   * This also calls @see showChanges to show the generated data right after fetching
+   * This is the only method you have to execute from outside this class
+   * @param {Marker[]} markersSorted - sorted marker array of the given code string
+   * @param {string} codeString - code string to be used, contained html tags will be escaped
+   * @return {string} - code string with all the markers added as span tags
+   */
+  diffAndDraw() {
 
     if (this.src == null || this.dst == null) {
       Utility.showError('src and dst must be set for changes to appear.');
@@ -187,7 +221,6 @@ class DiffDrawer {
           }
 
           if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
-
             var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
             srcMarker.bindToId(entry.dstId); //bind to destination
             srcMarkers.push(srcMarker);
@@ -206,7 +239,6 @@ class DiffDrawer {
           }
 
           if (entry.actionType == 'DELETE') {
-
             srcMarkers.push(new Marker(entry.srcId, entry.srcPos, 'DELETE', false, 'src'));
             srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, 'DELETE', true, 'src'));
           }
@@ -227,7 +259,6 @@ class DiffDrawer {
           .value();
 
         diffdrawer.showChanges();
-
       })
       .catch(function(error) {
         Utility.showError(error);
