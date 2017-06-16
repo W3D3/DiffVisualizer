@@ -15,7 +15,7 @@ import _ from 'lodash';
  * @param {string} dst - destination code string
  */
 class DiffDrawer {
-  
+
   /**
    * sets up reasonable defaults for filtering and API endpoint
    * @constructor
@@ -31,9 +31,11 @@ class DiffDrawer {
 
     this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
-    // set default base URL
+    this.matcherID = 1; //default to first matcher (ClassicGumtree)
+
+    //set default base URL
     this.DIFF_API = axios.create({
-      baseURL: 'http://swdyn.isys.uni-klu.ac.at:5000/v1/',
+      baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/',
     });
   }
 
@@ -67,9 +69,21 @@ class DiffDrawer {
     return this.filterArray;
   }
 
-  /**
-   * Takes the calculated and sorted markers, filters them and inserts them into the DOM with syntax highlighting
-   */
+  getAvailableMatchers()
+  {
+    return this.DIFF_API.get('/matchers');
+  }
+
+  setMatcher(id)
+  {
+    this.matcherID = id;
+  }
+
+  getMatcher()
+  {
+    return this.matcherID;
+  }
+
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
       Utility.showError('Cannot show changes with no calculated changes.');
@@ -204,7 +218,7 @@ class DiffDrawer {
     this.DIFF_API.post('/changes', {
         'src': base64.encode(srcString),
         'dst': base64.encode(dstString),
-        'matcher': 1
+        'matcher': this.getMatcher()
       })
       .then(function(response) {
         $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
