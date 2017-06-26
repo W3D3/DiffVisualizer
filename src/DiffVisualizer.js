@@ -26,7 +26,7 @@ $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
   dv.visualizeChanges();
-  dv.filterBy(options);
+  //dv.filterBy(options);
 });
 
 $('#changeSource').click(function() {
@@ -36,7 +36,6 @@ $('#changeSource').click(function() {
 
 $('#toggleSidebar').click(function() {
   //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
-
   $('#accordion').toggle();
   // $('.sidebar').toggleClass('col-sm-3');
   // $('.sidebar').toggleClass('col-sm-1')
@@ -145,7 +144,6 @@ var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
 //filter on click
 $('.dropdown-menu a').on('click', function(event) {
-
   if ($(event.currentTarget).attr('id') == 'applyFilter') {
     //clear last selected
     lastSelectedThis = null;
@@ -177,3 +175,12 @@ $('.dropdown-menu a').on('click', function(event) {
     return false;
   }
 });
+
+// machter on change
+$('#matcherID').on('change', function() {
+  dv.setMatcher(this.value);
+  Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
+  NProgress.start();
+  dv.visualizeChanges();
+  NProgress.done();
+})

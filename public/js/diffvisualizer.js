@@ -18686,7 +18686,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, 
 
 module.exports = {
 	"name": "DiffVisualizer",
-	"version": "1.4.1",
+	"version": "1.4.2",
 	"main": "server/index.js",
 	"license": "MIT",
 	"dependencies": {
@@ -18733,7 +18733,6 @@ module.exports = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_lodash__);
 /* global $ hljs */
-
 
 
 
@@ -18806,8 +18805,8 @@ class DiffDrawer {
 
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError("call visualizeChanges first to generate Data before showing Changes!");
-      //return;
+      //Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
+      return;
     }
 
     var filteredSrcMarkers;
@@ -18906,7 +18905,6 @@ class DiffDrawer {
   visualizeChanges() {
 
     if (this.src == null || this.dst == null) {
-      __WEBPACK_IMPORTED_MODULE_1__Utility__["a" /* default */].showError('src and dst must be set for changes to appear.');
       return;
     }
 
@@ -19947,22 +19945,22 @@ function placeHoldersCount (b64) {
 
 function byteLength (b64) {
   // base64 is 4/3 + up to two characters of the original data
-  return b64.length * 3 / 4 - placeHoldersCount(b64)
+  return (b64.length * 3 / 4) - placeHoldersCount(b64)
 }
 
 function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
+  var i, l, tmp, placeHolders, arr
   var len = b64.length
   placeHolders = placeHoldersCount(b64)
 
-  arr = new Arr(len * 3 / 4 - placeHolders)
+  arr = new Arr((len * 3 / 4) - placeHolders)
 
   // if there are placeholders, only get up to the last complete 4 chars
   l = placeHolders > 0 ? len - 4 : len
 
   var L = 0
 
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+  for (i = 0; i < l; i += 4) {
     tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
     arr[L++] = (tmp >> 16) & 0xFF
     arr[L++] = (tmp >> 8) & 0xFF
@@ -23972,7 +23970,7 @@ $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
   dv.visualizeChanges();
-  dv.filterBy(options);
+  //dv.filterBy(options);
 });
 
 $('#changeSource').click(function() {
@@ -23982,7 +23980,6 @@ $('#changeSource').click(function() {
 
 $('#toggleSidebar').click(function() {
   //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
-
   $('#accordion').toggle();
   // $('.sidebar').toggleClass('col-sm-3');
   // $('.sidebar').toggleClass('col-sm-1')
@@ -24091,7 +24088,6 @@ var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
 //filter on click
 $('.dropdown-menu a').on('click', function(event) {
-
   if ($(event.currentTarget).attr('id') == 'applyFilter') {
     //clear last selected
     lastSelectedThis = null;
@@ -24124,6 +24120,14 @@ $('.dropdown-menu a').on('click', function(event) {
   }
 });
 
+// machter on change
+$('#matcherID').on('change', function() {
+  dv.setMatcher(this.value);
+  __WEBPACK_IMPORTED_MODULE_2__Utility__["a" /* default */].showMessage('Matcher changed to ' + $('option:selected', this).text());
+  __WEBPACK_IMPORTED_MODULE_4_nprogress___default.a.start();
+  dv.visualizeChanges();
+  __WEBPACK_IMPORTED_MODULE_4_nprogress___default.a.done();
+})
 
 /***/ }),
 /* 42 */

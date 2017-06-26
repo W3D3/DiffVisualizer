@@ -3,7 +3,6 @@ import Marker from './Marker';
 import Utility from './Utility';
 import axios from 'axios';
 import Base64 from 'js-base64/base64';
-import Utility from './Utility';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
 
@@ -72,8 +71,8 @@ class DiffDrawer {
 
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
-      //return;
+      //Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
+      return;
     }
 
     var filteredSrcMarkers;
@@ -172,7 +171,6 @@ class DiffDrawer {
   visualizeChanges() {
 
     if (this.src == null || this.dst == null) {
-      Utility.showError('src and dst must be set for changes to appear.');
       return;
     }
 
