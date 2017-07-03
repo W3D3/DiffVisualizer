@@ -69,6 +69,11 @@ class DiffDrawer {
     return this.matcherID;
   }
 
+  clear() {
+    $('span.scriptmarker', $('#src')).contents().unwrap();
+    $('span.scriptmarker', $('#dst')).contents().unwrap();
+  }
+
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
       //Utility.showError("call visualizeChanges first to generate Data before showing Changes!");

@@ -18803,6 +18803,11 @@ class DiffDrawer {
     return this.matcherID;
   }
 
+  clear() {
+    $('span.scriptmarker', $('#src')).contents().unwrap();
+    $('span.scriptmarker', $('#dst')).contents().unwrap();
+  }
+
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
       //Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
@@ -24122,9 +24127,10 @@ $('.dropdown-menu a').on('click', function(event) {
 
 // machter on change
 $('#matcherID').on('change', function() {
+  __WEBPACK_IMPORTED_MODULE_4_nprogress___default.a.start();
+  dv.clear();
   dv.setMatcher(this.value);
   __WEBPACK_IMPORTED_MODULE_2__Utility__["a" /* default */].showMessage('Matcher changed to ' + $('option:selected', this).text());
-  __WEBPACK_IMPORTED_MODULE_4_nprogress___default.a.start();
   dv.visualizeChanges();
   __WEBPACK_IMPORTED_MODULE_4_nprogress___default.a.done();
 })
@@ -24157,9 +24163,9 @@ class Marker {
     } else {
       if (this.bind != null) {
         var bindingId = __WEBPACK_IMPORTED_MODULE_0__Utility__["a" /* default */].getOpponent(this.sourceType) + this.bind;
-        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type}" id="${this.sourceType}${this.id}">`;
+        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type} scriptmarker" id="${this.sourceType}${this.id}">`;
       } else {
-        return `<span class="${this.type}"  id="${this.sourceType}${this.id}">`;
+        return `<span class="${this.type} scriptmarker"  id="${this.sourceType}${this.id}">`;
       }
 
     }

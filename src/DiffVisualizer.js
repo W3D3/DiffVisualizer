@@ -178,9 +178,10 @@ $('.dropdown-menu a').on('click', function(event) {
 
 // machter on change
 $('#matcherID').on('change', function() {
+  NProgress.start();
+  dv.clear();
   dv.setMatcher(this.value);
   Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
-  NProgress.start();
   dv.visualizeChanges();
   NProgress.done();
 })
