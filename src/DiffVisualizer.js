@@ -43,6 +43,8 @@ $('#toggleSidebar').click(function() {
   $('#codeView').toggleClass('col-sm-12');
 });
 
+
+
 //enables uploading json files
 new Loader();
 
@@ -55,6 +57,10 @@ dv.getAvailableMatchers().then(response => {
                     .attr('value',item.id)
                     .text(item.name));
   }
+});
+
+$('#updateBaseURL').click(function() {
+  dv.setBaseUrl($('#apiEndpoint').val());
 });
 
 $( '#matcherID' )

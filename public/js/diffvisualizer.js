@@ -23972,6 +23972,8 @@ $('#toggleSidebar').click(function() {
   $('#codeView').toggleClass('col-sm-12');
 });
 
+
+
 //enables uploading json files
 new __WEBPACK_IMPORTED_MODULE_1__Loader__["a" /* default */]();
 
@@ -23984,6 +23986,10 @@ dv.getAvailableMatchers().then(response => {
                     .attr('value',item.id)
                     .text(item.name));
   }
+});
+
+$('#updateBaseURL').click(function() {
+  dv.setBaseUrl($('#apiEndpoint').val());
 });
 
 $( '#matcherID' )
