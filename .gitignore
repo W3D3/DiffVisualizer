@@ -3,4 +3,3 @@ node_modules
 .vscode
 public/uploads
 public/js/diffvisualizer.js
-out

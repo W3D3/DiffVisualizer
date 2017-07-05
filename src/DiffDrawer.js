@@ -2,26 +2,11 @@
 import Marker from './Marker';
 import Utility from './Utility';
 import axios from 'axios';
-import Base64 from 'js-base64/Base64';
+import Base64 from 'js-base64/base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
-
 import _ from 'lodash';
 
-/**
- * Used to fetch diff data from a webservice and show it on screen
- * @example var dd = new DiffDrawer(mySrc, myDst); dd.diffAndDraw();
- * @constructor
- * @param {string} src - source code string
- * @param {string} dst - destination code string
- */
 class DiffDrawer {
-
-  /**
-   * sets up reasonable defaults for filtering and API endpoint
-   * @constructor
-   * @param {string} src - source code string
-   * @param {string} dst - destination code string
-   */
   constructor(src, dst) {
     this.src = src;
     this.dst = dst;
@@ -84,9 +69,14 @@ class DiffDrawer {
     return this.matcherID;
   }
 
+  clear() {
+    $('span.scriptmarker', $('#src')).contents().unwrap();
+    $('span.scriptmarker', $('#dst')).contents().unwrap();
+  }
+
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      Utility.showError('Cannot show changes with no calculated changes.');
+      //Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
       return;
     }
 
@@ -115,9 +105,6 @@ class DiffDrawer {
     this.enableSyntaxHighlighting();
   }
 
-  /**
-   * Enables/refreshes syntax highlighting and line numbers for all code blocks
-   */
   enableSyntaxHighlighting() {
     $('pre code').each(function(i, block) {
       hljs.highlightBlock(block);
@@ -133,12 +120,6 @@ class DiffDrawer {
     });
   }
 
-  /**
-   * Takes a codestring and their already sorted markers and generates a string with all the inserted markers added
-   * @param {Marker[]} markersSorted - sorted marker array of the given code string
-   * @param {string} codeString - code string to be used, contained html tags will be escaped
-   * @return {string} - code string with all the markers added as span tags
-   */
   static insertMarkers(markersSorted, codeString) {
     var lastClosed = [];
     var escapeUntilPos = codeString.length;
@@ -147,14 +128,14 @@ class DiffDrawer {
       //Before inserting marker, escape everything up to this point
       codeString = Utility.escapeSubpart(codeString, marker.position, escapeUntilPos);
       escapeUntilPos = marker.position;
-      if(marker.id == 387)
-        debugger;
+
       if (marker.isEndMarker) {
         var range = Utility.splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];
         //fill the opening Marker into the last closed array for faster opening
-        var closingMarker = marker;
-        closingMarker.setIsEndMarker(false);
+        var closingMarker = new Marker(marker.id, marker.position, marker.type, false, marker.sourceType);
+        if (marker.bind)
+          closingMarker.bindToId(marker.bind);
         lastClosed.push(closingMarker);
       } else {
         //startmarker
@@ -192,18 +173,9 @@ class DiffDrawer {
     return codeString;
   }
 
-  /**
-   * Takes src and dst and send them to the webservice to get diffing information
-   * This also calls @see showChanges to show the generated data right after fetching
-   * This is the only method you have to execute from outside this class
-   * @param {Marker[]} markersSorted - sorted marker array of the given code string
-   * @param {string} codeString - code string to be used, contained html tags will be escaped
-   * @return {string} - code string with all the markers added as span tags
-   */
-  diffAndDraw() {
+  visualizeChanges() {
 
     if (this.src == null || this.dst == null) {
-      Utility.showError('src and dst must be set for changes to appear.');
       return;
     }
 
@@ -235,24 +207,26 @@ class DiffDrawer {
           }
 
           if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
+
             var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
             srcMarker.bindToId(entry.dstId); //bind to destination
-            srcMarker.addToolTip('ID' + entry.srcId, 'This is a '+ entry.actionType);
             srcMarkers.push(srcMarker);
             //add closing tag
-            var srcClosing = srcMarker.createEndMarker(entry.srcLength);
+            var srcClosing = new Marker(entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src');
+            srcClosing.bindToId(entry.dstId);
             srcMarkers.push(srcClosing);
 
             var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
             dstMarker.bindToId(entry.srcId);
-            dstMarker.addToolTip('ID' + entry.dstId, 'This is a '+ entry.actionType);
             dstMarkers.push(dstMarker);
 
-            var dstClosing = dstMarker.createEndMarker(entry.dstLength);
+            var dstClosing = new Marker(entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true, 'dst');
+            dstClosing.bindToId(entry.srcId);
             dstMarkers.push(dstClosing);
           }
 
           if (entry.actionType == 'DELETE') {
+
             srcMarkers.push(new Marker(entry.srcId, entry.srcPos, 'DELETE', false, 'src'));
             srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, 'DELETE', true, 'src'));
           }
@@ -273,6 +247,7 @@ class DiffDrawer {
           .value();
 
         diffdrawer.showChanges();
+
       })
       .catch(function(error) {
         Utility.showError(error);

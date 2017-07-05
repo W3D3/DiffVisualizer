@@ -1,6 +1,6 @@
 {
   "name": "DiffVisualizer",
-  "version": "1.5.0",
+  "version": "1.4.3",
   "main": "server/index.js",
   "license": "MIT",
   "dependencies": {
@@ -27,8 +27,8 @@
     "webpack": "^2.5.1"
   },
   "scripts": {
+    "uglify": "uglifyjs scripts/DiffVisualizer.js -o library/diffvisualizer.min.js",
     "dev": "nodemon server/index.js",
-    "docs": "jsdoc --package ./package.json src",
     "start": "node server/index.js"
   }
 }

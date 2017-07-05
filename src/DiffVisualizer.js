@@ -1,11 +1,12 @@
 /* global $ ace */
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
+// import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
-
+//var base64 = Base64.Base64; //very nice packaging indeed.
 import {version} from '../package.json';
 $('.versionNumber').text('v'+version);
 
@@ -24,8 +25,8 @@ editorDst.$blockScrolling = Infinity;
 $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
-  dv.setFilter(options);
-  dv.diffAndDraw();
+  dv.visualizeChanges();
+  //dv.filterBy(options);
 });
 
 $('#changeSource').click(function() {
@@ -35,7 +36,6 @@ $('#changeSource').click(function() {
 
 $('#toggleSidebar').click(function() {
   //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
-
   $('#accordion').toggle();
   // $('.sidebar').toggleClass('col-sm-3');
   // $('.sidebar').toggleClass('col-sm-1')
@@ -43,53 +43,31 @@ $('#toggleSidebar').click(function() {
   $('#codeView').toggleClass('col-sm-12');
 });
 
-
-
 //enables uploading json files
 new Loader();
 
+//TODO (christoph) remove test data!
+//var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
+//var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
+
 var dv = new DiffDrawer();
 dv.getAvailableMatchers().then(response => {
-  for (let item of response.data.matchers) {
-    console.log(item);
-    $('#matcherID')
-         .append($('<option></option>')
-                    .attr('value',item.id)
-                    .text(item.name));
-  }
+  console.log(response);
 });
-
-$('#updateBaseURL').click(function() {
-  dv.setBaseUrl($('#apiEndpoint').val());
-});
-
-$( '#matcherID' )
-  .change(function () {
-    dv.setMatcher($( 'select option:selected' ).attr('value'));
-  });
 
 
 var lastSelectedThis;
 var lastSelectedBound;
 
 //register clickhandler for all the UPDATEs and MOVEs
-$('body').on('click', 'span[data-boundto]', function(e) {
+$('body').on('click', 'span[data-boundto]', function() {
   //reset old selected nodes
-  // $('#'+lastSelectedThis).popover('hide');
-  // lastSelectedThis = $(this).attr('id');
-  e.preventDefault();
-  $('[data-toggle="popover"]').popover('destroy');
-
   $('.codebox').find('*').removeClass('selected');
 
   if (lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id')) {
-    $(this).popover({
-      trigger: 'manual',
-      placement: 'bottom'
-    });
-    $(this).popover('show');
-    // $(this).addClass('selected');
-    // return false;
+    lastSelectedThis = null;
+    lastSelectedBound = null;
+    return false;
   }
 
   //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
@@ -118,9 +96,6 @@ $('body').on('click', 'span[data-boundto]', function(e) {
   //stop propagation by returning
   return false;
 });
-
-//disable selection
-$('.codebox').mousedown(function(e){ e.preventDefault(); });
 
 //register clickhandler for all diffItems
 $('body').on('click', '#diffItem', _.debounce(function() {
@@ -151,7 +126,7 @@ $('body').on('click', '#diffItem', _.debounce(function() {
         .then(function(dst) {
           dv.setDestination(dst.data);
           dv.setFilter(options);
-          dv.diffAndDraw();
+          dv.visualizeChanges();
           //Utility.showMessage(options.join());
           NProgress.done();
         });
@@ -169,7 +144,6 @@ var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
 //filter on click
 $('.dropdown-menu a').on('click', function(event) {
-
   if ($(event.currentTarget).attr('id') == 'applyFilter') {
     //clear last selected
     lastSelectedThis = null;
@@ -201,3 +175,13 @@ $('.dropdown-menu a').on('click', function(event) {
     return false;
   }
 });
+
+// machter on change
+$('#matcherID').on('change', function() {
+  NProgress.start();
+  dv.clear();
+  dv.setMatcher(this.value);
+  Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
+  dv.visualizeChanges();
+  NProgress.done();
+})

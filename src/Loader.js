@@ -2,11 +2,8 @@
 import Utility from './Utility';
 import Dropzone from 'dropzone';
 import axios from 'axios';
+//import NProgress from 'NProgress';
 
-/**
- * Used to initialize and handle JSON file uploads
- * @constructor configures dropzone
- */
 class Loader {
   constructor() {
     //Configure dropzone
@@ -14,6 +11,11 @@ class Loader {
       paramName: 'file', // The name that will be used to transfer the file
       maxFilesize: 2, // MB
       accept: function(file, done) {
+        // if (file.name == 'aau.json') {
+        //   done('Naha, you don\'t.');
+        // }
+        // else { done(); }
+        // Utility.showSuccess('Valid JSON file added.');
         done();
       },
       acceptedFiles: '.json',
@@ -28,7 +30,7 @@ class Loader {
   }
 
   loadDiffsFromFile(file, filename) {
-    $('#diffsList').html('');
+    $('#diffsList').html('')
     axios.get('/uploads/' + filename)
       .then(function(response) {
 
@@ -40,12 +42,19 @@ class Loader {
           var rawSrcUrl = localBaseURl + '/' + diff.ParentCommit + '/' + diff.SrcFileName;
           var rawDstUrl = localBaseURl + '/' + diff.Commit + '/' + diff.DstFileName;
 
-          var diffTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '');
+          var diffTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '')
           if (diff.SrcFileName != diff.DstFileName) {
-            diffTitle += '</br> >> ' + diff.DstFileName.replace(/^.*[\\\/]/, '');
+            diffTitle += '</br> >> ' + diff.DstFileName.replace(/^.*[\\\/]/, '')
           }
 
           $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}"><span class="label label-default">${diff.Id}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
+          // axios.get('/uploads/'+filename)
+          //   .then(function (apires) {
+          //
+          //     $('#diffsList').append(`<a href="#" class="list-group-item" id="${diff.SrcFileName}"><h4>${diff.SrcFileName}</h4><p><small>${diff.ParentCommit} >> ${diff.Commit}</small></p></a>`);
+          //   });
+
+
         });
       })
       .catch(function(error) {
