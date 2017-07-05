@@ -42,7 +42,7 @@ class Marker {
         var bindingId = Utility.getOpponent(this.sourceType) + this.bind;
         return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type}" id="${this.sourceType}${this.id}" ${this.toolTipMarkup}>`;
       } else {
-        return `<span class="${this.type}"  id="${this.sourceType}${this.id}">`;
+        return `<span class="${this.type} scriptmarker"  id="${this.sourceType}${this.id}">`;
       }
 
     }

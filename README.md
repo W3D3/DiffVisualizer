@@ -6,7 +6,16 @@
 
 * Download repo
 * ` npm install `
-* ` npm start ` /  ` npm run dev ` for autorestart on save
+* ` webpack ` to compile
+* ` npm start `
+* Visit localhost:9999 
+
+### Development ###
+
+If you are actively changing things in the src folder:
+
+* ` webpack --watch ` (autocompile on change)
+* ` npm run dev ` (server autorestart on save)
 * Visit localhost:9999 
 
 ### Docker ###
