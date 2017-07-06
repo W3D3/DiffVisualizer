@@ -22,13 +22,18 @@
     "eslint": "^3.19.0",
     "mikro-config": "^1.1.0",
     "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2",
     "pm2": "^2.4.6",
-    "uglify-js": "^2.8.22",
     "webpack": "^2.5.1"
   },
   "scripts": {
-    "uglify": "uglifyjs scripts/DiffVisualizer.js -o library/diffvisualizer.min.js",
-    "dev": "nodemon server/index.js",
-    "start": "node server/index.js"
+    "lint": "jshint **.js",
+    "build": "webpack",
+    "watch:build": "webpack --watch",
+    "watch:server": "nodemon server/index.js",
+    "start": "node server/index.js",
+    "dev": "npm-run-all --parallel watch:server watch:build",
+
+    "prestart": "npm run build"
   }
 }
