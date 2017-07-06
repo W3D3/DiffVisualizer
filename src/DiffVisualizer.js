@@ -54,7 +54,12 @@ new Loader();
 
 var dv = new DiffDrawer();
 dv.getAvailableMatchers().then(response => {
-  console.log(response);
+  for (let item of response.data.matchers) {
+    $('#matcherID')
+         .append($('<option></option>')
+                    .attr('value',item.id)
+                    .text(item.name));
+  }
 });
 
 
