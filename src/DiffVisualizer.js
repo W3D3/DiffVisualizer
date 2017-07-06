@@ -25,8 +25,8 @@ editorDst.$blockScrolling = Infinity;
 $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
-  dv.visualizeChanges();
-  //dv.filterBy(options);
+  dv.setFilter(options);
+  dv.diffAndDraw();
 });
 
 $('#changeSource').click(function() {
@@ -126,7 +126,7 @@ $('body').on('click', '#diffItem', _.debounce(function() {
         .then(function(dst) {
           dv.setDestination(dst.data);
           dv.setFilter(options);
-          dv.visualizeChanges();
+          dv.diffAndDraw();
           //Utility.showMessage(options.join());
           NProgress.done();
         });
@@ -182,6 +182,5 @@ $('#matcherID').on('change', function() {
   dv.clear();
   dv.setMatcher(this.value);
   Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
-  dv.visualizeChanges();
-  NProgress.done();
-})
+  dv.diffAndDraw();
+});

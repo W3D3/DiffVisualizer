@@ -1,6 +1,6 @@
 {
   "name": "DiffVisualizer",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": "server/index.js",
   "license": "MIT",
   "dependencies": {
@@ -27,7 +27,7 @@
     "webpack": "^2.5.1"
   },
   "scripts": {
-    "lint": "jshint **.js",
+    "lint": "eslint src/*.js",
     "build": "webpack",
     "watch:build": "webpack --watch",
     "watch:server": "nodemon server/index.js",

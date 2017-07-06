@@ -5,6 +5,7 @@ import axios from 'axios';
 import Base64 from 'js-base64/base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
+import NProgress from 'nprogress';
 
 class DiffDrawer {
   constructor(src, dst) {
@@ -103,6 +104,7 @@ class DiffDrawer {
     $('#dst').html(dstString);
     $('#src').html(srcString);
     this.enableSyntaxHighlighting();
+    NProgress.done();
   }
 
   enableSyntaxHighlighting() {
@@ -173,7 +175,7 @@ class DiffDrawer {
     return codeString;
   }
 
-  visualizeChanges() {
+  diffAndDraw() {
 
     if (this.src == null || this.dst == null) {
       return;
