@@ -20,8 +20,7 @@ class Utility {
 
   // Scrolls to elem inside main
   static scrollToElementRelativeTo(elem, main) {
-    console.log('main:' + main.offset().top + '-elem:' + elem.offset().top);
-    if (elem) {
+  if (elem) {
       var t = main.offset().top;
       main.animate({
         scrollTop: elem.offset().top - t
@@ -31,21 +30,32 @@ class Utility {
     }
   }
 
-  static getProgressBarConfig() {
-    let config = {
-      onUploadProgress: progressEvent => {
-        let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-        // do whatever you like with the percentage complete
-        // maybe dispatch an action that will update a progress bar or something
-      }
-    }
-    return config;
+  /**
+   * Jumps to a line based on 20px line size inside a specific container
+   * @example Utility.jumpToLine(120, $('.src')); // jumps to line 120 inside .src
+   * @param {integer} lineNumber - the line number to jump to
+   * @param {string} container - the jQuery selector element of the container to scroll inside
+   */
+  static jumpToLine(lineNumber, container) {
+    $('span.selectedLine', container.find('.hljs-line-numbers')).contents().unwrap();
+
+    var pixelTop = lineNumber*20;
+    var offset = container.outerHeight() / 2;
+    $(container).scrollTo({
+      top: pixelTop - offset,
+      left: 0
+    }, 300);
+
+    if(lineNumber < 1)
+      return;
+    var numbers = container.find('.hljs-line-numbers').html();
+    container.find('.hljs-line-numbers').html(numbers.replace(lineNumber, '<span class="selectedLine">'+lineNumber+'</span>'));
   }
 
   static getOpponent(input) {
-    if (input == "src") {
-      return "dst";
-    } else if (input == "dst") {
+    if (input == 'src') {
+      return 'dst';
+    } else if (input == 'dst') {
       return 'src';
     }
   }

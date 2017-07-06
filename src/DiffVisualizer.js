@@ -6,6 +6,7 @@ import Utility from './Utility';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
+
 //var base64 = Base64.Base64; //very nice packaging indeed.
 import {version} from '../package.json';
 
@@ -23,6 +24,15 @@ editorDst.getSession().setMode('ace/mode/java');
 editorDst.$blockScrolling = Infinity;
 
 $('#metaDataPanel').hide();
+
+//register clickhandler
+$('#jumpSrc').click(function() {
+  Utility.jumpToLine($('#lineNumberInput').val(), $('.src'));
+});
+
+$('#jumpDst').click(function() {
+  Utility.jumpToLine($('#lineNumberInput').val(), $('.dst'));
+});
 
 //register clickhandler
 $('#saveSource').click(function() {
@@ -117,14 +127,12 @@ $('body').on('click', '#diffItem', _.debounce(function() {
   var config = {
     onDownloadProgress: progressEvent => {
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-      console.log(percentCompleted);
       NProgress.set(percentCompleted/100);
     }
   };
   var configDst = {
     onDownloadProgress: progressEvent => {
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-      console.log(percentCompleted);
       NProgress.set(0.33+percentCompleted/100);
     }
   };

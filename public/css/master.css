@@ -71,6 +71,7 @@ html, body {
 }
 pre {
   padding: 0;
+  line-height: 20px;
 }
 pre, code {
 	white-space: pre !important;
@@ -200,4 +201,9 @@ pre, code {
 .panel-heading span {
 	margin-top: -20px;
 	font-size: 15px;
+}
+
+.selectedLine {
+  background-color: blue;
+  color: white
 }
