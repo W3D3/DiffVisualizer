@@ -8,6 +8,7 @@ import NProgress from 'nprogress';
 import _ from 'lodash';
 //var base64 = Base64.Base64; //very nice packaging indeed.
 import {version} from '../package.json';
+
 $('.versionNumber').text('v'+version);
 
 var editorSrc = ace.edit('editorSrc');
@@ -114,10 +115,17 @@ $('body').on('click', '#diffItem', _.debounce(function() {
   var dstUrl = $(this).data('rawdsturl');
 
   var config = {
-    onUploadProgress: progressEvent => {
-      //TODO (christoph) make sure this gets run
-      let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-      NProgress.set(percentCompleted);
+    onDownloadProgress: progressEvent => {
+      let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
+      console.log(percentCompleted);
+      NProgress.set(percentCompleted/100);
+    }
+  };
+  var configDst = {
+    onDownloadProgress: progressEvent => {
+      let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
+      console.log(percentCompleted);
+      NProgress.set(0.33+percentCompleted/100);
     }
   };
   //Loading div from proxy
@@ -128,14 +136,13 @@ $('body').on('click', '#diffItem', _.debounce(function() {
   axios.get(srcUrl, config)
     .then(function(src) {
       dv.setSource(src.data);
-      NProgress.set(0.5);
-      axios.get(dstUrl, config)
+      //NProgress.set(0.5);
+      axios.get(dstUrl, configDst)
         .then(function(dst) {
           dv.setDestination(dst.data);
           dv.setFilter(options);
           dv.diffAndDraw();
           //Utility.showMessage(options.join());
-          NProgress.done();
         });
     });
 
