@@ -21,6 +21,8 @@ editorDst.setTheme('ace/theme/monokai');
 editorDst.getSession().setMode('ace/mode/java');
 editorDst.$blockScrolling = Infinity;
 
+$('#metaDataPanel').hide();
+
 //register clickhandler
 $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
