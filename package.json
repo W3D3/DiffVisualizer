@@ -5,6 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
+    "chalk": "^2.0.1",
+    "console-stamp": "^0.2.5",
     "cors": "^2.8.3",
     "dropzone": "^4.3.0",
     "express": "^4.15.2",
@@ -19,6 +21,7 @@
     "request": "^2.81.0"
   },
   "devDependencies": {
+    "browser-refresh": "^1.7.2",
     "eslint": "^3.19.0",
     "mikro-config": "^1.1.0",
     "nodemon": "^1.11.0",
@@ -33,7 +36,6 @@
     "watch:server": "nodemon server/index.js",
     "start": "node server/index.js",
     "dev": "npm-run-all --parallel watch:server watch:build",
-
     "prestart": "npm run build"
   }
 }
