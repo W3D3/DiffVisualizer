@@ -66,6 +66,7 @@ class Utility {
       message: message
     }, {
       // settings
+      delay: 0,
       type: 'danger',
       animate: {
         enter: 'animated fadeInDown',
