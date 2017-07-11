@@ -151,6 +151,7 @@ $('body').on('click', '#diffItem', _.debounce(function() {
           viewer.setDestination(dst.data);
           viewer.setFilter(options);
           viewer.diffAndDraw();
+          dv = viewer;
         });
     });
 
