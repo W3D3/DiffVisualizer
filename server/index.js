@@ -56,16 +56,17 @@ app.get('/github/*', cors(), function(req, res) {
 app.use(express.static('public'));
 //serve uploaded files
 app.use(express.static('uploads'));
-app.listen(config.get('server.port'), function(){
+app.listen(config.get('server.port'), function() {
 
-  console.log(chalk.blue("\n ____  _  __  ____     ___                 _ _              \n"+
-  "|  _ \\(_)/ _|/ _\\ \\   / (_)___ _   _  __ _| (_)_______ _ __ \n"+
-  "| | | | | |_| |_ \\ \\ / /| / __| | | |/ _` | | |_  / _ \\ '__| \n"+
-  "| |_| | |  _|  _| \\ V / | \\__ \\ |_| | (_| | | |/ /  __/ |    \n"+
-  "|____/|_|_| |_|    \\_/  |_|___/\\__,_|\\__,_|_|_/___\\___|_|v"+process.env.npm_package_version+"\n"));
+  console.log(chalk.blue('\n ____  _  __  ____     ___                 _ _              \n'+
+  '|  _ \\(_)/ _|/ _\\ \\   / (_)___ _   _  __ _| (_)_______ _ __ \n'+
+  '| | | | | |_| |_ \\ \\ / /| / __| | | |/ _` | | |_  / _ \\ \'__| \n'+
+  '| |_| | |  _|  _| \\ V / | \\__ \\ |_| | (_| | | |/ /  __/ |    \n'+
+  '|____/|_|_| |_|    \\_/  |_|___/\\__,_|\\__,_|_|_/___\\___|_|v'+process.env.npm_package_version+'\n'));
 
-  console.log(chalk.green("Server running and listening on: ") + chalk.bgCyan("http://localhost:" + config.get('server.port')));
+  console.log(chalk.green('Server running and listening on: ') + chalk.bgCyan('http://localhost:' + config.get('server.port')));
 
+  // only needed for browser-refresh package
   if (process.send) {
       process.send('online');
   }

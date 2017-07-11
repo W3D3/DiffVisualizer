@@ -39,6 +39,7 @@ $('#saveSource').click(function() {
   dv.setSource(editorSrc.getValue());
   dv.setDestination(editorDst.getValue());
   dv.setFilter(options);
+  dv.setAsCurrentJob();
   dv.diffAndDraw();
 });
 
@@ -59,11 +60,7 @@ $('#toggleSidebar').click(function() {
 //enables uploading json files
 new Loader();
 
-//TODO (christoph) remove test data!
-//var mysrc = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBUZXN0Q2xhc3MoKQ0KICB7DQogICAgaW50IHZhciA9IDEyMzsNCiAgICBpbnQgdG9CZURlbGV0ZWQgPSA1NjY3Ow0KICB9DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQp9DQo=');
-//var mydst = base64.decode('cGFja2FnZSBjb20udGVzdDsNCg0KcHVibGljIGNsYXNzIFRlc3RDbGFzcyBleHRlbmRzIFN1cGVyQ2xhc3Mgew0KDQogIHB1YmxpYyBTdHJpbmcgbmV3VmFyID0gInNvIG5ldyI7DQoNCiAgcHJpdmF0ZSB2b2lkIGxvbCgpDQogIHsNCiAgICBTeXN0ZW0ub3V0LnByaW50bG4oIm5peCIpOw0KICB9DQoNCiAgcHVibGljIFRlc3RDbGFzcygpDQogIHsNCiAgICBpbnQgdmFyVXBkID0gNDQ0NDMyMTsNCiAgfQ0KfQ0K=');
-
-var dv = new DiffDrawer();
+var dv = new DiffDrawer('th','as');
 dv.getAvailableMatchers().then(response => {
   for (let item of response.data.matchers) {
     $('#matcherID')
@@ -123,6 +120,11 @@ $('body').on('click', '#diffItem', _.debounce(function() {
   $(this).addClass('active');
   var srcUrl = $(this).data('rawsrcurl');
   var dstUrl = $(this).data('rawdsturl');
+  var diffId = $(this).data('id');
+
+  var viewer = new DiffDrawer();
+  viewer.setJobId(diffId);
+  viewer.setAsCurrentJob();
 
   var config = {
     onDownloadProgress: progressEvent => {
@@ -143,14 +145,13 @@ $('body').on('click', '#diffItem', _.debounce(function() {
   NProgress.start();
   axios.get(srcUrl, config)
     .then(function(src) {
-      dv.setSource(src.data);
-      //NProgress.set(0.5);
+      viewer.setSource(src.data);
       axios.get(dstUrl, configDst)
         .then(function(dst) {
-          dv.setDestination(dst.data);
-          dv.setFilter(options);
-          dv.diffAndDraw();
-          //Utility.showMessage(options.join());
+          viewer.setDestination(dst.data);
+          viewer.setFilter(options);
+          viewer.diffAndDraw();
+          dv = viewer;
         });
     });
 
