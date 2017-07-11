@@ -46,6 +46,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <span class="glyphicon glyphicon-filter" ></span> Filter <span class="caret"></span>
                 </a>
+                <!-- Filter dropdown-menu -->
                 <ul class="dropdown-menu">
                   <li><a href="#" class="small" data-value="INSERT" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;INSERT</a></li>
                   <li><a href="#" class="small" data-value="DELETE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;DELETE</a></li>
@@ -56,19 +57,17 @@
 
                   <li><a href="#" id="applyFilter">Apply filter</a></li>
                 </ul>
+                <!-- end filter dropdown-menu -->
               </li>
 
 
             </ul>
             <form class="navbar-form navbar-left">
-            <div class="form-group">
-            <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
-              <!-- <span class="input-group-btn">
-                <button class="btn btn-default" type="button">Go!</button>
-              </span> -->
-            </div>
-            <a type="submit" class="btn btn-primary" id="jumpSrc">SRC</a>
-            <a type="submit" class="btn btn-primary" id="jumpDst">DST</a>
+              <div class="form-group">
+                <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
+              </div>
+              <a class="btn btn-primary" id="jumpSrc">SRC</a>
+              <a class="btn btn-primary" id="jumpDst">DST</a>
             </form>
             <ul class="nav navbar-nav navbar-right">
 
@@ -87,61 +86,59 @@
       <div class="col-sm-3 sidebar">
         <!-- START ACCORDION NAV  -->
         <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                <h4 class="panel-title">
+          <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              <h4 class="panel-title">
                   <a ><span class="glyphicon glyphicon-upload">
                   </span>Upload</a>
                 </h4>
-              </div>
-              <div id="collapseOne" class="panel-collapse collapse in">
-
-                <form action="/diffjson"
-                      class="dropzone"
-                      id="jsonUploader">
-                </form>
-
-                <ul class="list-group">
-                  <li class="list-group-item">
-                    Uploaded files have to be .json and follow a pattern.
-                  </li>
-                </ul>
-              </div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#settingsPanel">
-                <h4 class="panel-title">
+            <div id="collapseOne" class="panel-collapse collapse in">
+
+              <form action="/diffjson" class="dropzone" id="jsonUploader">
+              </form>
+
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Uploaded files have to be .json and follow a pattern.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#settingsPanel">
+              <h4 class="panel-title">
                   <a><span class="glyphicon glyphicon-cog">
                   </span>Settings</a>
                 </h4>
-              </div>
-              <div id="settingsPanel" class="panel-collapse collapse">
-                <ul class="list-group">
-                  <li class="list-group-item">
-                    <div class="form-group">
-                      <label for="matcherID">Select Matcher</label>
-                      <select class="form-control" id="matcherID">
-                      </select>
-                    </div>
-                  </li>
-                </ul>
-              </div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer">
-                <h4 class="panel-title">
+            <div id="settingsPanel" class="panel-collapse collapse">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <div class="form-group">
+                    <label for="matcherID">Select Matcher</label>
+                    <select class="form-control" id="matcherID">
+                      </select>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer">
+              <h4 class="panel-title">
                   <a><span class="glyphicon glyphicon-file">
                   </span>Diffs</a>
                 </h4>
-              </div>
-              <div id="diffsViewer" class="panel-collapse collapse box">
-                <div class="list-group" id="diffsList" style="overflow: scroll; max-height: 700px">
-                </div>
-
-              </div>
             </div>
+            <div id="diffsViewer" class="panel-collapse collapse box">
+              <div class="list-group" id="diffsList" style="overflow: scroll; max-height: 700px">
+              </div>
 
+            </div>
           </div>
+
+        </div>
         <!-- END ACCORDION NAV -->
       </div>
       <div class="col-sm-9 box" id="codeView">
@@ -159,12 +156,12 @@
     <div class="row footer">
       <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1</span>
       <div class="panel panel-primary" id="metaDataPanel">
-				<div class="panel-heading">
-					<h3 class="panel-title">MetaData Title</h3>
-					<span class="pull-right clickable" id="closeMetaDataPanel"><i class="fa fa-times"></i></span>
-				</div>
-				<div class="panel-body">MetaData Panel content</div>
-			</div>
+        <div class="panel-heading">
+          <h3 class="panel-title">MetaData Title</h3>
+          <span class="pull-right clickable" id="closeMetaDataPanel"><i class="fa fa-times"></i></span>
+        </div>
+        <div class="panel-body">MetaData Panel content</div>
+      </div>
 
       <span class="label label-info" style="position: absolute; right:0; bottom: 0"><b>Metrics: </b><span class="time"></span></span>
 

@@ -6,12 +6,17 @@
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden; /*workaround for windows scrollbars adding to the height*/
+  overflow: hidden;
+  /*workaround for windows scrollbars adding to the height*/
+}
+
+body {
+  /*background-color: rgb(255, 143, 220);*/
+  /*background-color: rgba(92, 90, 168, 1);*/
 }
 
 .row {
   margin: 0;
-
 }
 
 .box {
@@ -33,7 +38,8 @@ html, body {
 .box .row.content {
   position: relative;
   flex: 1 1 1px;
-  overflow: hidden; /* fixes hover scrollbar on windows... */
+  overflow: hidden;
+  /* fixes hover scrollbar on windows... */
 }
 
 @media (min-width: 768px) {
@@ -44,7 +50,8 @@ html, body {
 }
 
 .box .row.footer {
-  flex: 0 1 1.5em; /*RESIZE HERE IF NEEDED*/
+  flex: 0 1 1.5em;
+  /*RESIZE HERE IF NEEDED*/
   background-color: rgb(98, 98, 98);
 }
 
@@ -52,7 +59,7 @@ html, body {
 /* END FLEXBOX CONFIG */
 
 .navbar {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 
@@ -69,12 +76,14 @@ html, body {
   -ms-user-select: none;
   user-select: none;
 }
+
 pre {
   padding: 0;
   line-height: 20px;
 }
+
 pre, code {
-	white-space: pre !important;
+  white-space: pre !important;
 }
 
 
@@ -99,7 +108,7 @@ pre, code {
 
 .MOVE:hover:not(.selected) {
   z-index: 50;
-  position:relative;
+  position: relative;
   border: 2px dashed rgba(192, 5, 203, 1);
 }
 
@@ -130,6 +139,16 @@ pre, code {
   border: 1px solid #CCC;
 }
 
+.sidebar {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.content {
+  /*padding: 5px;*/
+  padding-top: 0;
+}
+
 .codebox pre {
   padding-top: 0;
   padding-bottom: 0;
@@ -146,26 +165,63 @@ pre, code {
 .selected {
   border: 2px solid black;
   z-index: 100;
-  position:relative;
-
+  position: relative;
   /*font-weight: bold;*/
 }
 
+
 /* accordion nav */
 
-#accordion .glyphicon { margin-right:10px; }
-.panel-collapse>.list-group .list-group-item:first-child {border-top-right-radius: 0;border-top-left-radius: 0;}
-.panel-collapse>.list-group .list-group-item {border-width: 1px 0;}
-.panel-collapse>.list-group {margin-bottom: 0;}
-.panel-collapse .list-group-item {border-radius:0;}
+#accordion .glyphicon {
+  margin-right: 10px;
+}
 
-.panel-collapse .list-group .list-group {margin: 0;margin-top: 10px;}
-.panel-collapse .list-group-item li.list-group-item {margin: 0 -15px;border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
-.panel-collapse .list-group-item li.list-group-item:last-child {padding-bottom: 0;}
+.panel-collapse>.list-group .list-group-item:first-child {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
 
-.panel-collapse div.list-group div.list-group{margin: 0;}
-.panel-collapse div.list-group .list-group a.list-group-item {border-top: 1px solid #ddd !important;border-bottom: 0;padding-left: 30px;}
-.panel-collapse .list-group-item li.list-group-item {border-top: 1px solid #DDD !important;}
+.panel-collapse>.list-group .list-group-item {
+  border-width: 1px 0;
+}
+
+.panel-collapse>.list-group {
+  margin-bottom: 0;
+}
+
+.panel-collapse .list-group-item {
+  border-radius: 0;
+}
+
+.panel-collapse .list-group .list-group {
+  margin: 0;
+  margin-top: 10px;
+}
+
+.panel-collapse .list-group-item li.list-group-item {
+  margin: 0 -15px;
+  border-top: 1px solid #ddd !important;
+  border-bottom: 0;
+  padding-left: 30px;
+}
+
+.panel-collapse .list-group-item li.list-group-item:last-child {
+  padding-bottom: 0;
+}
+
+.panel-collapse div.list-group div.list-group {
+  margin: 0;
+}
+
+.panel-collapse div.list-group .list-group a.list-group-item {
+  border-top: 1px solid #ddd !important;
+  border-bottom: 0;
+  padding-left: 30px;
+}
+
+.panel-collapse .list-group-item li.list-group-item {
+  border-top: 1px solid #DDD !important;
+}
 
 .modal-dialog {
   width: 100%;
@@ -185,22 +241,29 @@ pre, code {
   cursor: pointer;
 }
 
-.skill-unit .bar .progress { background: #24ff09; }
-.skill-unit .bar .progress span { color: #24ff09; background: #24ff09; }
+.skill-unit .bar .progress {
+  background: #24ff09;
+}
 
-#diffsViewer
-{
+.skill-unit .bar .progress span {
+  color: #24ff09;
+  background: #24ff09;
+}
+
+#diffsViewer {
   max-height: 500px !important
 }
 
+
 /* panel close fix */
-.clickable{
-    cursor: pointer;
+
+.clickable {
+  cursor: pointer;
 }
 
 .panel-heading span {
-	margin-top: -20px;
-	font-size: 15px;
+  margin-top: -20px;
+  font-size: 15px;
 }
 
 .selectedLine {
