@@ -160,6 +160,7 @@ pre, code {
   overflow: visible;
 }
 
+
 /* selected element style */
 
 .selected {
@@ -270,3 +271,31 @@ pre, code {
   background-color: blue;
   color: white
 }
+
+
+/* minimap */
+
+#minimap {
+  position: fixed;
+  width: 125px;
+  height: 400px;
+  top: 20px;
+  right: 20px;
+  background-color: #EEE;
+  border: 1px solid #AAA;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.minimap-node {
+  position: absolute;
+  background-color: rgb(102, 120, 129);
+}
+
+/*.minimap-viewport {
+  position: absolute;
+  box-sizing: border-box;
+  background-color: rgba(79, 111, 126, 0.4);
+  z-index: 1;
+  cursor: move;
+}*/

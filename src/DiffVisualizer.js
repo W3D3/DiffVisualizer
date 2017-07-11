@@ -25,6 +25,11 @@ editorDst.$blockScrolling = Infinity;
 
 $('#metaDataPanel').hide();
 
+$( '#minimap' ).minimap($('body'));
+$( '#minimap' ).css({
+  right: $('.dst').width() + 20,
+  top: $('.navbar').height() + 20
+});
 //register clickhandler
 $('#jumpSrc').click(function() {
   Utility.jumpToLine($('#lineNumberInput').val(), $('.src'));

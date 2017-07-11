@@ -151,6 +151,8 @@ class DiffDrawer {
       $('#dst').html(dstString);
       $('#src').html(srcString);
       this.enableSyntaxHighlighting();
+      var $src = $('#src');
+      $( '#minimap' ).minimap($src);
       NProgress.done();
     }
 
