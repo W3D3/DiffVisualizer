@@ -40,11 +40,11 @@
           <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
               <li>
-                <a href="#" id="toggleSidebar"><i class="glyphicon glyphicon-collapse-down"></i> Toggle Sidebar</a>
+                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i></i></i> Toggle Sidebar</a>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <span class="glyphicon glyphicon-filter" ></span> Filter <span class="caret"></span>
+                  <i class="fa fa-filter"></i> Filter <span class="caret"></span>
                 </a>
                 <!-- Filter dropdown-menu -->
                 <ul class="dropdown-menu">
@@ -131,7 +131,28 @@
                   </span>Diffs</a>
                 </h4>
             </div>
+
             <div id="diffsViewer" class="panel-collapse collapse box">
+              <div class="input-group">
+                  <!-- <div class="input-group-btn search-panel">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      	<span id="search_concept">Filter by</span> <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#contains">Contains</a></li>
+                        <li><a href="#its_equal">It's equal</a></li>
+                        <li><a href="#greather_than">Greather than ></a></li>
+                        <li><a href="#less_than">Less than < </a></li>
+                        <li class="divider"></li>
+                        <li><a href="#all">Anything</a></li>
+                      </ul>
+                  </div> -->
+                  <input type="text" class="form-control" id="listFilterText" placeholder="ID / filename" style="width: 100%">
+                  <span class="input-group-btn">
+                      <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a>
+                      <a class="btn btn-default" id="filterListClear"><i class="fa fa-times"></i></span></a>
+                  </span>
+              </div>
               <div class="list-group" id="diffsList" style="overflow: scroll; max-height: 700px">
               </div>
 
