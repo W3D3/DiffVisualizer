@@ -38,7 +38,7 @@ class Loader {
           var rawDstUrl = localBaseURl + '/' + diff.Commit + '/' + diff.DstFileName;
 
           var diffTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '');
-          var diffDstTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '');
+          var diffDstTitle = diff.DstFileName.replace(/^.*[\\\/]/, '');
           if (diff.SrcFileName != diff.DstFileName) {
             diffTitle += '</br> >> ' + diffDstTitle;
           }

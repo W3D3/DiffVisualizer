@@ -21,7 +21,6 @@
     "request": "^2.81.0"
   },
   "devDependencies": {
-    "browser-refresh": "^1.7.2",
     "eslint": "^3.19.0",
     "mikro-config": "^1.1.0",
     "nodemon": "^1.11.0",
