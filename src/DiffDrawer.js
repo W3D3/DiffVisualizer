@@ -147,13 +147,13 @@ class DiffDrawer {
     let srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
     let dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
 
-    console.log(this.jobId);
-    console.log(DiffDrawer.currentJobId);
-    
-    $('#dst').html(dstString);
-    $('#src').html(srcString);
-    this.enableSyntaxHighlighting();
-    NProgress.done();
+    if (this.checkIfCurrentJob()) { //only show if this is the current Job!
+      $('#dst').html(dstString);
+      $('#src').html(srcString);
+      this.enableSyntaxHighlighting();
+      NProgress.done();
+    }
+
   }
 
   /**
@@ -318,7 +318,7 @@ class DiffDrawer {
           .value();
 
         if (!diffdrawer.checkIfCurrentJob()) {
-          Utility.showError('Aborted Operation!'+DiffDrawer.currentJobId);
+          console.log('Aborted Operation wiht id '+diffdrawer.currentJobId);
           return;
         }
         diffdrawer.showChanges();
