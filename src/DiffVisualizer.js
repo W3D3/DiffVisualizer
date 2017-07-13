@@ -28,6 +28,15 @@ $( '#listFilterText' ).keyup(_.debounce(function () {
   $('#listFilterText').tooltip('destroy');
 
   var $list = $('#diffsList #diffItem');
+  if(filterText.length < 4 && filterText.length > 0 && !$.isNumeric(filterText))
+  {
+    //won't filter when text is this short, alert user
+    $( '#listFilterText' ).css('border', 'red 1px solid');
+    $('#listFilterText').tooltip({
+      'title' : 'Filter input is too short'
+    }).tooltip('show');
+    return;
+  }
   $list.hide();
   $list.filter(function() {
     var currentObject;
@@ -37,15 +46,7 @@ $( '#listFilterText' ).keyup(_.debounce(function () {
       currentObject = $( this ).data( 'id' ) + ''; //adding empty string so it can be substring searched
     }
     else {
-      if(filterText.length < 4)
-      {
-        //won't filter when text is this short, alert user
-        $( '#listFilterText' ).css('border', 'red 1px solid');
-        $('#listFilterText').tooltip({
-          'title' : 'Filter input is too short'
-        }).tooltip('show');
-        return true;
-      }
+
       currentObject = $( this ).find( 'b' ).text().toLowerCase() + $( this ).find( 'small' ).text().toLowerCase() ;
     }
 
