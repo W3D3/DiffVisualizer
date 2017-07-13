@@ -60,6 +60,13 @@ $( '#filterListClear' ).click(function(){
   $( '#listFilterText' ).keyup();
 });
 
+// totally not an easter egg
+$('.navbar-brand').dblclick(function(){
+  $( 'body' ).toggleClass('rainbowwrapper');
+  $( '.badge' ).toggleClass('rainbowwrapper');
+  $( '.btn-primary' ).toggleClass('rainbowwrapper');
+});
+
 //register clickhandler
 $('#jumpSrc').click(function() {
   Utility.jumpToLine($('#lineNumberInput').val(), $('.src'));
