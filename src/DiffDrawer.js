@@ -255,7 +255,8 @@ class DiffDrawer {
 
     var diffdrawer = this;
     if (!diffdrawer.checkIfCurrentJob()) {
-      console.log('Aborted Operation wiht id '+diffdrawer.currentJobId);
+      console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
+      NProgress.done();
       return;
     }
     this.DIFF_API.post('/changes', {

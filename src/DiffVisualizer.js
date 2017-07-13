@@ -249,3 +249,20 @@ $('#matcherID').on('change', function() {
   Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
   dv.diffAndDraw();
 });
+
+//register clickhandler for all the UPDATEs and MOVEs
+$('.codebox')
+  .on('mouseover', '.scriptmarker', function(e) {
+    // console.log( 'mouse over ' + $(this).attr('id'));
+    $(this).focus();
+    $(this).css('border','black 1px dashed');
+    $(this).addClass('hovered');
+    $(this).find('.scriptmarker').addClass('subnode');
+    e.stopPropagation();
+  }).on('mouseout', '.scriptmarker', function(e) {
+    // console.log( 'mouse out ' + $(this).attr('id'));
+    $(this).css('border','');
+    $(this).removeClass('hovered');
+    $(this).find('.scriptmarker').removeClass('subnode');
+    e.stopPropagation();
+  });
