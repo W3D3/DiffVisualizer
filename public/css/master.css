@@ -354,5 +354,6 @@ background-size: 1800% 1800%;
 .scriptmarker .subnode
 {
   margin: 2px;
+  padding: 2px;
   border: none;
 }
