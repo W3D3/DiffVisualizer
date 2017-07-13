@@ -1,13 +1,10 @@
 /* global $ ace */
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
-// import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
-
-//var base64 = Base64.Base64; //very nice packaging indeed.
 import {version} from '../package.json';
 
 $('.versionNumber').text('v'+version);
@@ -24,6 +21,43 @@ editorDst.getSession().setMode('ace/mode/java');
 editorDst.$blockScrolling = Infinity;
 
 $('#metaDataPanel').hide();
+
+$( '#listFilterText' ).keyup(_.debounce(function () {
+  var filterText = $( '#listFilterText' ).val().toLowerCase();
+  $( '#listFilterText' ).css('border', '');
+  $('#listFilterText').tooltip('destroy');
+
+  var $list = $('#diffsList #diffItem');
+  $list.hide();
+  $list.filter(function() {
+    var currentObject;
+    if(filterText == '')
+      return true;
+    if($.isNumeric(filterText)){
+      currentObject = $( this ).data( 'id' ) + ''; //adding empty string so it can be substring searched
+    }
+    else {
+      if(filterText.length < 4)
+      {
+        //won't filter when text is this short, alert user
+        $( '#listFilterText' ).css('border', 'red 1px solid');
+        $('#listFilterText').tooltip({
+          'title' : 'Filter input is too short'
+        }).tooltip('show');
+        return true;
+      }
+      currentObject = $( this ).find( 'b' ).text().toLowerCase() + $( this ).find( 'small' ).text().toLowerCase() ;
+    }
+
+    return _.includes(currentObject, filterText);
+  })
+  .show();
+}, 300));
+
+$( '#filterListClear' ).click(function(){
+  $( '#listFilterText' ).val('');
+  $( '#listFilterText' ).keyup();
+});
 
 //register clickhandler
 $('#jumpSrc').click(function() {
