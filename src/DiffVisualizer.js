@@ -121,16 +121,18 @@ $('body').on('click', 'span[data-boundto]', function() {
   //reset old selected nodes
   $('.codebox').find('*').removeClass('selected');
 
-  if (lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id')) {
+  if (lastSelectedThis == $(this).data('type')+$(this).attr('id') || lastSelectedBound == $(this).data('type')+$(this).attr('id')) {
     lastSelectedThis = null;
     lastSelectedBound = null;
     return false;
   }
 
-  //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
-  lastSelectedBound = $(this).data('boundto');
-  var boundElem = $('#' + $(this).data('boundto'));
-  lastSelectedThis = $(this).attr('id');
+  var type = $(this).data('type');
+  lastSelectedBound = type + $(this).data('boundto');
+  lastSelectedThis = type + $(this).attr('id');
+
+  var boundElem = $('#' + $(this).data('boundto')+'.'+type);
+
 
   //set style
   boundElem.addClass('selected');
