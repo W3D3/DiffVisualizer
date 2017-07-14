@@ -57,8 +57,9 @@ describe('DiffDrawer', () => {
       dd.setJobId(null);
       dd.setAsCurrentJob();
       let dd2 = new DiffDrawer();
-      dd2.setJobId(null);
+
       dd2.setMatcher(2); //different matcher
+      dd2.setJobId(null);
       dd2.setAsCurrentJob();
       dd.checkIfCurrentJob().should.equal(false);
       dd2.checkIfCurrentJob().should.equal(true);

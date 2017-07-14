@@ -48,10 +48,10 @@ class DiffDrawer {
 
   setJobId(id) {
     if(id === null) {
-      this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst));
+      this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
     }
     else {
-      this.jobId = id;
+      this.jobId = hash(id + 'm' + this.matcherID);
     }
   }
 
