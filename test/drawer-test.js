@@ -77,4 +77,18 @@ describe('DiffDrawer', () => {
       dd2.checkIfCurrentJob().should.equal(true);
     });
   });
+
+  describe('#properties', () => {
+    beforeEach(() => {
+      // Create a new Rectangle object before every test.
+      dd = new DiffDrawer();
+    });
+
+    it('can update base url of API', () => {
+      var newURL = 'example.com/api';
+      dd.setBaseUrl(newURL);
+      dd.DIFF_API.defaults.baseURL.should.equal(newURL);
+    });
+
+  });
 });
