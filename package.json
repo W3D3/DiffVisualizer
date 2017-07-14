@@ -27,6 +27,7 @@
     "nodemon": "^1.11.0",
     "npm-run-all": "^4.0.2",
     "pm2": "^2.4.6",
+    "webdriver-manager": "^11.1.1",
     "webpack": "^2.5.1"
   },
   "scripts": {
@@ -34,8 +35,13 @@
     "build": "webpack",
     "watch:build": "webpack --watch",
     "watch:server": "nodemon server/index.js",
-    "start": "node server/index.js",
+    "start": "node server/index.js &",
     "dev": "npm-run-all --parallel watch:server watch:build",
-    "prestart": "npm run build"
+    "test": "npm-run-all test:server test:start",
+    "test:start": "protractor test/conf.js",
+    "test:server": "webdriver-manager start --detach",
+    "prestart": "npm run build",
+    "pretest": "webdriver-manager update",
+    "posttest": "webdriver-manager shutdown"
   }
 }
