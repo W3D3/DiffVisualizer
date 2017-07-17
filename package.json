@@ -42,7 +42,7 @@
     "build": "webpack",
     "watch:build": "webpack --watch",
     "watch:server": "nodemon server/index.js",
-    "start": "node server/index.js &",
+    "start": "node server/index.js",
     "dev": "npm-run-all --parallel watch:server watch:build",
     "test": "npm-run-all test:server test:start",
     "test:start": "protractor test/e2e/conf.js",
