@@ -1,4 +1,4 @@
-/*global $ */
+/* global $ */
 import Utility from './Utility';
 import Dropzone from 'dropzone';
 import axios from 'axios';
@@ -21,7 +21,6 @@ class Loader {
         this.addFile(file);
       }
     };
-
   }
 
   loadDiffsFromFile(file, filename) {

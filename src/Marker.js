@@ -15,18 +15,15 @@ class Marker {
     this.bind = bindingId;
   }
 
-  addMetaData(title, content)
-  {
+  addMetaData(title, content) {
     this.metaDataMarkup = `data-title="${title}" data-content="${content}"`;
   }
 
-  setIsEndMarker(isEndMarker)
-  {
+  setIsEndMarker(isEndMarker) {
     this.isEndMarker = isEndMarker;
   }
 
-  createEndMarker(length)
-  {
+  createEndMarker(length) {
     var endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
     endmarker.position = endmarker.position + length;
     endmarker.bind = this.bind;

@@ -2,11 +2,14 @@
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
 import Utility from './Utility';
+import GUI from './GUI';
+import {
+  version
+} from '../package.json';
+
 import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
-import {version} from '../package.json';
-import GUI from './GUI';
 
 var gui;
 var dv;
@@ -19,7 +22,11 @@ var lastSelectedBound;
 //start unfiltered
 var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
-$( document ).ready(function() {
+/**
+ * This sets up all handlers and
+ * initializes the DiffVisualizer application
+ */
+$(document).ready(function() {
   gui = new GUI();
   gui.setVersion(version);
 
@@ -104,13 +111,13 @@ function diffListSetup() {
     var config = {
       onDownloadProgress: progressEvent => {
         let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-        NProgress.set(percentCompleted/100);
+        NProgress.set(percentCompleted / 100);
       }
     };
     var configDst = {
       onDownloadProgress: progressEvent => {
         let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-        NProgress.set(0.33+percentCompleted/100);
+        NProgress.set(0.33 + percentCompleted / 100);
       }
     };
     //Loading div from proxy
@@ -138,42 +145,39 @@ function diffListSetup() {
   }));
 
   //filter diff list on keyup
-  $('#listFilterText').keyup(_.debounce(function () {
-    var filterText = $( '#listFilterText' ).val().toLowerCase();
+  $('#listFilterText').keyup(_.debounce(function() {
+    var filterText = $('#listFilterText').val().toLowerCase();
     $('#listFilterText').css('border', '');
     $('#listFilterText').tooltip('destroy');
 
     var $list = $('#diffsList #diffItem');
-    if(filterText.length < 4 && filterText.length > 0 && !$.isNumeric(filterText))
-    {
+    if (filterText.length < 4 && filterText.length > 0 && !$.isNumeric(filterText)) {
       //won't filter when text is this short, alert user
-      $( '#listFilterText' ).css('border', 'red 1px solid');
+      $('#listFilterText').css('border', 'red 1px solid');
       $('#listFilterText').tooltip({
-        'title' : 'Filter input is too short'
+        'title': 'Filter input is too short'
       }).tooltip('show');
       return;
     }
     $list.hide();
     $list.filter(function() {
-      var currentObject;
-      if(filterText == '')
-        return true;
-      if($.isNumeric(filterText)){
-        currentObject = $( this ).data( 'id' ) + ''; //adding empty string so it can be substring searched
-      }
-      else {
+        var currentObject;
+        if (filterText == '')
+          return true;
+        if ($.isNumeric(filterText)) {
+          currentObject = $(this).data('id') + ''; //adding empty string so it can be substring searched
+        } else {
+          currentObject = $(this).find('b').text().toLowerCase() + $(this).find('small').text().toLowerCase();
+        }
 
-        currentObject = $( this ).find( 'b' ).text().toLowerCase() + $( this ).find( 'small' ).text().toLowerCase() ;
-      }
-
-      return _.includes(currentObject, filterText);
-    })
-    .show();
+        return _.includes(currentObject, filterText);
+      })
+      .show();
   }, 300));
 
-  $( '#filterListClear' ).click(function(){
-    $( '#listFilterText' ).val('');
-    $( '#listFilterText' ).keyup();
+  $('#filterListClear').click(function() {
+    $('#listFilterText').val('');
+    $('#listFilterText').keyup();
   });
 }
 
@@ -188,7 +192,7 @@ function jumptToLineSetup() {
   });
 }
 
-function filterSetup(){
+function filterSetup() {
   //filter on click
   $('.dropdown-menu a').on('click', function(event) {
     if ($(event.currentTarget).attr('id') == 'applyFilter') {
@@ -230,7 +234,7 @@ function clickBoundMarkersSetup() {
     //reset old selected nodes
     $('.codebox').find('span').removeClass('selected');
 
-    if (lastSelectedThis == $(this).data('type')+$(this).attr('id') || lastSelectedBound == $(this).data('type')+$(this).attr('id')) {
+    if (lastSelectedThis == $(this).data('type') + $(this).attr('id') || lastSelectedBound == $(this).data('type') + $(this).attr('id')) {
       lastSelectedThis = null;
       lastSelectedBound = null;
       return false;
@@ -240,7 +244,7 @@ function clickBoundMarkersSetup() {
     lastSelectedBound = type + $(this).data('boundto');
     lastSelectedThis = type + $(this).attr('id');
 
-    var boundElem = $('#' + $(this).data('boundto')+'.'+type);
+    var boundElem = $('#' + $(this).data('boundto') + '.' + type);
 
     //set style
     boundElem.addClass('selected');

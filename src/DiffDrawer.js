@@ -47,10 +47,9 @@ class DiffDrawer {
   }
 
   setJobId(id) {
-    if(id === null) {
+    if (id === null) {
       this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
-    }
-    else {
+    } else {
       this.jobId = hash(id + 'm' + this.matcherID);
     }
   }
@@ -105,18 +104,15 @@ class DiffDrawer {
   /**
    * Checks if current job is indeed this job
    */
-   checkIfCurrentJob()
-   {
-     if(this.jobId == DiffDrawer.currentJobId)
-     {
-       //everthing is fine
-       return true;
-     }
-     else {
-       console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
-       return false;
-     }
-   }
+  checkIfCurrentJob() {
+    if (this.jobId == DiffDrawer.currentJobId) {
+      //everthing is fine
+      return true;
+    } else {
+      //console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
+      return false;
+    }
+  }
 
   /**
    * takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen
@@ -255,7 +251,7 @@ class DiffDrawer {
 
     var diffdrawer = this;
     if (!diffdrawer.checkIfCurrentJob()) {
-      console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
+      //console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
       NProgress.done();
       return;
     }
@@ -319,7 +315,7 @@ class DiffDrawer {
           .value();
 
         if (!diffdrawer.checkIfCurrentJob()) {
-          console.log('Aborted Operation wiht id '+diffdrawer.currentJobId);
+          //console.log('Aborted Operation wiht id ' + diffdrawer.currentJobId);
           return;
         }
         diffdrawer.showChanges();

@@ -20,13 +20,13 @@ class Utility {
 
   // Scrolls to elem inside main
   static scrollToElementRelativeTo(elem, main) {
-  if (elem) {
+    if (elem) {
       var t = main.offset().top;
       main.animate({
         scrollTop: elem.offset().top - t
       }, 500);
     } else {
-      console.error('No element found');
+      //console.error('No element found');
     }
   }
 
@@ -39,17 +39,17 @@ class Utility {
   static jumpToLine(lineNumber, container) {
     $('span.selectedLine', container.find('.hljs-line-numbers')).contents().unwrap();
 
-    var pixelTop = lineNumber*20;
+    var pixelTop = lineNumber * 20;
     var offset = container.outerHeight() / 2;
     $(container).scrollTo({
       top: pixelTop - offset,
       left: 0
     }, 300);
 
-    if(lineNumber < 1)
+    if (lineNumber < 1)
       return;
     var numbers = container.find('.hljs-line-numbers').html();
-    container.find('.hljs-line-numbers').html(numbers.replace(lineNumber, '<span class="selectedLine">'+lineNumber+'</span>'));
+    container.find('.hljs-line-numbers').html(numbers.replace(lineNumber, '<span class="selectedLine">' + lineNumber + '</span>'));
   }
 
   static getOpponent(input) {

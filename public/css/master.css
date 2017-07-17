@@ -1,5 +1,6 @@
 /*FULL SIZE AND ONLY DIV SCROLL!*/
 
+
 /* this does not work on safari,
  safari is new internet explorer confirmed */
 
@@ -106,6 +107,7 @@ pre, code {
   /*border: 2px solid rgba(238, 135, 244, 0.7);*/
 }
 
+
 /*.MOVE:hover:not(.selected) {
   z-index: 50;
   position: relative;
@@ -121,6 +123,7 @@ pre, code {
   /*border: 2px solid rgba(231, 194, 3, 0.7);*/
 }
 
+
 /*.UPDATE:hover:not(.selected) {
   border: 2px dashed rgba(231, 194, 3, 1);
 }*/
@@ -132,6 +135,7 @@ pre, code {
   margin: 1px;
   /*border: 1px solid rgba(222, 166, 166, 0.7);*/
 }
+
 
 /*.scriptmarker {
   padding: 4px;
@@ -177,9 +181,8 @@ pre, code {
   overflow: visible;
 }
 
+
 /* selected element style */
-
-
 
 
 /* accordion nav */
@@ -283,7 +286,9 @@ pre, code {
   color: white
 }
 
+
 /*nice colors <3*/
+
 .rainbowwrapper {
   /*height: 100%;
   width: 100%;
@@ -292,37 +297,63 @@ pre, code {
   top: 0;
   bottom: 0;
   position: absolute;*/
-background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-background-size: 1800% 1800%;
-
--webkit-animation: rainbow 18s ease infinite;
--z-animation: rainbow 18s ease infinite;
--o-animation: rainbow 18s ease infinite;
-  animation: rainbow 18s ease infinite;}
+  background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+  background-size: 1800% 1800%;
+  -webkit-animation: rainbow 18s ease infinite;
+  -z-animation: rainbow 18s ease infinite;
+  -o-animation: rainbow 18s ease infinite;
+  animation: rainbow 18s ease infinite;
+}
 
 @-webkit-keyframes rainbow {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
-}
-@-moz-keyframes rainbow {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
-}
-@-o-keyframes rainbow {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
-}
-@keyframes rainbow {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+  0% {
+    background-position: 0% 82%
+  }
+  50% {
+    background-position: 100% 19%
+  }
+  100% {
+    background-position: 0% 82%
+  }
 }
 
-.hovered
-{
+@-moz-keyframes rainbow {
+  0% {
+    background-position: 0% 82%
+  }
+  50% {
+    background-position: 100% 19%
+  }
+  100% {
+    background-position: 0% 82%
+  }
+}
+
+@-o-keyframes rainbow {
+  0% {
+    background-position: 0% 82%
+  }
+  50% {
+    background-position: 100% 19%
+  }
+  100% {
+    background-position: 0% 82%
+  }
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 0% 82%
+  }
+  50% {
+    background-position: 100% 19%
+  }
+  100% {
+    background-position: 0% 82%
+  }
+}
+
+.hovered {
   z-index: 50;
   position: relative;
   border: black 1px dashed;
@@ -333,8 +364,7 @@ background-size: 1800% 1800%;
 .selected {
   border-width: 1px;
   border-style: solid;
-  border-color: #2780E3
-  z-index: 100;
+  border-color: #2780E3 z-index: 100;
   position: relative;
   /*font-weight: bold;*/
   box-shadow: 2px 2px 5px #2780E3;
@@ -351,8 +381,7 @@ background-size: 1800% 1800%;
   border-color: rgba(231, 194, 3, 1);
 }
 
-.scriptmarker .subnode
-{
+.scriptmarker .subnode {
   margin: 2px;
   padding: 2px;
   border: none;

@@ -24,7 +24,7 @@ class GUI {
   }
 
   setVersion(version) {
-    $('.versionNumber').text('v'+version);
+    $('.versionNumber').text('v' + version);
   }
 
   static initializeEditor(id, theme, language) {
@@ -36,34 +36,31 @@ class GUI {
     return editor;
   }
 
-  setMatcherSelectionSource(matchers)
-  {
+  setMatcherSelectionSource(matchers) {
     for (let item of matchers) {
       this.matcherSelector
-           .append($('<option></option>')
-                      .attr('value',item.id)
-                      .text(item.name));
+        .append($('<option></option>')
+          .attr('value', item.id)
+          .text(item.name));
     }
   }
 
-  setMatcherChangeHandler(handler)
-  {
+  setMatcherChangeHandler(handler) {
     this.matcherSelector.on('change', handler);
   }
 
-  setHoverEffect(container, selector)
-  {
+  setHoverEffect(container, selector) {
     $(container)
       .on('mouseover', selector, function(e) {
         // console.log( 'mouse over ' + $(this).attr('id'));
         $(this).focus();
-        $(this).css('border','black 1px dashed');
+        $(this).css('border', 'black 1px dashed');
         $(this).addClass('hovered');
         $(this).find('.scriptmarker').addClass('subnode');
         e.stopPropagation();
       }).on('mouseout', selector, function(e) {
         // console.log( 'mouse out ' + $(this).attr('id'));
-        $(this).css('border','');
+        $(this).css('border', '');
         $(this).removeClass('hovered');
         $(this).find('.scriptmarker').removeClass('subnode');
         e.stopPropagation();
@@ -72,13 +69,12 @@ class GUI {
 
 
 
-  enableEasterEgg()
-  {
+  enableEasterEgg() {
     // totally not an easter egg
-    $('.navbar-brand').dblclick(function(){
-      $( 'body' ).toggleClass('rainbowwrapper');
-      $( '.badge' ).toggleClass('rainbowwrapper');
-      $( '.btn-primary' ).toggleClass('rainbowwrapper');
+    $('.navbar-brand').dblclick(function() {
+      $('body').toggleClass('rainbowwrapper');
+      $('.badge').toggleClass('rainbowwrapper');
+      $('.btn-primary').toggleClass('rainbowwrapper');
     });
   }
 
