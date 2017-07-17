@@ -1,22 +1,20 @@
 # DiffVisualizer #
 
-![v 1.4](https://img.shields.io/badge/version-1.4-brightgreen.svg)
+![v 1.5](https://img.shields.io/badge/version-1.5-brightgreen.svg)
 
 ### Installation ###
 
 * Download repo
 * ` npm install `
-* ` webpack ` to compile
-* ` npm start `
-* Visit localhost:9999 
+* ` npm start`
+* Visit localhost:9999 (or change port in config/default.json)
 
 ### Development ###
 
 If you are actively changing things in the src folder:
 
-* ` webpack --watch ` (autocompile on change)
-* ` npm run dev ` (server autorestart on save)
-* Visit localhost:9999 
+* ` npm run dev ` (autocompile on change, server autorestart on save)
+* Visit localhost:9999
 
 ### Docker ###
 
@@ -33,5 +31,5 @@ We will use the image name of `wedenigc/diffviz` and the remote registry `swdyn.
 
 Finally create a container based on the image with name "my-diffviz-container"
 
-* `docker run -d -p 80:9999 --name "my-diffviz-container" 
-swdyn.isys.uni-klu.ac.at:5000/wedenigc/diffviz `
+* `docker run -d -p 80:9999 --name "my-diffviz-container"
+swdyn.isys.uni-klu.ac.at:8080/wedenigc/diffviz `

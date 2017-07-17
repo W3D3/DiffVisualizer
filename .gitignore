@@ -3,3 +3,7 @@ node_modules
 .vscode
 public/uploads
 public/js/diffvisualizer.js
+/.gtm/
+npm-debug.log
+.nyc_output
+coverage/

@@ -5,8 +5,24 @@ import axios from 'axios';
 import Base64 from 'js-base64/base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
+import NProgress from 'nprogress';
+import hash from 'object-hash';
 
+/**
+ * Used to fetch diff data from a webservice and show it on screen
+ * @example var dd = new DiffDrawer(mySrc, myDst); dd.diffAndDraw();
+ * @constructor
+ * @param {string} src - source code string
+ * @param {string} dst - destination code string
+ */
 class DiffDrawer {
+
+  /**
+   * sets up reasonable defaults for filtering and API endpoint
+   * @constructor
+   * @param {string} src - source code string
+   * @param {string} dst - destination code string
+   */
   constructor(src, dst) {
     this.src = src;
     this.dst = dst;
@@ -20,18 +36,31 @@ class DiffDrawer {
 
     //set default base URL
     this.DIFF_API = axios.create({
-      baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/',
+      baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/'
     });
+
+    this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst));
+  }
+
+  setAsCurrentJob() {
+    DiffDrawer.currentJobId = this.jobId;
+  }
+
+  setJobId(id) {
+    if (id === null) {
+      this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
+    } else {
+      this.jobId = hash(id + 'm' + this.matcherID);
+    }
   }
 
   setBaseUrl(newBase) {
-    this.DIFF_API = axios.create({
-      baseURL: newBase,
-    });
+    this.DIFF_API.defaults.baseURL = newBase;
   }
 
   setSource(newSrc) {
     this.src = newSrc;
+    //this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst));
   }
 
   getSource() {
@@ -40,6 +69,7 @@ class DiffDrawer {
 
   setDestination(newDst) {
     this.dst = newDst;
+    //this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst));
   }
 
   getDestination() {
@@ -54,18 +84,15 @@ class DiffDrawer {
     return this.filterArray;
   }
 
-  getAvailableMatchers()
-  {
+  getAvailableMatchers() {
     return this.DIFF_API.get('/matchers');
   }
 
-  setMatcher(id)
-  {
+  setMatcher(id) {
     this.matcherID = id;
   }
 
-  getMatcher()
-  {
+  getMatcher() {
     return this.matcherID;
   }
 
@@ -74,9 +101,25 @@ class DiffDrawer {
     $('span.scriptmarker', $('#dst')).contents().unwrap();
   }
 
+  /**
+   * Checks if current job is indeed this job
+   */
+  checkIfCurrentJob() {
+    if (this.jobId == DiffDrawer.currentJobId) {
+      //everthing is fine
+      return true;
+    } else {
+      //console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
+      return false;
+    }
+  }
+
+  /**
+   * takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen
+   */
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
-      //Utility.showError("call visualizeChanges first to generate Data before showing Changes!");
+      Utility.showError('There are no changes to show');
       return;
     }
 
@@ -100,11 +143,18 @@ class DiffDrawer {
     let srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
     let dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
 
-    $('#dst').html(dstString);
-    $('#src').html(srcString);
-    this.enableSyntaxHighlighting();
+    if (this.checkIfCurrentJob()) { //only show if this is the current Job!
+      $('#dst').html(dstString);
+      $('#src').html(srcString);
+      this.enableSyntaxHighlighting();
+      NProgress.done();
+    }
+
   }
 
+  /**
+   * Enables/refreshes syntax highlighting and line numbers for all code blocks
+   */
   enableSyntaxHighlighting() {
     $('pre code').each(function(i, block) {
       hljs.highlightBlock(block);
@@ -120,6 +170,12 @@ class DiffDrawer {
     });
   }
 
+  /**
+   * Takes a codestring and their already sorted markers and generates a string with all the inserted markers added
+   * @param {Marker[]} markersSorted - sorted marker array of the given code string
+   * @param {string} codeString - code string to be used, contained html tags will be escaped
+   * @return {string} - code string with all the markers added as span tags
+   */
   static insertMarkers(markersSorted, codeString) {
     var lastClosed = [];
     var escapeUntilPos = codeString.length;
@@ -173,7 +229,14 @@ class DiffDrawer {
     return codeString;
   }
 
-  visualizeChanges() {
+  /**
+   * Takes src and dst and send them to the webservice to get diffing information
+   * This also calls @see showChanges to show the generated data right after fetching
+   * This is the only method you have to execute from outside this class
+   * @param {Marker[]} markersSorted - sorted marker array of the given code string
+   * @param {string} codeString - code string to be used, contained html tags will be escaped
+   */
+  diffAndDraw() {
 
     if (this.src == null || this.dst == null) {
       return;
@@ -187,6 +250,11 @@ class DiffDrawer {
     this.dst = dstString;
 
     var diffdrawer = this;
+    if (!diffdrawer.checkIfCurrentJob()) {
+      //console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
+      NProgress.done();
+      return;
+    }
     this.DIFF_API.post('/changes', {
         'src': base64.encode(srcString),
         'dst': base64.encode(dstString),
@@ -210,25 +278,25 @@ class DiffDrawer {
 
             var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
             srcMarker.bindToId(entry.dstId); //bind to destination
+            srcMarker.addMetaData('ID' + entry.srcId, 'This is a ' + entry.actionType);
             srcMarkers.push(srcMarker);
             //add closing tag
-            var srcClosing = new Marker(entry.srcId, entry.srcPos + entry.srcLength, entry.actionType, true, 'src');
-            srcClosing.bindToId(entry.dstId);
+            var srcClosing = srcMarker.createEndMarker(entry.srcLength);
             srcMarkers.push(srcClosing);
 
             var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
             dstMarker.bindToId(entry.srcId);
+            dstMarker.addMetaData('ID' + entry.dstId, 'This is a ' + entry.actionType);
             dstMarkers.push(dstMarker);
 
-            var dstClosing = new Marker(entry.dstId, entry.dstPos + entry.dstLength, entry.actionType, true, 'dst');
-            dstClosing.bindToId(entry.srcId);
+            var dstClosing = dstMarker.createEndMarker(entry.dstLength);
             dstMarkers.push(dstClosing);
           }
 
           if (entry.actionType == 'DELETE') {
-
-            srcMarkers.push(new Marker(entry.srcId, entry.srcPos, 'DELETE', false, 'src'));
-            srcMarkers.push(new Marker(entry.srcId, entry.srcPos + entry.srcLength, 'DELETE', true, 'src'));
+            var deleteMarker = new Marker(entry.srcId, entry.srcPos, 'DELETE', false, 'src');
+            srcMarkers.push(deleteMarker);
+            srcMarkers.push(deleteMarker.createEndMarker(entry.srcLength));
           }
 
         });
@@ -246,11 +314,16 @@ class DiffDrawer {
           .reverse()
           .value();
 
+        if (!diffdrawer.checkIfCurrentJob()) {
+          //console.log('Aborted Operation wiht id ' + diffdrawer.currentJobId);
+          return;
+        }
         diffdrawer.showChanges();
 
       })
       .catch(function(error) {
         Utility.showError(error);
+        NProgress.done();
       });
   }
 }
