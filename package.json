@@ -26,6 +26,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.24.1",
     "chai": "^4.1.0",
+    "chai-html": "^1.1.4",
     "eslint": "^3.19.0",
     "mikro-config": "^1.1.0",
     "mocha": "^3.4.2",
