@@ -3,6 +3,7 @@ import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
 import Utility from './Utility';
 import GUI from './GUI';
+import Settings from './Settings';
 import {
   version
 } from '../package.json';
@@ -29,6 +30,8 @@ var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 $(document).ready(function() {
   gui = new GUI();
   gui.setVersion(version);
+
+  var settings = new Settings();
 
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
