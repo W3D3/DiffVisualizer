@@ -1,6 +1,6 @@
 {
   "name": "DiffVisualizer",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "engines": {
     "node": "6.11.1"
   },
@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
+    "bootstrap-switch": "^3.3.4",
     "chalk": "^2.0.1",
     "console-stamp": "^0.2.5",
     "cors": "^2.8.3",

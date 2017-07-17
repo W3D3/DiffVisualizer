@@ -33,6 +33,7 @@ class DiffDrawer {
     this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
     this.matcherID = 1; //default to first matcher (ClassicGumtree)
+    this.matcherName = 'ClassicGumtree';
 
     //set default base URL
     this.DIFF_API = axios.create({
@@ -88,11 +89,16 @@ class DiffDrawer {
     return this.DIFF_API.get('/matchers');
   }
 
-  setMatcher(id) {
-    this.matcherID = id;
+  // setMatcher(id) {
+  //   this.matcherID = id;
+  // }
+
+  setMatcher(matcher) {
+    this.matcherID = matcher.id;
+    this.matcherName = matcher.name;
   }
 
-  getMatcher() {
+  getMatcherID() {
     return this.matcherID;
   }
 
@@ -258,10 +264,11 @@ class DiffDrawer {
     this.DIFF_API.post('/changes', {
         'src': base64.encode(srcString),
         'dst': base64.encode(dstString),
-        'matcher': this.getMatcher()
+        'matcher': this.getMatcherID()
       })
       .then(function(response) {
-        $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
+
+        $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify using matcher ' + diffdrawer.matcherName);
 
         var changes = response.data.results;
         var dstMarkers = new Array();

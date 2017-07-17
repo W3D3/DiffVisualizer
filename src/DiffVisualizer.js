@@ -22,6 +22,8 @@ var lastSelectedBound;
 
 //start unfiltered
 var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+var matcherID = 1;
+var matchers;
 
 /**
  * This sets up all handlers and
@@ -84,13 +86,15 @@ function matcherChangerSetup() {
 
   dv.getAvailableMatchers().then(response => {
     gui.setMatcherSelectionSource(response.data.matchers);
+    matchers = response.data.matchers;
   });
 
   // matcher on change
   gui.setMatcherChangeHandler(function() {
     NProgress.start();
     dv.clear();
-    dv.setMatcher(this.value);
+    matcherID = this.value;
+    dv.setMatcher(matchers[matcherID-1]);
     Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
     dv.diffAndDraw();
   });
@@ -109,6 +113,8 @@ function diffListSetup() {
 
     var viewer = new DiffDrawer();
     viewer.setJobId(diffId);
+    console.log(matchers);
+    viewer.setMatcher(matchers[matcherID-1]);
     viewer.setAsCurrentJob();
 
     var config = {
@@ -193,6 +199,8 @@ function jumptToLineSetup() {
   $('#jumpDst').click(function() {
     Utility.jumpToLine($('#lineNumberInput').val(), $('.dst'));
   });
+
+  $('[name=\'my-checkbox\']').bootstrapSwitch();
 }
 
 function filterSetup() {
