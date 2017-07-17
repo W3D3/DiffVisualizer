@@ -11,7 +11,6 @@ RUN npm install
 
 # Bundle app source
 COPY . /usr/src/app
-RUN webpack
+#RUN webpack
 
 CMD [ "npm", "start" ]
-EXPOSE 8080
