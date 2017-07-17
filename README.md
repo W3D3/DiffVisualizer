@@ -1,6 +1,6 @@
 # DiffVisualizer #
 
-![v 1.5](https://img.shields.io/badge/version-1.5-brightgreen.svg)
+![v 1.5](https://img.shields.io/badge/version-1.5-brightgreen.svg) [ ![Codeship Status for W3D3/diffvisualizer](https://app.codeship.com/projects/01939780-4ced-0135-0db8-1a20c3f2c8a7/status?branch=master)](https://app.codeship.com/projects/232991)
 
 ### Installation ###
 
