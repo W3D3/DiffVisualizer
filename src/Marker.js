@@ -40,7 +40,7 @@ class Marker {
     } else {
       if (this.bind != null) {
         var bindingId = Utility.getOpponent(this.sourceType) + this.bind;
-        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
+        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" data-type="${this.type}" class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
       } else {
         return `<span class="${this.type} scriptmarker" id="${this.sourceType}${this.id}">`;
       }

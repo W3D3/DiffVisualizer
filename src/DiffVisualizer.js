@@ -121,16 +121,18 @@ $('body').on('click', 'span[data-boundto]', function() {
   //reset old selected nodes
   $('.codebox').find('*').removeClass('selected');
 
-  if (lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id')) {
+  if (lastSelectedThis == $(this).data('type')+$(this).attr('id') || lastSelectedBound == $(this).data('type')+$(this).attr('id')) {
     lastSelectedThis = null;
     lastSelectedBound = null;
     return false;
   }
 
-  //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
-  lastSelectedBound = $(this).data('boundto');
-  var boundElem = $('#' + $(this).data('boundto'));
-  lastSelectedThis = $(this).attr('id');
+  var type = $(this).data('type');
+  lastSelectedBound = type + $(this).data('boundto');
+  lastSelectedThis = type + $(this).attr('id');
+
+  var boundElem = $('#' + $(this).data('boundto')+'.'+type);
+
 
   //set style
   boundElem.addClass('selected');
@@ -249,3 +251,20 @@ $('#matcherID').on('change', function() {
   Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
   dv.diffAndDraw();
 });
+
+//register clickhandler for all the UPDATEs and MOVEs
+$('.codebox')
+  .on('mouseover', '.scriptmarker', function(e) {
+    // console.log( 'mouse over ' + $(this).attr('id'));
+    $(this).focus();
+    $(this).css('border','black 1px dashed');
+    $(this).addClass('hovered');
+    $(this).find('.scriptmarker').addClass('subnode');
+    e.stopPropagation();
+  }).on('mouseout', '.scriptmarker', function(e) {
+    // console.log( 'mouse out ' + $(this).attr('id'));
+    $(this).css('border','');
+    $(this).removeClass('hovered');
+    $(this).find('.scriptmarker').removeClass('subnode');
+    e.stopPropagation();
+  });

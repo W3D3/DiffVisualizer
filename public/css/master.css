@@ -103,14 +103,14 @@ pre, code {
   padding: 1px;
   margin: 1px;
   cursor: pointer;
-  border: 2px solid rgba(238, 135, 244, 0.7);
+  /*border: 2px solid rgba(238, 135, 244, 0.7);*/
 }
 
-.MOVE:hover:not(.selected) {
+/*.MOVE:hover:not(.selected) {
   z-index: 50;
   position: relative;
   border: 2px dashed rgba(192, 5, 203, 1);
-}
+}*/
 
 .UPDATE {
   background-color: rgba(222, 250, 110, 0.7);
@@ -118,12 +118,12 @@ pre, code {
   padding: 1px;
   margin: 1px;
   cursor: pointer;
-  border: 2px solid rgba(231, 194, 3, 0.7);
+  /*border: 2px solid rgba(231, 194, 3, 0.7);*/
 }
 
-.UPDATE:hover:not(.selected) {
+/*.UPDATE:hover:not(.selected) {
   border: 2px dashed rgba(231, 194, 3, 1);
-}
+}*/
 
 .DELETE {
   background-color: rgba(222, 166, 166, 0.7);
@@ -132,6 +132,23 @@ pre, code {
   margin: 1px;
   /*border: 1px solid rgba(222, 166, 166, 0.7);*/
 }
+
+/*.scriptmarker {
+  padding: 4px;
+  margin: 4px;
+  border-width: 1px;
+}
+.scriptmarker .scriptmarker {
+  padding: 3px;
+  margin: 3px;
+  border-width: 1px;
+}
+
+.scriptmarker .scriptmarker .scriptmarker {
+  padding: 2px;
+  margin: 2px;
+  border-width: 1px;
+}*/
 
 .codebox {
   padding-right: 0;
@@ -162,12 +179,7 @@ pre, code {
 
 /* selected element style */
 
-.selected {
-  border: 2px solid black;
-  z-index: 100;
-  position: relative;
-  /*font-weight: bold;*/
-}
+
 
 
 /* accordion nav */
@@ -307,4 +319,41 @@ background-size: 1800% 1800%;
     0%{background-position:0% 82%}
     50%{background-position:100% 19%}
     100%{background-position:0% 82%}
+}
+
+.hovered
+{
+  z-index: 50;
+  position: relative;
+  border: black 1px dashed;
+  padding: 2px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.selected {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #2780E3
+  z-index: 100;
+  position: relative;
+  /*font-weight: bold;*/
+  box-shadow: 2px 2px 5px #2780E3;
+  padding: 2px
+}
+
+.selected.MOVE {
+  box-shadow: 2px 2px 5px rgba(192, 5, 203, 1);
+  border-color: rgba(192, 5, 203, 1)
+}
+
+.selected.UPDATE {
+  box-shadow: 2px 2px 5px rgba(231, 194, 3, 1);
+  border-color: rgba(231, 194, 3, 1);
+}
+
+.scriptmarker .subnode
+{
+  margin: 2px;
+  padding: 2px;
+  border: none;
 }
