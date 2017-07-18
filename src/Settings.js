@@ -12,14 +12,40 @@ class Settings {
     }
   }
 
+  saveSettingPersistent(key, value)
+  {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  loadSettingPersistent(key)
+  {
+    var val = localStorage.getItem(key);
+    if(val == 'true'){
+      return true;
+    } else if(val == 'false'){
+      return false;
+    } else {
+      return val;
+    }
+
+  }
+
   saveSetting(key, value)
   {
-    localStorage.setItem(key, value);
+    sessionStorage.setItem(key, JSON.stringify(value));
   }
 
   loadSetting(key)
   {
-    localStorage.getItem(key);
+    var val = sessionStorage.getItem(key);
+    if(val == 'true'){
+      return true;
+    } else if(val == 'false'){
+      return false;
+    } else {
+      return val;
+    }
+
   }
 
 }

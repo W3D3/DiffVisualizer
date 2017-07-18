@@ -89,13 +89,16 @@ class DiffDrawer {
     return this.DIFF_API.get('/matchers');
   }
 
-  // setMatcher(id) {
-  //   this.matcherID = id;
-  // }
-
   setMatcher(matcher) {
     this.matcherID = matcher.id;
     this.matcherName = matcher.name;
+  }
+
+  getMatcher() {
+    return {
+      id: this.matcherID,
+      name: this.matcherName
+    };
   }
 
   getMatcherID() {

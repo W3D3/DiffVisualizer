@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="css/default.css">
   <link rel="stylesheet" href="css/dropzone.css">
   <link rel="stylesheet" href="css/nprogress.css">
-  <link rel="stylesheet" href="css/bootstrap-switch.css">
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
   <!-- master style -->
   <link rel="stylesheet" href="css/master.css">
 
@@ -63,13 +63,15 @@
 
 
             </ul>
-            <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left" id="lineNumberForm">
               <div class="form-group">
                 <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
+                <a class="btn btn-primary" id="jump"><i class="fa fa-play-circle"></i> GOTO</a>
               </div>
-              <a class="btn btn-primary" id="jumpSrc">SRC</a>
-              <a class="btn btn-primary" id="jumpDst">DST</a>
+              <!-- <a class="btn btn-primary" id="jumpSrc">SRC</a>
+              <a class="btn btn-primary" id="jumpDst">DST</a> -->
               <!-- <input type="checkbox" name="my-checkbox" checked> -->
+              <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="warning" data-on="SRC" data-off="DST">
             </form>
             <ul class="nav navbar-nav navbar-right">
 
@@ -227,12 +229,13 @@
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="js/bootstrap-notify.js" charset="utf-8"></script>
-  <script src="js/bootstrap-switch.js" charset="utf-8"></script>
   <!-- scroll to plugin -->
   <script src="//cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js"></script>
   <!-- highlight js -->
   <script src="js/highlight.pack.js"></script>
   <script src="js/highlightjs-line-numbers.min.js" charset="utf-8"></script>
+  <!-- bootstrap-toggle -->
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
   <!-- EDITOR -->
   <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
 

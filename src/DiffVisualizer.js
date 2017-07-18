@@ -25,6 +25,7 @@ var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 var matcherID = 1;
 var matchers;
 
+var settings;
 /**
  * This sets up all handlers and
  * initializes the DiffVisualizer application
@@ -33,7 +34,7 @@ $(document).ready(function() {
   gui = new GUI();
   gui.setVersion(version);
 
-  var settings = new Settings();
+  settings = new Settings();
 
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
@@ -113,7 +114,6 @@ function diffListSetup() {
 
     var viewer = new DiffDrawer();
     viewer.setJobId(diffId);
-    console.log(matchers);
     viewer.setMatcher(matchers[matcherID-1]);
     viewer.setAsCurrentJob();
 
@@ -191,16 +191,34 @@ function diffListSetup() {
 }
 
 function jumptToLineSetup() {
+  //initialize from settings
+  if(settings.loadSetting('jumpToSource') != false){
+    $('#jumpToLineSelector').bootstrapToggle('on');
+  }
+  else {
+    $('#jumpToLineSelector').bootstrapToggle('off');
+  }
+
   //register clickhandler
-  $('#jumpSrc').click(function() {
-    Utility.jumpToLine($('#lineNumberInput').val(), $('.src'));
+  $('#jump').click(function() {
+    var selector;
+    if(settings.loadSetting('jumpToSource') == true){
+      selector = '.src';
+    }
+    else {
+      selector = '.dst';
+    }
+    Utility.jumpToLine($('#lineNumberInput').val(), $(selector));
   });
 
-  $('#jumpDst').click(function() {
-    Utility.jumpToLine($('#lineNumberInput').val(), $('.dst'));
+  $( '#lineNumberForm' ).submit(function( event ) {
+    $('#jump').click();
+    event.preventDefault();
   });
 
-  $('[name=\'my-checkbox\']').bootstrapSwitch();
+  $('#jumpToLineSelector').change(function() {
+    settings.saveSetting('jumpToSource', $(this).prop('checked'));
+  });
 }
 
 function filterSetup() {
