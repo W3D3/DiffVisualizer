@@ -26,6 +26,14 @@ class Loader {
       acceptedFiles: '.json',
       maxFiles: 1,
       success: this.loadDiffsFromFile,
+      error: function(file, err, xhr) {
+        if(xhr) {
+          NProgress.done();
+          Utility.showError('Error parsing file - '+ err.error);
+          this.removeAllFiles();
+        }
+
+      },
       maxfilesexceeded: function(file) {
         this.removeAllFiles();
         this.addFile(file);
@@ -60,6 +68,7 @@ class Loader {
 
         });
         NProgress.done();
+        Utility.showSuccess('Finished importing <i>' + file.name + '</i>');
       })
       .catch(function(error) {
         Utility.showError(error);
