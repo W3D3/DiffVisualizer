@@ -101,12 +101,6 @@
 
               <form action="/diffjson" class="dropzone" id="jsonUploader">
               </form>
-
-              <!-- <ul class="list-group">
-                <li class="list-group-item">
-                  Uploaded files have to be .json and follow a pattern.
-                </li>
-              </ul> -->
             </div>
           </div>
           <div class="panel panel-default">
@@ -129,28 +123,16 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer">
+            <!-- <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer"> -->
+            <div class="panel-heading">
               <h4 class="panel-title">
                   <a><span class="glyphicon glyphicon-file">
                   </span>Diffs</a>
                 </h4>
             </div>
 
-            <div id="diffsViewer" class="panel-collapse collapse box">
+            <div id="diffsViewer" class="panel-collapse box">
               <div class="input-group">
-                  <!-- <div class="input-group-btn search-panel">
-                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      	<span id="search_concept">Filter by</span> <span class="caret"></span>
-                      </button>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#contains">Contains</a></li>
-                        <li><a href="#its_equal">It's equal</a></li>
-                        <li><a href="#greather_than">Greather than ></a></li>
-                        <li><a href="#less_than">Less than < </a></li>
-                        <li class="divider"></li>
-                        <li><a href="#all">Anything</a></li>
-                      </ul>
-                  </div> -->
                   <input type="text" class="form-control" id="listFilterText" placeholder="ID / filename" style="width: 100%">
                   <span class="input-group-btn">
                       <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
@@ -166,14 +148,20 @@
         </div>
         <!-- END ACCORDION NAV -->
       </div>
-      <div class="col-sm-9 box" id="codeView">
-        <div class="row content">
-          <div class="col-sm-6 codebox src">
-            <pre><code class="language-java" id="src"></code></pre>
-          </div>
-          <div class="col-sm-6 codebox dst">
-            <pre><code class="language-java" id="dst"></code></pre>
-          </div>
+      <div class="col-sm-9 box panel panel-default" id="codeView">
+        <div class="panel-heading">DiffViewer	&trade;</div>
+        <div class="row content panel-body" style="padding: 0">
+
+
+
+        <div class="col-sm-6 codebox src">
+          <pre><code class="language-java" id="src"></code></pre>
+        </div>
+        <div class="col-sm-6 codebox dst">
+          <pre><code class="language-java" id="dst"></code></pre>
+        </div>
+
+
         </div>
       </div>
 

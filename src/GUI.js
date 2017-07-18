@@ -11,7 +11,7 @@
 class GUI {
 
   constructor() {
-  //  $('#metaDataPanel').hide();
+    $('#metaDataPanel').hide();
     this.enableEasterEgg();
     this.setupToggleSidebar();
 

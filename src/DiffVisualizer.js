@@ -94,7 +94,6 @@ function matcherChangerSetup() {
     gui.setMatcherSelectionSource(response.data.matchers);
     matchers = response.data.matchers;
 
-    console.log(settings.loadSetting('matcher').id);
     gui.setSelectedMatcher(settings.loadSetting('matcher').id);
   });
 
