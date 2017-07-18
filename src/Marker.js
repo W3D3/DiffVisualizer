@@ -1,3 +1,8 @@
+/**
+ * @file Marker Object representing start/endpoints of codebits
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+
 import Utility from './Utility';
 
 class Marker {

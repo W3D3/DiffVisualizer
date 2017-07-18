@@ -1,4 +1,9 @@
 /* global $ hljs */
+/**
+ * @file Represents and draws Diffs
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+
 import Marker from './Marker';
 import Utility from './Utility';
 import axios from 'axios';

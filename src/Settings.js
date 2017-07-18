@@ -1,4 +1,8 @@
 /* global $ */
+/**
+ * @file Settings used to save Data temporarily or persistently
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
 import Utility from './Utility';
 
 class Settings {

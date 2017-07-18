@@ -1,5 +1,9 @@
 /* global $ ace */
-
+/**
+ * @file DOM manipulation that doesn't need context
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+ 
 /**
  * Helper class to keep DiffVisualizer clean.
  * does various things regarding DOM manipulation

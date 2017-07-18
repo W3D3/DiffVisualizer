@@ -1,7 +1,13 @@
 /* global $ */
+/**
+ * @file Uploading and parsing JSON diff lists
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+
 import Utility from './Utility';
 import Dropzone from 'dropzone';
 import axios from 'axios';
+import NProgress from 'nprogress';
 
 class Loader {
   constructor() {
@@ -11,6 +17,10 @@ class Loader {
       maxFilesize: 2, // MB
       accept: function(file, done) {
         //accept all files for now
+        NProgress.configure({
+          parent: '#jsonUploader'
+        });
+        NProgress.start();
         done();
       },
       acceptedFiles: '.json',
@@ -24,7 +34,11 @@ class Loader {
   }
 
   loadDiffsFromFile(file, filename) {
+
+
     $('#diffsList').html('');
+
+
     axios.get('/uploads/' + filename)
       .then(function(response) {
 
@@ -45,9 +59,11 @@ class Loader {
           $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}"><span class="label label-default">${diff.Id}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
 
         });
+        NProgress.done();
       })
       .catch(function(error) {
         Utility.showError(error);
+        NProgress.done();
       });
   }
 
