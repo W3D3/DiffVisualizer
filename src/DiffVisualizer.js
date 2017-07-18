@@ -27,7 +27,7 @@ var editorDst;
 
 //start unfiltered
 var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
-var matcherID = 1;
+//var matcherID = 1;
 var matchers;
 
 var settings;
@@ -93,14 +93,18 @@ function matcherChangerSetup() {
   dv.getAvailableMatchers().then(response => {
     gui.setMatcherSelectionSource(response.data.matchers);
     matchers = response.data.matchers;
+
+    console.log(settings.loadSetting('matcher').id);
+    gui.setSelectedMatcher(settings.loadSetting('matcher').id);
   });
 
   // matcher on change
   gui.setMatcherChangeHandler(function() {
     NProgress.start();
     dv.clear();
-    matcherID = this.value;
-    dv.setMatcher(matchers[matcherID-1]);
+    settings.saveSetting('matcher', matchers[this.value-1]);
+    //console.log(settings.loadSetting('matcher'));
+    dv.setMatcher(settings.loadSetting('matcher'));
     Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
     dv.diffAndDraw();
   });
@@ -119,7 +123,7 @@ function diffListSetup() {
 
     var viewer = new DiffDrawer();
     viewer.setJobId(diffId);
-    viewer.setMatcher(matchers[matcherID-1]);
+    viewer.setMatcher(settings.loadSetting('matcher'));
     viewer.setAsCurrentJob();
 
     var config = {

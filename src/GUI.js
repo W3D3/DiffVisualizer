@@ -3,7 +3,7 @@
  * @file DOM manipulation that doesn't need context
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
- 
+
 /**
  * Helper class to keep DiffVisualizer clean.
  * does various things regarding DOM manipulation
@@ -11,7 +11,7 @@
 class GUI {
 
   constructor() {
-    $('#metaDataPanel').hide();
+  //  $('#metaDataPanel').hide();
     this.enableEasterEgg();
     this.setupToggleSidebar();
 
@@ -51,6 +51,10 @@ class GUI {
 
   setMatcherChangeHandler(handler) {
     this.matcherSelector.on('change', handler);
+  }
+
+  setSelectedMatcher(id) {
+    this.matcherSelector.val(id);
   }
 
   setHoverEffect(container, selector) {

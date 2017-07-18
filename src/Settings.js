@@ -47,7 +47,7 @@ class Settings {
     } else if(val == 'false'){
       return false;
     } else {
-      return val;
+      return JSON.parse(val);
     }
 
   }

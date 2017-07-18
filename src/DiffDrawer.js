@@ -253,6 +253,7 @@ class DiffDrawer {
   diffAndDraw() {
 
     if (this.src == null || this.dst == null) {
+      NProgress.done();
       return;
     }
 
