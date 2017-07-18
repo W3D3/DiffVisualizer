@@ -48,30 +48,32 @@ describe('DiffDrawer', () => {
       let dd2 = new DiffDrawer('src','dst'); //differnet src and dst
       dd2.setJobId(null);
       dd2.setAsCurrentJob();
+
       dd.checkIfCurrentJob().should.equal(false);
       dd2.checkIfCurrentJob().should.equal(true);
     });
 
     it('should terminate when the new job has another matcher', () => {
-      dd.setMatcher(1);
+      dd.setMatcher({id: 1, name: 'TestMatcher'});
       dd.setJobId(null);
       dd.setAsCurrentJob();
-      let dd2 = new DiffDrawer();
 
-      dd2.setMatcher(2); //different matcher
+      let dd2 = new DiffDrawer();
+      dd2.setMatcher({id: 2, name: 'NotTheSameMatcher'}); //different matcher
       dd2.setJobId(null);
       dd2.setAsCurrentJob();
+
       dd.checkIfCurrentJob().should.equal(false);
       dd2.checkIfCurrentJob().should.equal(true);
     });
 
     it('should not terminate when the new job is the same', () => {
-      dd.setMatcher(1);
+      dd.setMatcher({id: 1, name: 'TestMatcher'});
       dd.setJobId(null);
       dd.setAsCurrentJob();
       let dd2 = new DiffDrawer();
       dd2.setJobId(null);
-      dd2.setMatcher(1); //different matcher
+      dd.setMatcher({id: 1, name: 'TestMatcher'}); //same matcher
       dd2.setAsCurrentJob();
       dd.checkIfCurrentJob().should.equal(true);
       dd2.checkIfCurrentJob().should.equal(true);

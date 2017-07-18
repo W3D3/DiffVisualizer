@@ -40,7 +40,7 @@ class DiffDrawer {
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/'
     });
 
-    this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst));
+    this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
   }
 
   setAsCurrentJob() {
@@ -111,8 +111,8 @@ class DiffDrawer {
    * Checks if current job is indeed this job
    */
   checkIfCurrentJob() {
-    if (this.jobId == DiffDrawer.currentJobId) {
-      //everthing is fine
+    if (this.jobId === DiffDrawer.currentJobId) {
+      //this is the current job
       return true;
     } else {
       //console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
