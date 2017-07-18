@@ -106,6 +106,7 @@ function matcherChangerSetup() {
     dv.setMatcher(settings.loadSetting('matcher'));
     Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
     dv.diffAndDraw();
+    $('#currentMatcher').text(settings.loadSetting('matcher').name);
   });
 }
 
@@ -119,6 +120,7 @@ function diffListSetup() {
     var srcUrl = $(this).data('rawsrcurl');
     var dstUrl = $(this).data('rawdsturl');
     var diffId = $(this).data('id');
+    var fileName = $(this).find('b').text();
 
     var viewer = new DiffDrawer();
     viewer.setJobId(diffId);
@@ -151,6 +153,8 @@ function diffListSetup() {
             viewer.setFilter(filter);
             viewer.diffAndDraw();
             dv = viewer;
+
+            $('#codeboxTitle').html(`<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`);
           });
       });
 
