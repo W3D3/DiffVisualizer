@@ -22,8 +22,8 @@ var dv;
 var editorSrc;
 var editorDst;
 
-var lastSelectedThis;
-var lastSelectedBound;
+// var lastSelectedThis;
+// var lastSelectedBound;
 
 //start unfiltered
 var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
@@ -231,8 +231,6 @@ function filterSetup() {
   $('.dropdown-menu a').on('click', function(event) {
     if ($(event.currentTarget).attr('id') == 'applyFilter') {
       //clear last selected
-      lastSelectedThis = null;
-      lastSelectedBound = null;
       dv.setFilter(filter);
       dv.showChanges();
       Utility.showSuccess('Now only showing nodes of type: ' + filter.join(', '));
@@ -255,8 +253,6 @@ function filterSetup() {
       }
 
       $(event.target).blur();
-      lastSelectedThis = null;
-      lastSelectedBound = null;
       return false;
     }
   });
@@ -266,33 +262,28 @@ function clickBoundMarkersSetup() {
   //register clickhandler for all the UPDATEs and MOVEs
   $('body').on('click', 'span[data-boundto]', function() {
     //reset old selected nodes
-    $('.codebox').find('span').removeClass('selected');
+    $('.codebox').find('.scriptmarker').removeClass('selected');
 
-    if (lastSelectedThis == $(this).data('type') + $(this).attr('id') || lastSelectedBound == $(this).data('type') + $(this).attr('id')) {
-      lastSelectedThis = null;
-      lastSelectedBound = null;
-      return false;
-    }
+    // if (lastSelectedThis == $(this).data('type') + $(this).attr('id') || lastSelectedBound == $(this).data('type') + $(this).attr('id')) {
+    //   lastSelectedThis = null;
+    //   lastSelectedBound = null;
+    //   return false;
+    // }
 
-    var type = $(this).data('type');
-    lastSelectedBound = type + $(this).data('boundto');
-    lastSelectedThis = type + $(this).attr('id');
+    // var type = $(this).data('type');
+    // lastSelectedBound = type + $(this).data('boundto');
+    // lastSelectedThis = type + $(this).attr('id');
 
-    var boundElem = $('#' + $(this).data('boundto') + '.' + type);
-
+    var boundSelector = '#' + $(this).data('boundto') + '.' + $(this).data('type');
+    var boundCodeboxSelector = '.codebox.' + Utility.getOpponent($(this).data('sourcetype'));
     //set style
-    boundElem.addClass('selected');
+    var boundElem = $(boundCodeboxSelector).find(boundSelector).first();
+    $(boundElem).addClass('selected');
     $(this).addClass('selected');
 
-    var boundCodebox;
-    var localOffset;
-    if ($(this).data('sourcetype') == 'src') { //this is a src element
-      boundCodebox = $('.codebox.dst');
-      localOffset = $(this).offset().top;
-    } else if ($(this).data('sourcetype') == 'dst') { //this is a src element
-      boundCodebox = $('.codebox.src');
-      localOffset = $(this).offset().top;
-    }
+    var boundCodebox = $(boundCodeboxSelector);
+    var localOffset = $(this).offset().top;
+
     //scroll the other view to the same height
     $(boundCodebox).scrollTo(boundElem, 300, {
       offset: 0 - localOffset + $('.codebox.src').offset().top
