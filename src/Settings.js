@@ -23,12 +23,12 @@ class Settings {
     }
   }
 
-  saveSettingPersistent(key, value)
+  static saveSettingPersistent(key, value)
   {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  loadSettingPersistent(key)
+  static loadSettingPersistent(key)
   {
     var val = localStorage.getItem(key);
     if(val == 'true'){
@@ -36,9 +36,27 @@ class Settings {
     } else if(val == 'false'){
       return false;
     } else {
-      return val;
+      return JSON.parse(val);
     }
 
+  }
+
+  static getAllSettingsPersistent()
+  {
+    var arr = [];
+    for (var i = 0; i < localStorage.length; i++){
+      arr[i] = localStorage.getItem(localStorage.key(i));
+    }
+    return arr;
+  }
+
+  static getAllSettingsKeysPersistent()
+  {
+    var arr = [];
+    for (var i = 0; i < localStorage.length; i++){
+      arr[i] = localStorage.key(i);
+    }
+    return arr;
   }
 
   saveSetting(key, value)
