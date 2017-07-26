@@ -22,9 +22,6 @@ var dv;
 var editorSrc;
 var editorDst;
 
-// var lastSelectedThis;
-// var lastSelectedBound;
-
 //start unfiltered
 var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 //var matcherID = 1;
