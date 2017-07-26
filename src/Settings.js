@@ -9,10 +9,17 @@ class Settings {
 
   constructor() {
     if (typeof(Storage) !== undefined) {
-        this.saveSetting('lastAccess', Date.now());
+        this.initDefaults();
         //Utility.showMessage('storage activated');
     } else {
         Utility.showError('No Web Storage support! Settings will not be saved permanently');
+    }
+  }
+
+  initDefaults()
+  {
+    if (sessionStorage.length == 0) {
+      this.saveSetting('lastAccess', Date.now());
     }
   }
 

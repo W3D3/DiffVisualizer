@@ -93,8 +93,11 @@ function matcherChangerSetup() {
   dv.getAvailableMatchers().then(response => {
     gui.setMatcherSelectionSource(response.data.matchers);
     matchers = response.data.matchers;
+    if(settings.loadSetting('matcher'))
+    {
+      gui.setSelectedMatcher(settings.loadSetting('matcher').id);
+    }
 
-    gui.setSelectedMatcher(settings.loadSetting('matcher').id);
   });
 
   // matcher on change
