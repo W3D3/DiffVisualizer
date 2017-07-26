@@ -127,7 +127,10 @@ function diffListSetup() {
 
     var viewer = new DiffDrawer();
     viewer.setJobId(diffId);
-    viewer.setMatcher(settings.loadSetting('matcher'));
+    if(settings.loadSetting('matcher'))
+    {
+      viewer.setMatcher(settings.loadSetting('matcher'));
+    }
     viewer.setAsCurrentJob();
 
     var config = {
@@ -273,16 +276,6 @@ function clickBoundMarkersSetup() {
   $('body').on('click', 'span[data-boundto]', function() {
     //reset old selected nodes
     $('.codebox').find('.scriptmarker').removeClass('selected');
-
-    // if (lastSelectedThis == $(this).data('type') + $(this).attr('id') || lastSelectedBound == $(this).data('type') + $(this).attr('id')) {
-    //   lastSelectedThis = null;
-    //   lastSelectedBound = null;
-    //   return false;
-    // }
-
-    // var type = $(this).data('type');
-    // lastSelectedBound = type + $(this).data('boundto');
-    // lastSelectedThis = type + $(this).attr('id');
 
     var boundSelector = '#' + $(this).data('boundto') + '.' + $(this).data('type');
     var boundCodeboxSelector = '.codebox.' + Utility.getOpponent($(this).data('sourcetype'));

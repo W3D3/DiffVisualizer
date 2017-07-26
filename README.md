@@ -1,6 +1,6 @@
 # DiffVisualizer #
 
-![v 1.5.4](https://img.shields.io/badge/version-1.5.4-brightgreen.svg) [![Codeship](https://img.shields.io/codeship/01939780-4ced-0135-0db8-1a20c3f2c8a7.svg)](https://app.codeship.com/projects/232991)
+![v 1.5.6](https://img.shields.io/badge/version-1.5.4-brightgreen.svg) [![Codeship](https://img.shields.io/codeship/01939780-4ced-0135-0db8-1a20c3f2c8a7.svg)](https://app.codeship.com/projects/232991)
 
 ### Installation ###
 
@@ -17,6 +17,16 @@ If you are actively changing things in the src folder:
 * Visit localhost:9999
 
 ### Docker ###
+
+to build an up to date tagged version of this Application as a docker container you just have to run
+
+` npm run docker-build `
+
+and to push it to the private registry (`swdyn.isys.uni-klu.ac.at:5000`)
+
+` npm run docker-push `
+
+#### old method
 
 This repo contains a dockerfile. To build a docker container and add it to your registry follow these steps:
 

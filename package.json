@@ -1,17 +1,19 @@
 {
-  "name": "DiffVisualizer",
-  "version": "1.5.4",
+  "name": "diffvisualizer",
+  "version": "1.5.6",
   "engines": {
     "node": "6.11.1"
   },
+  "docker-registry": "swdyn.isys.uni-klu.ac.at:5000",
   "main": "server/index.js",
+  "repository" : "https://bitbucket.org/W3D3/diffvisualizer",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
-    "bootstrap-switch": "^3.3.4",
     "chalk": "^2.0.1",
     "console-stamp": "^0.2.5",
     "cors": "^2.8.3",
+    "docker-build-run-push": "^3.0.0",
     "dropzone": "^4.3.0",
     "express": "^4.15.2",
     "highlightjs": "^9.10.0",
@@ -58,7 +60,10 @@
     "posttest": "webdriver-manager shutdown",
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register test/*-test.js",
     "preunittest": "npm run lint",
-    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-core/register test/*-test.js"
+    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-core/register test/*-test.js",
+    "docker-build": "npm i --production && docker-build",
+    "docker-run": "docker-run",
+    "docker-push": "docker-push"
   },
   "babel": {
     "presets": [

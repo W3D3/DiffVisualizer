@@ -338,7 +338,7 @@ class DiffDrawer {
 
       })
       .catch(function(error) {
-        Utility.showError(error + '(using matcher ' + this.matcherName + ')');
+        Utility.showError(error + '(using matcher ' + diffdrawer.matcherName + ')');
         NProgress.done();
       });
   }
