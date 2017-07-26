@@ -61,9 +61,10 @@
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register test/*-test.js",
     "preunittest": "npm run lint",
     "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-core/register test/*-test.js",
-    "docker-build": "npm i --production && docker-build",
+    "docker-build": "docker-build",
     "docker-run": "docker-run",
-    "docker-push": "docker-push"
+    "docker-push": "docker-push",
+    "deploy": "docker-build && docker-push"
   },
   "babel": {
     "presets": [

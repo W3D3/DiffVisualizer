@@ -78,6 +78,7 @@ function editorSetup() {
     dv.setSource(editorSrc.getValue());
     dv.setDestination(editorDst.getValue());
     dv.setFilter(filter);
+    dv.setJobId(null);
     dv.setAsCurrentJob();
     dv.diffAndDraw();
   });
@@ -89,7 +90,7 @@ function editorSetup() {
 }
 
 function matcherChangerSetup() {
-
+  // fill dropdown box with available matchers
   dv.getAvailableMatchers().then(response => {
     gui.setMatcherSelectionSource(response.data.matchers);
     matchers = response.data.matchers;
@@ -133,7 +134,7 @@ function diffListSetup() {
     }
     viewer.setAsCurrentJob();
 
-    var config = {
+    var configSrc = {
       onDownloadProgress: progressEvent => {
         let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
         NProgress.set(percentCompleted / 100);
@@ -150,7 +151,7 @@ function diffListSetup() {
       parent: '#codeView'
     });
     NProgress.start();
-    axios.get(srcUrl, config)
+    axios.get(srcUrl, configSrc)
       .then(function(src) {
         viewer.setSource(src.data);
         axios.get(dstUrl, configDst)
@@ -220,7 +221,7 @@ function jumptToLineSetup() {
   //register clickhandler
   $('#jump').click(function() {
     var selector;
-    if(settings.loadSetting('jumpToSource') == true){
+    if(settings.loadSetting('jumpToSource') != false){
       selector = '.src';
     }
     else {
