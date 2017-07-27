@@ -138,7 +138,7 @@
 					// 	hM = 3;
 					//var xM = ($child.position().left + $mapSource.scrollLeft()) * ratioX;
 					var yM = ($child.position().top + $mapSource.scrollTop()) * ratioY;
-					var bgC = $child.css('background-color');
+					var bgC = $child.css('border-color');
 
 					mini.css( {
 						width : minimapWidth,
