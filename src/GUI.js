@@ -8,6 +8,8 @@
  * Helper class to keep DiffVisualizer clean.
  * does various things regarding DOM manipulation
  */
+import DiffDrawer from './DiffDrawer';
+
 class GUI {
 
   constructor() {
@@ -24,6 +26,7 @@ class GUI {
       $('#accordion').toggle();
       $('#codeView').toggleClass('col-sm-9');
       $('#codeView').toggleClass('col-sm-12');
+      DiffDrawer.refreshMinimap();
     });
   }
 

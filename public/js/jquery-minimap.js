@@ -6,12 +6,23 @@
 		var minimapWidth = $minimap.width();
 		var minimapHeight = $minimap.height();
 		var $viewport = $( '<div></div>' ).addClass( 'minimap-viewport' );
+		var $mapCodeContainer;
+		if( $mapSource.hasClass('src'))
+		{
+			$mapCodeContainer = $mapSource.find('#src');
+		}
+		if( $mapSource.hasClass('dst'))
+		{
+			$mapCodeContainer = $mapSource.find('#dst');
+		}
+
 		$minimap.append( $viewport );
 		synchronize();
 
 		$window.on( 'resize', synchronize );
 		$mapSource.on( 'scroll', synchronize );
 		$mapSource.on( 'drag', init );
+
 		$minimap.on( 'mousedown touchstart', down );
 
 		function down( e ) {
@@ -35,14 +46,14 @@
 
 		function move( e ) {
 			e.preventDefault();
-
+			var event;
 			if ( e.type.match( /touch/ ) ) {
 				if ( e.touches.length > 1 ) {
 					return;
 				}
-				var event = e.touches[ 0 ];
+				event = e.touches[ 0 ];
 			} else {
-				var event = e;
+				event = e;
 			}
 
 			var dx = event.clientX - x;
@@ -66,12 +77,12 @@
 			l += dx;
 			t += dy;
 
-			var coefX = minimapWidth / $mapSource[ 0 ].scrollWidth;
+			//var coefX = minimapWidth / $mapSource[ 0 ].scrollWidth;
 			var coefY = minimapHeight / $mapSource[ 0 ].scrollHeight;
-			var left = l / coefX;
+			//var left = l / coefX;
 			var top = t / coefY;
 
-			$mapSource[ 0 ].scrollLeft = Math.round( left );
+			//$mapSource[ 0 ].scrollLeft = Math.round( left );
 			$mapSource[ 0 ].scrollTop = Math.round( top );
 			redraw();
 		}
@@ -81,29 +92,30 @@
 		}
 
 		function synchronize() {
+			// $viewport.remove();
 			var dims = [ $mapSource.width(), $mapSource.height() ];
 			var scroll = [ $mapSource.scrollLeft(), $mapSource.scrollTop() ];
 			var scaleX = minimapWidth / $mapSource[ 0 ].scrollWidth;
 			var scaleY = minimapHeight / $mapSource[ 0 ].scrollHeight;
 
-			var lW = dims[ 0 ] * scaleX;
+			//var lW = dims[ 0 ] * scaleX;
 			var lH = dims[ 1 ] * scaleY;
 			var lX = scroll[ 0 ] * scaleX;
 			var lY = scroll[ 1 ] * scaleY;
 
-			w = Math.round( lW );
+			w = Math.round( minimapWidth );
 			h = Math.round( lH );
 			l = Math.round( lX );
 			t = Math.round( lY );
 			//set the mini viewport dimesions
-			//redraw();
+			redraw();
 		}
 
 		function redraw() {
 			$viewport.css( {
 				width : w,
 				height : h,
-				left : l,
+				left : 0,
 				top : t
 			} );
 		}
@@ -111,24 +123,22 @@
 		function init() {
 			$minimap.find( '.minimap-node' ).remove();
 			//creating mini version of the supplied children
-			$mapSource.children().each( function() {
+			$mapCodeContainer.children().each( function() {
 				var $child = $( this );
 				if($($child).hasClass('scriptmarker'))
 				{
 					var mini = $( '<div></div>' ).addClass( 'minimap-node' );
 					$minimap.append( mini );
-					var ratioX = minimapWidth / $mapSource[ 0 ].scrollWidth;
+					//var ratioX = minimapWidth / $mapSource[ 0 ].scrollWidth;
 					var ratioY = minimapHeight / $mapSource[ 0 ].scrollHeight;
 
 					//var wM = $child.width() * ratioX;
 					var hM = $child.height() * ratioY;
 					// if(hM < 3)
 					// 	hM = 3;
-					var xM = ($child.position().left + $mapSource.scrollLeft()) * ratioX;
-					//this assumes we are drawing a minimap of a codebox, of which the parent of the parent is the scrollable div where we can calculate the scrollTop!
-					var yM = ($child.position().top + $mapSource.parent().parent().scrollTop()) * ratioY;
+					//var xM = ($child.position().left + $mapSource.scrollLeft()) * ratioX;
+					var yM = ($child.position().top + $mapSource.scrollTop()) * ratioY;
 					var bgC = $child.css('background-color');
-					console.log(bgC);
 
 					mini.css( {
 						width : minimapWidth,

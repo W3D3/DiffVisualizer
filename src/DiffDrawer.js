@@ -161,7 +161,14 @@ class DiffDrawer {
       $('#dst').html(dstString);
       $('#src').html(srcString);
       this.enableSyntaxHighlighting();
+
       DiffDrawer.refreshMinimap();
+      var $src = $('.src');
+      var $dst = $('.dst');
+      $('.minimap-viewport').remove();
+      $( '.srcminimap' ).minimap($src);
+      $( '.dstminimap' ).minimap($dst);
+
 
       $( window ).resize(_.debounce(DiffDrawer.refreshMinimap, 150));
       NProgress.done();
@@ -170,19 +177,17 @@ class DiffDrawer {
   }
 
   static refreshMinimap(){
-    var $src = $('#src');
-    var $dst = $('#dst');
 
-    var codeboxHeight = $('.content').css('height');
-    $( '.srcminimap' ).css('height',  codeboxHeight);
-    $( '.dstminimap' ).css('height',  codeboxHeight);
+    var minimapHeight = $('.codebox').css('height');
+    var minimapTop = $('#codeboxTitle').css('height');
+    $( '.minimap' ).css('height',  minimapHeight);
+    $( '.minimap' ).css('top', minimapTop);
 
     var right = parseInt($('.dst').css('width'))+0 + 'px';
     $( '.srcminimap' ).css('right',  right);
     $( '.dstminimap' ).css('right',  '0px');
     //console.log($('.dst').css('width'));
-    $( '.srcminimap' ).minimap($src);
-    $( '.dstminimap' ).minimap($dst);
+
   }
 
 

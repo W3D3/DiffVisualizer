@@ -37,6 +37,7 @@ $(document).ready(function() {
   gui.setVersion(version);
 
   settings = new Settings();
+  $('.scrollbar-chrome').perfectScrollbar();
 
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
