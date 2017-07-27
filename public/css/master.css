@@ -277,13 +277,12 @@ pre, code {
 
 #minimap {
   position: fixed;
-  width: 125px;
-  height: 400px;
-  top: 20px;
-  right: 20px;
+  width: 20px;
+  top: 57px !important;
+  /*right: 620px !important;*/
   background-color: #EEE;
   border: 1px solid #AAA;
-  opacity: 0.9;
+  opacity: 0.7;
   z-index: 1;
 }
 

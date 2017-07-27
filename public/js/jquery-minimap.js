@@ -73,7 +73,6 @@
 
 			$mapSource[ 0 ].scrollLeft = Math.round( left );
 			$mapSource[ 0 ].scrollTop = Math.round( top );
-console.log(top);
 			redraw();
 		}
 
@@ -97,7 +96,7 @@ console.log(top);
 			l = Math.round( lX );
 			t = Math.round( lY );
 			//set the mini viewport dimesions
-			redraw();
+			//redraw();
 		}
 
 		function redraw() {
@@ -114,24 +113,31 @@ console.log(top);
 			//creating mini version of the supplied children
 			$mapSource.children().each( function() {
 				var $child = $( this );
-				var mini = $( '<div></div>' ).addClass( 'minimap-node' );
-				$minimap.append( mini );
-				var ratioX = minimapWidth / $mapSource[ 0 ].scrollWidth;
-				var ratioY = minimapHeight / $mapSource[ 0 ].scrollHeight;
+				if($($child).hasClass('scriptmarker'))
+				{
+					var mini = $( '<div></div>' ).addClass( 'minimap-node' );
+					$minimap.append( mini );
+					var ratioX = minimapWidth / $mapSource[ 0 ].scrollWidth;
+					var ratioY = minimapHeight / $mapSource[ 0 ].scrollHeight;
 
-				var wM = $child.width() * ratioX;
-				var hM = $child.height() * ratioY;
-				var xM = ($child.position().left + $mapSource.scrollLeft()) * ratioX;
-				var yM = ($child.position().top + $mapSource.scrollTop()) * ratioY;
-				var bgC = $child.css('background-color');
+					//var wM = $child.width() * ratioX;
+					var hM = $child.height() * ratioY;
+					// if(hM < 3)
+					// 	hM = 3;
+					var xM = ($child.position().left + $mapSource.scrollLeft()) * ratioX;
+					//this assumes we are drawing a minimap of a codebox, of which the parent of the parent is the scrollable div where we can calculate the scrollTop!
+					var yM = ($child.position().top + $mapSource.parent().parent().scrollTop()) * ratioY;
+					var bgC = $child.css('background-color');
+					console.log(bgC);
 
-				mini.css( {
-					width : Math.round( wM ),
-					height : Math.round( hM ),
-					left : Math.round( xM ),
-					top : Math.round( yM ),
-					'background-color': bgC
-				} );
+					mini.css( {
+						width : minimapWidth,
+						height : Math.round( hM ),
+						left : 0,
+						top : Math.round( yM ),
+						'background-color': bgC
+					} );
+				}
 			} );
 		}
 
