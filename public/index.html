@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
   <title>Diff Visualizer</title>
 
   <!-- Bootstrap -->
@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="css/dropzone.css">
   <link rel="stylesheet" href="css/nprogress.css">
   <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="css/jquery.scrollbar.css"> -->
+  <link rel="stylesheet" href="css/perfect-scrollbar.css">
   <!-- master style -->
   <link rel="stylesheet" href="css/master.css">
 
@@ -154,17 +156,14 @@
       <div class="col-sm-9 box panel panel-default" id="codeView">
         <div class="panel-heading" id="codeboxTitle">DiffViewer	&trade;</div>
         <div class="row content panel-body" style="padding: 0">
-
-
-
-        <div class="col-sm-6 codebox src">
-          <pre><code class="language-java" id="src"></code></pre>
-        </div>
-        <div class="col-sm-6 codebox dst">
-          <pre><code class="language-java" id="dst"></code></pre>
-        </div>
-
-
+          <div id="minimap" class="srcminimap minimap"></div>
+          <div class="col-sm-6 codebox src scrollbar-chrome">
+            <pre><code class="language-java" id="src"></code></pre>
+          </div>
+          <div id="minimap" class="dstminimap minimap"></div>
+          <div class="col-sm-6 codebox dst scrollbar-chrome">
+            <pre><code class="language-java" id="dst"></code></pre>
+          </div>
         </div>
       </div>
 
@@ -228,6 +227,11 @@
   <!-- bootstrap-toggle -->
   <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
   <!-- EDITOR -->
+  <!-- minimap -->
+  <script src="js/jquery-minimap.js" charset="utf-8"></script>
+  <!-- <script src="js/jquery.scrollbar.min.js" charset="utf-8"></script> -->
+    <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
+  <!-- ace editor -->
   <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
 
   <script src="js/diffvisualizer.js"></script> -->

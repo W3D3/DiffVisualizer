@@ -8,6 +8,7 @@ html, body {
   height: 100%;
   margin: 0;
   overflow: hidden;
+  min-width: 1060px;
   /*workaround for windows scrollbars adding to the height*/
 }
 
@@ -95,6 +96,8 @@ pre, code {
   text-shadow: none;
   padding: 1px;
   margin: 1px;
+  border: none;
+  border-color: rgba(32, 212, 10, 0.7);
   /*border: 1px solid rgba(155, 245, 144, 0.7);*/
 }
 
@@ -104,6 +107,8 @@ pre, code {
   padding: 1px;
   margin: 1px;
   cursor: pointer;
+  border: none;
+  border-color: rgba(200, 48, 209, 0.7);
   /*border: 2px solid rgba(238, 135, 244, 0.7);*/
 }
 
@@ -120,6 +125,8 @@ pre, code {
   padding: 1px;
   margin: 1px;
   cursor: pointer;
+  border: none;
+  border-color: rgba(250, 255, 9, 0.7);
   /*border: 2px solid rgba(231, 194, 3, 0.7);*/
 }
 
@@ -133,6 +140,8 @@ pre, code {
   text-shadow: none;
   padding: 1px;
   margin: 1px;
+  border: none;
+  border-color: rgba(218, 1, 1, 0.7);
   /*border: 1px solid rgba(222, 166, 166, 0.7);*/
 }
 
@@ -287,16 +296,43 @@ pre, code {
 }
 
 
+/* minimap */
+
+#minimap {
+  position: fixed;
+  width: 20px;
+  top: 100px !important;
+  /*right: 620px !important;*/
+  background-color: #EEE;
+  border: 1px solid #AAA;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.minimap-node {
+  position: absolute;
+  background-color: rgb(102, 120, 129);
+  z-index: 2;
+}
+
+.minimap-viewport {
+  position: absolute;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgba(140, 163, 173, 0.4);
+  z-index: 3;
+  cursor: move;
+}
+
+.ps__scrollbar-y
+{
+  visibility: hidden;
+}
+
 /*nice colors <3*/
 
 .rainbowwrapper {
-  /*height: 100%;
-  width: 100%;
-  left:0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  position: absolute;*/
+
   background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
   background-size: 1800% 1800%;
   -webkit-animation: rainbow 18s ease infinite;

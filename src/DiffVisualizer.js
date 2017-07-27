@@ -37,11 +37,11 @@ $(document).ready(function() {
   gui.setVersion(version);
 
   settings = new Settings();
+  $('.scrollbar-chrome').perfectScrollbar();
 
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
 
-  //enables loading json files into diff list
   new Loader();
 
   //setup ace editor and all clickhandlers
