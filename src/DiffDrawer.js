@@ -153,9 +153,6 @@ class DiffDrawer {
       this.enableSyntaxHighlighting();
       DiffDrawer.refreshMinimap();
 
-
-      DiffDrawer.refreshMinimap();
-
       $( window ).resize(_.debounce(DiffDrawer.refreshMinimap, 150));
       NProgress.done();
     }
@@ -165,15 +162,14 @@ class DiffDrawer {
   static refreshMinimap(){
     var $src = $('#src');
     var $dst = $('#dst');
-    
+
     var codeboxHeight = $('.content').css('height');
-    console.log(codeboxHeight);
     $( '.srcminimap' ).css('height',  codeboxHeight);
     $( '.dstminimap' ).css('height',  codeboxHeight);
 
-    var right = parseInt($('.dst').css('width'))+20 + 'px';
+    var right = parseInt($('.dst').css('width'))+0 + 'px';
     $( '.srcminimap' ).css('right',  right);
-    $( '.dstminimap' ).css('right',  '20px');
+    $( '.dstminimap' ).css('right',  '0px');
     //console.log($('.dst').css('width'));
     $( '.srcminimap' ).minimap($src);
     $( '.dstminimap' ).minimap($dst);
