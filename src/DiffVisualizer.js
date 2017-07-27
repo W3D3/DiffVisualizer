@@ -1,214 +1,295 @@
-/* global $ ace */
+/* global $ */
+/**
+ * @file Main file that acts as the entry point
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
-// import Base64 from 'js-base64/Base64';
 import Utility from './Utility';
+import GUI from './GUI';
+import Settings from './Settings';
+import {
+  version
+} from '../package.json';
+
 import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
 
-//var base64 = Base64.Base64; //very nice packaging indeed.
-import {version} from '../package.json';
-
-$('.versionNumber').text('v'+version);
-
-var editorSrc = ace.edit('editorSrc');
-editorSrc.setTheme('ace/theme/monokai');
-editorSrc.getSession().setMode('ace/mode/java');
-editorSrc.resize();
-editorSrc.$blockScrolling = Infinity;
-
-var editorDst = ace.edit('editorDst');
-editorDst.setTheme('ace/theme/monokai');
-editorDst.getSession().setMode('ace/mode/java');
-editorDst.$blockScrolling = Infinity;
-
-$('#metaDataPanel').hide();
-
-$( '#minimap' ).minimap($('body'));
-$( '#minimap' ).css({
-  right: $('.dst').width() + 20,
-  top: $('.navbar').height() + 20
-});
-//register clickhandler
-$('#jumpSrc').click(function() {
-  Utility.jumpToLine($('#lineNumberInput').val(), $('.src'));
-});
-
-$('#jumpDst').click(function() {
-  Utility.jumpToLine($('#lineNumberInput').val(), $('.dst'));
-});
-
-//register clickhandler
-$('#saveSource').click(function() {
-  dv.setSource(editorSrc.getValue());
-  dv.setDestination(editorDst.getValue());
-  dv.setFilter(options);
-  dv.setAsCurrentJob();
-  dv.diffAndDraw();
-});
-
-$('#changeSource').click(function() {
-  editorSrc.setValue(dv.getSource());
-  editorDst.setValue(dv.getDestination());
-});
-
-$('#toggleSidebar').click(function() {
-  //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
-  $('#accordion').toggle();
-  // $('.sidebar').toggleClass('col-sm-3');
-  // $('.sidebar').toggleClass('col-sm-1')
-  $('#codeView').toggleClass('col-sm-9');
-  $('#codeView').toggleClass('col-sm-12');
-});
-
-//enables uploading json files
-new Loader();
-
-var dv = new DiffDrawer('th','as');
-dv.getAvailableMatchers().then(response => {
-  for (let item of response.data.matchers) {
-    $('#matcherID')
-         .append($('<option></option>')
-                    .attr('value',item.id)
-                    .text(item.name));
-  }
-});
-
-
-var lastSelectedThis;
-var lastSelectedBound;
-
-//register clickhandler for all the UPDATEs and MOVEs
-$('body').on('click', 'span[data-boundto]', function() {
-  //reset old selected nodes
-  $('.codebox').find('*').removeClass('selected');
-
-  if (lastSelectedThis == $(this).attr('id') || lastSelectedBound == $(this).attr('id')) {
-    lastSelectedThis = null;
-    lastSelectedBound = null;
-    return false;
-  }
-
-  //console.log('clicked ' + $(this).text() + ' which is bound to ' + $(this).data('boundto'));
-  lastSelectedBound = $(this).data('boundto');
-  var boundElem = $('#' + $(this).data('boundto'));
-  lastSelectedThis = $(this).attr('id');
-
-  //set style
-  boundElem.addClass('selected');
-  $(this).addClass('selected');
-
-  var boundCodebox;
-  var localOffset;
-  if ($(this).data('sourcetype') == 'src') { //this is a src element
-    boundCodebox = $('.codebox.dst');
-    localOffset = $(this).offset().top;
-  } else if ($(this).data('sourcetype') == 'dst') { //this is a src element
-    boundCodebox = $('.codebox.src');
-    localOffset = $(this).offset().top;
-  }
-  //scroll the other view to the same height
-  $(boundCodebox).scrollTo(boundElem, 300, {
-    offset: 0 - localOffset + $('.codebox.src').offset().top
-  });
-
-  //stop propagation by returning
-  return false;
-});
-
-//register clickhandler for all diffItems
-$('body').on('click', '#diffItem', _.debounce(function() {
-  $('code').html('');
-  $('.codebox').scrollTo(0);
-  $(this).parents().children().removeClass('active');
-  $(this).addClass('active');
-  var srcUrl = $(this).data('rawsrcurl');
-  var dstUrl = $(this).data('rawdsturl');
-  var diffId = $(this).data('id');
-
-  var viewer = new DiffDrawer();
-  viewer.setJobId(diffId);
-  viewer.setAsCurrentJob();
-
-  var config = {
-    onDownloadProgress: progressEvent => {
-      let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-      NProgress.set(percentCompleted/100);
-    }
-  };
-  var configDst = {
-    onDownloadProgress: progressEvent => {
-      let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-      NProgress.set(0.33+percentCompleted/100);
-    }
-  };
-  //Loading div from proxy
-  NProgress.configure({
-    parent: '#codeView'
-  });
-  NProgress.start();
-  axios.get(srcUrl, config)
-    .then(function(src) {
-      viewer.setSource(src.data);
-      axios.get(dstUrl, configDst)
-        .then(function(dst) {
-          viewer.setDestination(dst.data);
-          viewer.setFilter(options);
-          viewer.diffAndDraw();
-          dv = viewer;
-        });
-    });
-
-  //stop propagation by returning
-  return false;
-}, 1000, {
-  'leading': true,
-  'trailing': false
-}));
+var gui;
+var dv;
+var editorSrc;
+var editorDst;
 
 //start unfiltered
-var options = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+//var matcherID = 1;
+var matchers;
 
-//filter on click
-$('.dropdown-menu a').on('click', function(event) {
-  if ($(event.currentTarget).attr('id') == 'applyFilter') {
-    //clear last selected
-    lastSelectedThis = null;
-    lastSelectedBound = null;
-    dv.setFilter(options);
-    dv.showChanges();
-    Utility.showSuccess('Now only showing nodes of type: ' + options.join(', '));
-  } else {
-    var $target = $(event.currentTarget),
-      val = $target.attr('data-value'),
-      $inp = $target.find('input'),
-      idx;
+var settings;
+/**
+ * This sets up all handlers and
+ * initializes the DiffVisualizer application
+ */
+$(document).ready(function() {
+  gui = new GUI();
+  gui.setVersion(version);
 
-    if ((idx = options.indexOf(val)) > -1) {
-      options.splice(idx, 1);
-      setTimeout(function() {
-        $inp.prop('checked', false);
-      }, 0);
-    } else {
-      options.push(val);
-      setTimeout(function() {
-        $inp.prop('checked', true);
-      }, 0);
+  settings = new Settings();
+
+  //create first DiffDrawer object to work on
+  dv = new DiffDrawer();
+
+  new Loader();
+
+  //setup ace editor and all clickhandlers
+  editorSetup();
+
+  //setup on change and fill with all available matchers
+  matcherChangerSetup();
+
+  // initialize clickhandler and filter on the diff list
+  diffListSetup();
+
+  // initializes INSERT/UPDATE/DELETE/MOVE filter
+  filterSetup();
+
+  // enables clickhandler on bound markers inside codeboxes
+  clickBoundMarkersSetup();
+
+  // enables jumping to lines
+  jumptToLineSetup();
+
+  //register hover handler for all the UPDATEs and MOVEs
+  gui.setHoverEffect('.codebox', '.scriptmarker');
+});
+
+function editorSetup() {
+  editorSrc = GUI.initializeEditor('editorSrc', 'monokai', 'java');
+  editorDst = GUI.initializeEditor('editorDst', 'monokai', 'java');
+
+  //register clickhandler
+  $('#saveSource').click(function() {
+    dv.setSource(editorSrc.getValue());
+    dv.setDestination(editorDst.getValue());
+    dv.setFilter(filter);
+    dv.setJobId(null);
+    dv.setAsCurrentJob();
+    dv.diffAndDraw();
+  });
+
+  $('#changeSource').click(function() {
+    editorSrc.setValue(dv.getSource());
+    editorDst.setValue(dv.getDestination());
+  });
+}
+
+function matcherChangerSetup() {
+  // fill dropdown box with available matchers
+  dv.getAvailableMatchers().then(response => {
+    gui.setMatcherSelectionSource(response.data.matchers);
+    matchers = response.data.matchers;
+    if(settings.loadSetting('matcher'))
+    {
+      gui.setSelectedMatcher(settings.loadSetting('matcher').id);
     }
 
-    $(event.target).blur();
-    lastSelectedThis = null;
-    lastSelectedBound = null;
-    return false;
-  }
-});
+  });
 
-// machter on change
-$('#matcherID').on('change', function() {
-  NProgress.start();
-  dv.clear();
-  dv.setMatcher(this.value);
-  Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
-  dv.diffAndDraw();
-});
+  // matcher on change
+  gui.setMatcherChangeHandler(function() {
+    NProgress.start();
+    dv.clear();
+    settings.saveSetting('matcher', matchers[this.value-1]);
+    //console.log(settings.loadSetting('matcher'));
+    dv.setMatcher(settings.loadSetting('matcher'));
+    Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
+    dv.diffAndDraw();
+    $('#currentMatcher').text(settings.loadSetting('matcher').name);
+  });
+}
+
+function diffListSetup() {
+  //register clickhandler for all diffItems
+  $('body').on('click', '#diffItem', _.debounce(function() {
+    $('code').html('');
+    $('.codebox').scrollTo(0);
+    $(this).parents().children().removeClass('active');
+    $(this).addClass('active');
+    var srcUrl = $(this).data('rawsrcurl');
+    var dstUrl = $(this).data('rawdsturl');
+    var diffId = $(this).data('id');
+    var fileName = $(this).find('b').text();
+
+    var viewer = new DiffDrawer();
+    viewer.setJobId(diffId);
+    if(settings.loadSetting('matcher'))
+    {
+      viewer.setMatcher(settings.loadSetting('matcher'));
+    }
+    viewer.setAsCurrentJob();
+
+    var configSrc = {
+      onDownloadProgress: progressEvent => {
+        let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
+        NProgress.set(percentCompleted / 100);
+      }
+    };
+    var configDst = {
+      onDownloadProgress: progressEvent => {
+        let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
+        NProgress.set(0.33 + percentCompleted / 100);
+      }
+    };
+    //Loading div from proxy
+    NProgress.configure({
+      parent: '#codeView'
+    });
+    NProgress.start();
+    axios.get(srcUrl, configSrc)
+      .then(function(src) {
+        viewer.setSource(src.data);
+        axios.get(dstUrl, configDst)
+          .then(function(dst) {
+            viewer.setDestination(dst.data);
+            viewer.setFilter(filter);
+            viewer.diffAndDraw();
+            dv = viewer;
+
+            $('#codeboxTitle').html(`<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`);
+          });
+      });
+
+    //stop propagation by returning
+    return false;
+  }, 1000, {
+    'leading': true,
+    'trailing': false
+  }));
+
+  //filter diff list on keyup
+  $('#listFilterText').keyup(_.debounce(function() {
+    var filterText = $('#listFilterText').val().toLowerCase();
+    $('#listFilterText').css('border', '');
+    $('#listFilterText').tooltip('destroy');
+
+    var $list = $('#diffsList #diffItem');
+    if (filterText.length < 4 && filterText.length > 0 && !$.isNumeric(filterText)) {
+      //won't filter when text is this short, alert user
+      $('#listFilterText').css('border', 'red 1px solid');
+      $('#listFilterText').tooltip({
+        'title': 'Filter input is too short'
+      }).tooltip('show');
+      return;
+    }
+    $list.hide();
+    $list.filter(function() {
+        var currentObject;
+        if (filterText == '')
+          return true;
+        if ($.isNumeric(filterText)) {
+          currentObject = $(this).data('id') + ''; //adding empty string so it can be substring searched
+        } else {
+          currentObject = $(this).find('b').text().toLowerCase() + $(this).find('small').text().toLowerCase();
+        }
+
+        return _.includes(currentObject, filterText);
+      })
+      .show();
+  }, 300));
+
+  $('#filterListClear').click(function() {
+    $('#listFilterText').val('');
+    $('#listFilterText').keyup();
+  });
+}
+
+function jumptToLineSetup() {
+  //initialize from settings
+  if(settings.loadSetting('jumpToSource') != false){
+    $('#jumpToLineSelector').bootstrapToggle('on');
+  }
+  else {
+    $('#jumpToLineSelector').bootstrapToggle('off');
+  }
+
+  //register clickhandler
+  $('#jump').click(function() {
+    var selector;
+    if(settings.loadSetting('jumpToSource') != false){
+      selector = '.src';
+    }
+    else {
+      selector = '.dst';
+    }
+    Utility.jumpToLine($('#lineNumberInput').val(), $(selector));
+  });
+
+  $( '#lineNumberForm' ).submit(function( event ) {
+    $('#jump').click();
+    event.preventDefault();
+  });
+
+  $('#jumpToLineSelector').change(function() {
+    settings.saveSetting('jumpToSource', $(this).prop('checked'));
+  });
+}
+
+function filterSetup() {
+  //filter on click
+  $('.dropdown-menu a').on('click', function(event) {
+    if ($(event.currentTarget).attr('id') == 'applyFilter') {
+      //clear last selected
+      dv.setFilter(filter);
+      dv.showChanges();
+      Utility.showSuccess('Now only showing nodes of type: ' + filter.join(', '));
+    } else {
+      var $target = $(event.currentTarget),
+        val = $target.attr('data-value'),
+        $inp = $target.find('input'),
+        idx;
+
+      if ((idx = filter.indexOf(val)) > -1) {
+        filter.splice(idx, 1);
+        setTimeout(function() {
+          $inp.prop('checked', false);
+        }, 0);
+      } else {
+        filter.push(val);
+        setTimeout(function() {
+          $inp.prop('checked', true);
+        }, 0);
+      }
+
+      $(event.target).blur();
+      return false;
+    }
+  });
+}
+
+function clickBoundMarkersSetup() {
+  //register clickhandler for all the UPDATEs and MOVEs
+  $('body').on('click', 'span[data-boundto]', function() {
+    //reset old selected nodes
+    $('.codebox').find('.scriptmarker').removeClass('selected');
+
+    var boundSelector = '#' + $(this).data('boundto') + '.' + $(this).data('type');
+    var boundCodeboxSelector = '.codebox.' + Utility.getOpponent($(this).data('sourcetype'));
+    //set style
+    var boundElem = $(boundCodeboxSelector).find(boundSelector).first();
+    $(boundElem).addClass('selected');
+    $(this).addClass('selected');
+
+    var boundCodebox = $(boundCodeboxSelector);
+    var localOffset = $(this).offset().top;
+
+    //scroll the other view to the same height
+    $(boundCodebox).scrollTo(boundElem, 300, {
+      offset: 0 - localOffset + $('.codebox.src').offset().top
+    });
+
+    //stop propagation by returning
+    return false;
+  });
+}

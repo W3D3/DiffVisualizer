@@ -1,13 +1,19 @@
 {
-  "name": "DiffVisualizer",
-  "version": "1.4.5",
+  "name": "diffvisualizer",
+  "version": "1.6.0",
+  "engines": {
+    "node": "6.11.1"
+  },
+  "docker-registry": "swdyn.isys.uni-klu.ac.at:5000",
   "main": "server/index.js",
+  "repository" : "https://bitbucket.org/W3D3/diffvisualizer",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
     "chalk": "^2.0.1",
     "console-stamp": "^0.2.5",
     "cors": "^2.8.3",
+    "docker-build-run-push": "^3.0.0",
     "dropzone": "^4.3.0",
     "express": "^4.15.2",
     "highlightjs": "^9.10.0",
@@ -17,15 +23,25 @@
     "lodash": "^4.17.4",
     "multer": "^1.3.0",
     "nprogress": "^0.2.0",
+    "object-hash": "^1.1.8",
     "octicons": "^5.0.1",
     "request": "^2.81.0"
   },
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "chai": "^4.1.0",
+    "chai-html": "^1.1.4",
     "eslint": "^3.19.0",
     "mikro-config": "^1.1.0",
+    "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
     "npm-run-all": "^4.0.2",
+    "nyc": "^11.0.3",
     "pm2": "^2.4.6",
+    "webdriver-manager": "^11.1.1",
     "webpack": "^2.5.1"
   },
   "scripts": {
@@ -35,6 +51,24 @@
     "watch:server": "nodemon server/index.js",
     "start": "node server/index.js",
     "dev": "npm-run-all --parallel watch:server watch:build",
-    "prestart": "npm run build"
+    "test": "npm-run-all test:server test:start",
+    "test:start": "protractor test/e2e/conf.js",
+    "test:server": "webdriver-manager start --detach",
+    "prestart": "npm run build",
+    "prebuild": "npm run unittest",
+    "pretest": "webdriver-manager update",
+    "posttest": "webdriver-manager shutdown",
+    "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register test/*-test.js",
+    "preunittest": "npm run lint",
+    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-core/register test/*-test.js",
+    "docker-build": "docker-build",
+    "docker-run": "docker-run",
+    "docker-push": "docker-push",
+    "deploy": "docker-build && docker-push"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
   }
 }

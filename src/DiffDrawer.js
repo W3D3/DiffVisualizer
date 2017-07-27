@@ -1,4 +1,9 @@
 /* global $ hljs */
+/**
+ * @file Represents and draws Diffs
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+
 import Marker from './Marker';
 import Utility from './Utility';
 import axios from 'axios';
@@ -33,13 +38,14 @@ class DiffDrawer {
     this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
     this.matcherID = 1; //default to first matcher (ClassicGumtree)
+    this.matcherName = 'ClassicGumtree';
 
     //set default base URL
     this.DIFF_API = axios.create({
       baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/'
     });
 
-    this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst));
+    this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
   }
 
   setAsCurrentJob() {
@@ -47,11 +53,10 @@ class DiffDrawer {
   }
 
   setJobId(id) {
-    if(id === null) {
-      this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst));
-    }
-    else {
-      this.jobId = id;
+    if (id === null) {
+      this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
+    } else {
+      this.jobId = hash(id + 'm' + this.matcherID);
     }
   }
 
@@ -89,11 +94,19 @@ class DiffDrawer {
     return this.DIFF_API.get('/matchers');
   }
 
-  setMatcher(id) {
-    this.matcherID = id;
+  setMatcher(matcher) {
+    this.matcherID = matcher.id;
+    this.matcherName = matcher.name;
   }
 
   getMatcher() {
+    return {
+      id: this.matcherID,
+      name: this.matcherName
+    };
+  }
+
+  getMatcherID() {
     return this.matcherID;
   }
 
@@ -105,18 +118,15 @@ class DiffDrawer {
   /**
    * Checks if current job is indeed this job
    */
-   checkIfCurrentJob()
-   {
-     if(this.jobId == DiffDrawer.currentJobId)
-     {
-       //everthing is fine
-       return true;
-     }
-     else {
-       console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
-       return false;
-     }
-   }
+  checkIfCurrentJob() {
+    if (this.jobId === DiffDrawer.currentJobId) {
+      //this is the current job
+      return true;
+    } else {
+      //console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
+      return false;
+    }
+  }
 
   /**
    * takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen
@@ -264,6 +274,7 @@ class DiffDrawer {
   diffAndDraw() {
 
     if (this.src == null || this.dst == null) {
+      NProgress.done();
       return;
     }
 
@@ -276,16 +287,18 @@ class DiffDrawer {
 
     var diffdrawer = this;
     if (!diffdrawer.checkIfCurrentJob()) {
-      console.log('Aborted Operation wiht id '+diffdrawer.currentJobId);
+      //console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
+      NProgress.done();
       return;
     }
     this.DIFF_API.post('/changes', {
         'src': base64.encode(srcString),
         'dst': base64.encode(dstString),
-        'matcher': this.getMatcher()
+        'matcher': this.getMatcherID()
       })
       .then(function(response) {
-        $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify');
+
+        $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify using matcher ' + diffdrawer.matcherName);
 
         var changes = response.data.results;
         var dstMarkers = new Array();
@@ -339,14 +352,14 @@ class DiffDrawer {
           .value();
 
         if (!diffdrawer.checkIfCurrentJob()) {
-          console.log('Aborted Operation wiht id '+diffdrawer.currentJobId);
+          //console.log('Aborted Operation wiht id ' + diffdrawer.currentJobId);
           return;
         }
         diffdrawer.showChanges();
 
       })
       .catch(function(error) {
-        Utility.showError(error);
+        Utility.showError(error + '(using matcher ' + diffdrawer.matcherName + ')');
         NProgress.done();
       });
   }

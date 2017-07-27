@@ -1,3 +1,8 @@
+/**
+ * @file Marker Object representing start/endpoints of codebits
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+
 import Utility from './Utility';
 
 class Marker {
@@ -15,18 +20,15 @@ class Marker {
     this.bind = bindingId;
   }
 
-  addMetaData(title, content)
-  {
+  addMetaData(title, content) {
     this.metaDataMarkup = `data-title="${title}" data-content="${content}"`;
   }
 
-  setIsEndMarker(isEndMarker)
-  {
+  setIsEndMarker(isEndMarker) {
     this.isEndMarker = isEndMarker;
   }
 
-  createEndMarker(length)
-  {
+  createEndMarker(length) {
     var endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
     endmarker.position = endmarker.position + length;
     endmarker.bind = this.bind;
@@ -40,7 +42,7 @@ class Marker {
     } else {
       if (this.bind != null) {
         var bindingId = Utility.getOpponent(this.sourceType) + this.bind;
-        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
+        return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" data-type="${this.type}" class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
       } else {
         return `<span class="${this.type} scriptmarker" id="${this.sourceType}${this.id}">`;
       }

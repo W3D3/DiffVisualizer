@@ -1,18 +1,44 @@
+/**
+ * @file Utility class for various tasks
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
 import _ from 'lodash';
 
+/**
+ * Utility class for various tasks
+ */
 class Utility {
 
-  //utility functions
+  /**
+   * splits string at given index and returns both
+   * @param {string} value - string to be split
+   * @param {integer} index - where it should be splitValue
+   * @return {string[]} - array with two elements containing split values
+   */
   static splitValue(value, index) {
     var arr = [value.substring(0, index), value.substring(index)];
     return arr;
   }
 
+  /**
+   * extracts a given range from a string and returns the string with left and right side
+   * @param {string} value - input string
+   * @param {integer} start - where the range begins
+   * @param {integer} length - how long the range is
+   * @return {string[]} - array with 3 elements containing left side, string in range and right side
+   */
   static splitRange(value, start, length) {
     var arr = [value.substring(0, start), value.substring(start, start + length), value.substring(start + length)];
     return arr;
   }
 
+  /**
+   * html safe escapes a given range from a string
+   * @param {string} value - html unsafe string
+   * @param {integer} start - where the range begins
+   * @param {integer} length - how long the range is
+   * @return {string} - html safe string with range escaped
+   */
   static escapeSubpart(value, start, end) {
     var arr = [value.substring(0, start), _.escape(value.substring(start, end)), value.substring(end)];
     return arr.join('');
@@ -20,13 +46,13 @@ class Utility {
 
   // Scrolls to elem inside main
   static scrollToElementRelativeTo(elem, main) {
-  if (elem) {
+    if (elem) {
       var t = main.offset().top;
       main.animate({
         scrollTop: elem.offset().top - t
       }, 500);
     } else {
-      console.error('No element found');
+      //console.error('No element found');
     }
   }
 
@@ -39,19 +65,24 @@ class Utility {
   static jumpToLine(lineNumber, container) {
     $('span.selectedLine', container.find('.hljs-line-numbers')).contents().unwrap();
 
-    var pixelTop = lineNumber*20;
+    var pixelTop = lineNumber * 20;
     var offset = container.outerHeight() / 2;
     $(container).scrollTo({
       top: pixelTop - offset,
       left: 0
     }, 300);
 
-    if(lineNumber < 1)
+    if (lineNumber < 1)
       return;
     var numbers = container.find('.hljs-line-numbers').html();
-    container.find('.hljs-line-numbers').html(numbers.replace(lineNumber, '<span class="selectedLine">'+lineNumber+'</span>'));
+    container.find('.hljs-line-numbers').html(numbers.replace(lineNumber, '<span class="selectedLine">' + lineNumber + '</span>'));
   }
 
+  /**
+   * gets the type of the opposing codeview
+   * @param {string} value - current type (src or dst)
+   * @return {string} - opposing type
+   */
   static getOpponent(input) {
     if (input == 'src') {
       return 'dst';
@@ -73,7 +104,7 @@ class Utility {
         exit: 'animated fadeOutUp'
       }
     });
-    console.error(message);
+    //console.error(message);
   }
 
   static showMessage(message) {

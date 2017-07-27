@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/default.css">
   <link rel="stylesheet" href="css/dropzone.css">
   <link rel="stylesheet" href="css/nprogress.css">
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
   <!-- <link rel="stylesheet" href="css/jquery.scrollbar.css"> -->
   <link rel="stylesheet" href="css/perfect-scrollbar.css">
   <!-- master style -->
@@ -26,7 +27,8 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -42,11 +44,11 @@
           <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
               <li>
-                <a href="#" id="toggleSidebar"><i class="glyphicon glyphicon-collapse-down"></i> Toggle Sidebar</a>
+                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i></i></i> Toggle Sidebar</a>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <span class="glyphicon glyphicon-filter" ></span> Filter <span class="caret"></span>
+                  <i class="fa fa-filter"></i> Filter <span class="caret"></span>
                 </a>
                 <!-- Filter dropdown-menu -->
                 <ul class="dropdown-menu">
@@ -64,12 +66,15 @@
 
 
             </ul>
-            <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left" id="lineNumberForm">
               <div class="form-group">
                 <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
+                <a class="btn btn-primary" id="jump"><i class="fa fa-play-circle"></i> GOTO</a>
               </div>
-              <a class="btn btn-primary" id="jumpSrc">SRC</a>
-              <a class="btn btn-primary" id="jumpDst">DST</a>
+              <!-- <a class="btn btn-primary" id="jumpSrc">SRC</a>
+              <a class="btn btn-primary" id="jumpDst">DST</a> -->
+              <!-- <input type="checkbox" name="my-checkbox" checked> -->
+              <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="warning" data-on="SRC" data-off="DST">
             </form>
             <ul class="nav navbar-nav navbar-right">
 
@@ -99,12 +104,8 @@
 
               <form action="/diffjson" class="dropzone" id="jsonUploader">
               </form>
-
-              <ul class="list-group">
-                <li class="list-group-item">
-                  Uploaded files have to be .json and follow a pattern.
-                </li>
-              </ul>
+              <h4 class="list-group-item panel panel-default"> Cached entries:</h4>
+              <div id="uploadedFiles"></div>
             </div>
           </div>
           <div class="panel panel-default">
@@ -127,13 +128,22 @@
             </div>
           </div>
           <div class="panel panel-default">
-            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer">
+            <!-- <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer"> -->
+            <div class="panel-heading">
               <h4 class="panel-title">
                   <a><span class="glyphicon glyphicon-file">
                   </span>Diffs</a>
                 </h4>
             </div>
-            <div id="diffsViewer" class="panel-collapse collapse box">
+
+            <div id="diffsViewer" class="panel-collapse box">
+              <div class="input-group">
+                  <input type="text" class="form-control" id="listFilterText" placeholder="ID / filename" style="width: 100%">
+                  <span class="input-group-btn">
+                      <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
+                      <a class="btn btn-default" id="filterListClear"><i class="fa fa-times"></i></span></a>
+                  </span>
+              </div>
               <div class="list-group" id="diffsList" style="overflow: scroll; max-height: 700px">
               </div>
 
@@ -143,8 +153,9 @@
         </div>
         <!-- END ACCORDION NAV -->
       </div>
-      <div class="col-sm-9 box" id="codeView">
-        <div class="row content">
+      <div class="col-sm-9 box panel panel-default" id="codeView">
+        <div class="panel-heading" id="codeboxTitle">DiffViewer	&trade;</div>
+        <div class="row content panel-body" style="padding: 0">
           <div id="minimap" class="srcminimap"></div>
           <div class="col-sm-6 codebox src scrollbar-chrome">
             <pre><code class="language-java" id="src"></code></pre>
@@ -213,6 +224,9 @@
   <!-- highlight js -->
   <script src="js/highlight.pack.js"></script>
   <script src="js/highlightjs-line-numbers.min.js" charset="utf-8"></script>
+  <!-- bootstrap-toggle -->
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+  <!-- EDITOR -->
   <!-- minimap -->
   <script src="js/jquery-minimap.js" charset="utf-8"></script>
   <!-- <script src="js/jquery.scrollbar.min.js" charset="utf-8"></script> -->
