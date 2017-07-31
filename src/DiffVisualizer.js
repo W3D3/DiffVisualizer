@@ -156,8 +156,10 @@ function diffListSetup() {
             viewer.setFilter(filter);
             viewer.diffAndDraw();
             dv = viewer;
-
-            $('#codeboxTitle').html(`<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`);
+            var titlestring = `<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
+            titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
+            titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
+            $('#codeboxTitle').html(titlestring);
           });
       });
 

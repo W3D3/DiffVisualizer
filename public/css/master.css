@@ -294,6 +294,10 @@ pre, code {
 }
 
 .panel-heading span {
+  font-size: 15px;
+}
+
+#metaDataPanel .panel-heading span {
   margin-top: -20px;
   font-size: 15px;
 }
