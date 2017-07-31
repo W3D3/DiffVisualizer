@@ -90,25 +90,39 @@
       </nav>
     </div>
     <div class="row content">
-      <div class="col-sm-3 sidebar">
+      <div class="col-sm-3 sidebar" style="overflow: hidden">
         <!-- START ACCORDION NAV  -->
         <div class="panel-group" id="accordion">
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
               <h4 class="panel-title">
                   <a ><span class="glyphicon glyphicon-upload">
-                  </span>Upload</a>
+                  </span>Import</a>
                 </h4>
             </div>
             <div id="collapseOne" class="panel-collapse collapse in">
 
               <form action="/diffjson" class="dropzone" id="jsonUploader">
               </form>
-              <h4 class="list-group-item panel panel-default"> Cached entries:</h4>
-              <div id="uploadedFiles"></div>
+
+              <div class="panel panel-info">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                  <h4 class="panel-title">
+                      <a ><span class="glyphicon glyphicon-cloud-upload">
+                      </span>Cached entries:</a>
+                    </h4>
+                </div>
+                <div>
+
+                  <div id="uploadedFiles"></div>
+
+                </div>
+              </div>
+
+
             </div>
           </div>
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#settingsPanel">
               <h4 class="panel-title">
                   <a><span class="glyphicon glyphicon-cog">
@@ -127,12 +141,12 @@
               </ul>
             </div>
           </div>
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <!-- <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#diffsViewer"> -->
             <div class="panel-heading">
               <h4 class="panel-title">
-                  <a><span class="glyphicon glyphicon-file">
-                  </span>Diffs</a>
+                  <a><i class="glyphicon glyphicon-file"></i>
+                  Diffs</a>
                 </h4>
             </div>
 
@@ -169,7 +183,8 @@
 
     </div>
     <div class="row footer">
-      <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1</span>
+      <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1 <span id="baseurl"></span></span>
+
       <div class="panel panel-primary" id="metaDataPanel">
         <div class="panel-heading">
           <h3 class="panel-title">MetaData Title</h3>

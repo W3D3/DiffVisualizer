@@ -9,6 +9,9 @@
  * does various things regarding DOM manipulation
  */
 import DiffDrawer from './DiffDrawer';
+import {
+  client
+} from '../config/default.json';
 
 class GUI {
 
@@ -18,6 +21,7 @@ class GUI {
     this.setupToggleSidebar();
 
     this.matcherSelector = $('#matcherID');
+    $('#baseurl').text('(' + client.apibase + ')');
   }
 
   setupToggleSidebar() {

@@ -1,5 +1,8 @@
 {
   "server": {
     "port": 9999
+  },
+  "client": {
+    "apibase": "http://swdyn.aau.at:8080/v1/"
   }
 }

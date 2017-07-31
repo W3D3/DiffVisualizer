@@ -1,6 +1,6 @@
 {
   "name": "diffvisualizer",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "engines": {
     "node": "6.11.1"
   },
@@ -24,7 +24,6 @@
     "multer": "^1.3.0",
     "nprogress": "^0.2.0",
     "object-hash": "^1.1.8",
-    "octicons": "^5.0.1",
     "request": "^2.81.0"
   },
   "devDependencies": {

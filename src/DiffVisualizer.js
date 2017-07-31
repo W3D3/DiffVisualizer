@@ -33,6 +33,7 @@ var settings;
  * initializes the DiffVisualizer application
  */
 $(document).ready(function() {
+
   gui = new GUI();
   gui.setVersion(version);
 
@@ -91,8 +92,7 @@ function matcherChangerSetup() {
   dv.getAvailableMatchers().then(response => {
     gui.setMatcherSelectionSource(response.data.matchers);
     matchers = response.data.matchers;
-    if(settings.loadSetting('matcher'))
-    {
+    if (settings.loadSetting('matcher')) {
       gui.setSelectedMatcher(settings.loadSetting('matcher').id);
     }
 
@@ -102,7 +102,7 @@ function matcherChangerSetup() {
   gui.setMatcherChangeHandler(function() {
     NProgress.start();
     dv.clear();
-    settings.saveSetting('matcher', matchers[this.value-1]);
+    settings.saveSetting('matcher', matchers[this.value - 1]);
     //console.log(settings.loadSetting('matcher'));
     dv.setMatcher(settings.loadSetting('matcher'));
     Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
@@ -125,8 +125,7 @@ function diffListSetup() {
 
     var viewer = new DiffDrawer();
     viewer.setJobId(diffId);
-    if(settings.loadSetting('matcher'))
-    {
+    if (settings.loadSetting('matcher')) {
       viewer.setMatcher(settings.loadSetting('matcher'));
     }
     viewer.setAsCurrentJob();
@@ -208,26 +207,24 @@ function diffListSetup() {
 
 function jumptToLineSetup() {
   //initialize from settings
-  if(settings.loadSetting('jumpToSource') != false){
+  if (settings.loadSetting('jumpToSource') != false) {
     $('#jumpToLineSelector').bootstrapToggle('on');
-  }
-  else {
+  } else {
     $('#jumpToLineSelector').bootstrapToggle('off');
   }
 
   //register clickhandler
   $('#jump').click(function() {
     var selector;
-    if(settings.loadSetting('jumpToSource') != false){
+    if (settings.loadSetting('jumpToSource') != false) {
       selector = '.src';
-    }
-    else {
+    } else {
       selector = '.dst';
     }
     Utility.jumpToLine($('#lineNumberInput').val(), $(selector));
   });
 
-  $( '#lineNumberForm' ).submit(function( event ) {
+  $('#lineNumberForm').submit(function(event) {
     $('#jump').click();
     event.preventDefault();
   });

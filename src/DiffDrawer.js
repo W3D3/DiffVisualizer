@@ -12,6 +12,9 @@ var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
 import NProgress from 'nprogress';
 import hash from 'object-hash';
+import {
+  client
+} from '../config/default.json';
 
 /**
  * Used to fetch diff data from a webservice and show it on screen
@@ -41,9 +44,8 @@ class DiffDrawer {
     this.matcherName = 'ClassicGumtree';
 
     //set default base URL
-    this.DIFF_API = axios.create({
-      baseURL: 'http://swdyn.isys.uni-klu.ac.at:8080/v1/'
-    });
+    this.DIFF_API = axios.create();
+    this.setBaseUrl(client.apibase);
 
     this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
   }
@@ -62,6 +64,10 @@ class DiffDrawer {
 
   setBaseUrl(newBase) {
     this.DIFF_API.defaults.baseURL = newBase;
+  }
+
+  getBaseUrl() {
+    return this.DIFF_API.defaults.baseURL;
   }
 
   setSource(newSrc) {
@@ -166,26 +172,26 @@ class DiffDrawer {
       var $src = $('.src');
       var $dst = $('.dst');
       $('.minimap-viewport').remove();
-      $( '.srcminimap' ).minimap($src);
-      $( '.dstminimap' ).minimap($dst);
+      $('.srcminimap').minimap($src);
+      $('.dstminimap').minimap($dst);
 
 
-      $( window ).resize(_.debounce(DiffDrawer.refreshMinimap, 150));
+      $(window).resize(_.debounce(DiffDrawer.refreshMinimap, 150));
       NProgress.done();
     }
 
   }
 
-  static refreshMinimap(){
+  static refreshMinimap() {
 
     var minimapHeight = $('.codebox').css('height');
     var minimapTop = $('#codeboxTitle').css('height');
-    $( '.minimap' ).css('height',  minimapHeight);
-    $( '.minimap' ).css('top', minimapTop);
+    $('.minimap').css('height', minimapHeight);
+    $('.minimap').css('top', minimapTop);
 
-    var right = parseInt($('.dst').css('width'))+0 + 'px';
-    $( '.srcminimap' ).css('right',  right);
-    $( '.dstminimap' ).css('right',  '0px');
+    var right = parseInt($('.dst').css('width')) + 0 + 'px';
+    $('.srcminimap').css('right', right);
+    $('.dstminimap').css('right', '0px');
     //console.log($('.dst').css('width'));
 
   }
