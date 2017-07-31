@@ -5,6 +5,7 @@
  */
 
 import Utility from './Utility';
+import GUI from './GUI';
 import Settings from './Settings';
 import Dropzone from 'dropzone';
 import axios from 'axios';
@@ -28,9 +29,9 @@ class Loader {
       maxFiles: 1,
       success: this.loadDiffsFromFile,
       error: function(file, err, xhr) {
-        if(xhr) {
+        if (xhr) {
           NProgress.done();
-          Utility.showError('Error parsing file - '+ err.error);
+          Utility.showError('Error parsing file - ' + err.error);
           this.removeAllFiles();
         }
 
@@ -45,8 +46,7 @@ class Loader {
     Loader.showUploadedElements();
   }
 
-  static showUploadedElements()
-  {
+  static showUploadedElements() {
     var alreadyUploaded = Settings.getAllSettingsKeysPersistent();
     $('#uploadedFiles').html('');
     alreadyUploaded.forEach(filename => {
@@ -54,7 +54,7 @@ class Loader {
       //<i class="fa fa-times pull-right" style="color: red"></i></a>
     });
 
-    $('.fileButton').on('click', function () {
+    $('.fileButton').on('click', function() {
       NProgress.configure({
         parent: '#uploadedFiles'
       });
@@ -81,8 +81,7 @@ class Loader {
       });
   }
 
-  static createDiffList(data)
-  {
+  static createDiffList(data) {
     $('#diffsList').html('');
     data.forEach(function(diff) {
 
@@ -101,6 +100,7 @@ class Loader {
       $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}"><span class="label label-default">${diff.Id}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
 
     });
+    GUI.recalcDiffListHeight();
     NProgress.done();
   }
 

@@ -9,6 +9,7 @@
  * does various things regarding DOM manipulation
  */
 import DiffDrawer from './DiffDrawer';
+import _ from 'lodash';
 import {
   client
 } from '../config/default.json';
@@ -19,9 +20,26 @@ class GUI {
     $('#metaDataPanel').hide();
     this.enableEasterEgg();
     this.setupToggleSidebar();
+    this.setupDiffList();
 
     this.matcherSelector = $('#matcherID');
     $('#baseurl').text('(' + client.apibase + ')');
+  }
+
+  setupDiffList() {
+    // recalc when resizing window
+    $(window).resize(_.debounce(GUI.recalcDiffListHeight, 150));
+    // or when something gets toggled in our sidebar
+    $('#accordion').on('shown.bs.collapse', function() {
+      GUI.recalcDiffListHeight();
+    }).on('hidden.bs.collapse', function() {
+      GUI.recalcDiffListHeight();
+    });
+  }
+
+  static recalcDiffListHeight() {
+    var $listPanel = $('#diffsViewer');
+    $listPanel.css('height', $(document).height() - $listPanel.offset().top - 30);
   }
 
   setupToggleSidebar() {
