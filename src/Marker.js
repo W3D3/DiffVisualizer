@@ -21,7 +21,7 @@ class Marker {
   }
 
   addMetaData(title, content) {
-    this.metaDataMarkup = `data-title="${title}" data-content="${content}"`;
+    this.metaDataMarkup = `data-title="${title}" data-metadata="${content}"`;
   }
 
   setIsEndMarker(isEndMarker) {
@@ -32,7 +32,7 @@ class Marker {
     var endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
     endmarker.position = endmarker.position + length;
     endmarker.bind = this.bind;
-    endmarker.toolTipMarkup = this.toolTipMarkup;
+    endmarker.metaDataMarkup = this.metaDataMarkup;
     return endmarker;
   }
 

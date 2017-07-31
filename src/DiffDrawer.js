@@ -235,7 +235,9 @@ class DiffDrawer {
         var range = Utility.splitValue(codeString, marker.position);
         codeString = range[0] + marker.generateTag() + range[1];
         //fill the opening Marker into the last closed array for faster opening
+        //TODO copy the old marker and not generate a new one!!!
         var closingMarker = new Marker(marker.id, marker.position, marker.type, false, marker.sourceType);
+        closingMarker.metaDataMarkup = marker.metaDataMarkup;
         if (marker.bind)
           closingMarker.bindToId(marker.bind);
         lastClosed.push(closingMarker);
@@ -323,10 +325,11 @@ class DiffDrawer {
           }
 
           if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
-
+            // if (entry.srcId == 55)
+            //   debugger;
             var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
             srcMarker.bindToId(entry.dstId); //bind to destination
-            srcMarker.addMetaData('ID' + entry.srcId, 'This is a ' + entry.actionType);
+            srcMarker.addMetaData('src' + entry.srcId, 'This is a ' + entry.actionType);
             srcMarkers.push(srcMarker);
             //add closing tag
             var srcClosing = srcMarker.createEndMarker(entry.srcLength);
@@ -334,7 +337,7 @@ class DiffDrawer {
 
             var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
             dstMarker.bindToId(entry.srcId);
-            dstMarker.addMetaData('ID' + entry.dstId, 'This is a ' + entry.actionType);
+            dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
             dstMarkers.push(dstMarker);
 
             var dstClosing = dstMarker.createEndMarker(entry.dstLength);

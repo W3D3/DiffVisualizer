@@ -18,6 +18,9 @@ class GUI {
 
   constructor() {
     $('#metaDataPanel').hide();
+    $('#metaDataPanel .panel-heading').click(function() {
+      GUI.hideMetaData();
+    });
     this.enableEasterEgg();
     this.setupToggleSidebar();
     this.setupDiffList();
@@ -54,6 +57,22 @@ class GUI {
 
   setVersion(version) {
     $('.versionNumber').text('v' + version);
+  }
+
+  static showMetaData(title, content) {
+
+    $('#metadataTitle').text(title);
+    $('#metadataContent').text(content);
+
+    $('#metaDataPanel').show(function() {
+      DiffDrawer.refreshMinimap();
+    });
+    //DiffDrawer.refreshMinimap();
+  }
+
+  static hideMetaData() {
+    $('#metaDataPanel').hide(600);
+    DiffDrawer.refreshMinimap();
   }
 
   static initializeEditor(id, theme, language) {

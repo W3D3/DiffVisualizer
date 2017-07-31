@@ -268,7 +268,7 @@ function filterSetup() {
 
 function clickBoundMarkersSetup() {
   //register clickhandler for all the UPDATEs and MOVEs
-  $('body').on('click', 'span[data-boundto]', function() {
+  $('#codeView').on('click', 'span[data-boundto]', function() {
     //reset old selected nodes
     $('.codebox').find('.scriptmarker').removeClass('selected');
 
@@ -286,6 +286,16 @@ function clickBoundMarkersSetup() {
     $(boundCodebox).scrollTo(boundElem, 300, {
       offset: 0 - localOffset + $('.codebox.src').offset().top
     });
+
+    //stop propagation by returning
+    return false;
+  });
+
+  $('#codeView').on('dblclick', 'span[data-metadata]', function() {
+
+    var title = $(this).data('title');
+    var content = $(this).data('metadata');
+    GUI.showMetaData(title, content);
 
     //stop propagation by returning
     return false;

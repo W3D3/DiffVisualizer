@@ -431,13 +431,16 @@ pre, code {
   border: none;
 }
 
-.octicon {
-  display: inline-block;
-  vertical-align: text-top;
-  fill: currentColor;
-}
-
 .glyphicon
 {
   font-weight: normal !important;
+}
+
+#metaDataPanel {
+  position: absolute;
+  right: 25px;
+  left: 25px;
+  bottom: 25px;
+  z-index: 1500;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
