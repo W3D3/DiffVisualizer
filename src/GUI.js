@@ -32,10 +32,15 @@ class GUI {
     $('#printCodebox').click(function () {
       var filename = $('#codeboxTitle b').text().substring(1);
       if(!filename)
+      {
         filename = 'DiffVisualizer-Screenshot';
-      else
+        Utility.showWarning('No file loaded to generate Image from.');
+      }
+      else{
         filename = filename + '-Screenshot';
-      GUI.screenshotCodeView(filename);
+        GUI.screenshotCodeView(filename);
+      }
+
     });
   }
 

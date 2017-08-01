@@ -24,6 +24,15 @@ body {
   /*background-color: rgba(92, 90, 168, 1);*/
 }
 
+[data-notify="progressbar"] {
+	margin-bottom: 0px;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	height: 5px;
+}
+
 .row {
   margin: 0;
 }
@@ -127,13 +136,14 @@ pre, code {
 }*/
 
 .UPDATE {
-  background-color: rgba(222, 250, 110, 0.7);
+  background-color: rgba(243, 250, 110, 0.7);
+  /*background-color: rgba(240, 210, 0, 0.7);*/
   text-shadow: none;
   padding: 1px;
   margin: 1px;
   cursor: pointer;
   border: none;
-  border-color: rgba(250, 255, 9, 0.7);
+  border-color: rgba(240, 210, 0, 0.7);
   /*border: 2px solid rgba(231, 194, 3, 0.7);*/
 }
 
@@ -425,8 +435,8 @@ pre, code {
 }
 
 .selected.UPDATE {
-  box-shadow: 2px 2px 5px rgba(231, 194, 3, 1);
-  border-color: rgba(255, 176, 0, 1);
+  box-shadow: 2px 2px 5px rgba(117, 84, 0, 0.7);
+  border-color: rgba(117, 84, 0, 0.7);
 }
 
 .scriptmarker .subnode {
@@ -437,7 +447,7 @@ pre, code {
 
 .glyphicon
 {
-  font-weight: normal !important;
+  font-weight: 100 !important;
 }
 
 #metaDataPanel {
