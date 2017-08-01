@@ -134,5 +134,18 @@ class Utility {
     Utility.showNotify('', message, 'success', 'glyphicon glyphicon-ok-sign', 2000);
   }
 
+  static changeCodeStyle(style) {
+
+    var oldlink = document.getElementById('codestyle');
+
+    var newlink = document.createElement('link');
+    newlink.setAttribute('rel', 'stylesheet');
+    newlink.setAttribute('type', 'text/css');
+    newlink.setAttribute('id', 'codestyle');
+    newlink.setAttribute('href', 'http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/'+style+'.min.css');
+
+    document.getElementsByTagName('head').item(0).replaceChild(newlink, oldlink);
+}
+
 }
 export default Utility;

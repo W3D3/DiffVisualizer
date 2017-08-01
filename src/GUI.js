@@ -25,6 +25,8 @@ class GUI {
     this.setupDiffList();
 
     this.matcherSelector = $('#matcherID');
+    this.styleSelector = $('#themePicker');
+
     $('#baseurl').text('(' + client.apibase + ')');
 
     //code to print the code View, ignores scroll position
@@ -96,7 +98,7 @@ class GUI {
   setupToggleSidebar() {
     $('#toggleSidebar').click(function() {
       //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
-      $('#accordion').toggle(400);
+      $('#accordion').toggle();
       $('#codeView').toggleClass('col-sm-9');
       $('#codeView').toggleClass('col-sm-12');
       DiffDrawer.refreshMinimap();
@@ -104,7 +106,7 @@ class GUI {
   }
 
   setVersion(version) {
-    $('.versionNumber').text('v' + version);
+    $('.versionNumber').text(version);
   }
 
   static showMetaData(title, content) {
@@ -149,6 +151,14 @@ class GUI {
 
   setSelectedMatcher(id) {
     this.matcherSelector.val(id);
+  }
+
+  setStyleChangeHandler(handler) {
+    this.styleSelector.on('change', handler);
+  }
+
+  setSelectedStyle(id) {
+    this.styleSelector.val(id);
   }
 
   setHoverEffect(container, selector) {

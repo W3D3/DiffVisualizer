@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/animate.css">
   <!-- code highlighting style -->
-  <link rel="stylesheet" href="css/default.css">
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" id="codestyle">
   <link rel="stylesheet" href="css/dropzone.css">
   <link rel="stylesheet" href="css/nprogress.css">
   <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -136,10 +136,27 @@
               <ul class="list-group">
                 <li class="list-group-item">
                   <div class="form-group">
+                    <h4>Webservice</h4>
                     <label for="matcherID">Select Matcher</label>
                     <select class="form-control" id="matcherID">
                       </select>
+
                   </div>
+                  <hr>
+                  <div class="form-group">
+                      <h4>Appearance</h4>
+                      <label for="matcherID">Select Theme</label>
+                      <select class="form-control" id="themePicker">
+                        <option value="default">Default</option>
+                        <option value="github">GitHub</option>
+                        <option value="vs">Visual Studio</option>
+                        <option value="mono-blue">Mono Blue</option>
+                        <option value="atom-one-light">Atom One Light</option>
+                        <option value="color-brewer">Color Brewer</option>
+                      </select>
+
+                  </div>
+
                 </li>
               </ul>
             </div>

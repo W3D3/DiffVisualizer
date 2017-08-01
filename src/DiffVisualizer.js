@@ -51,6 +51,9 @@ $(document).ready(function() {
   //setup on change and fill with all available matchers
   matcherChangerSetup();
 
+  //
+  styleChangerSetup();
+
   // initialize clickhandler and filter on the diff list
   diffListSetup();
 
@@ -108,6 +111,14 @@ function matcherChangerSetup() {
     Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
     dv.diffAndDraw();
     $('#currentMatcher').text(settings.loadSetting('matcher').name);
+  });
+}
+
+function styleChangerSetup() {
+
+  // matcher on change
+  gui.setStyleChangeHandler(function() {
+    Utility.changeCodeStyle(this.value);
   });
 }
 
