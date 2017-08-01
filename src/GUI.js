@@ -30,7 +30,12 @@ class GUI {
     //code to print the code View, ignores scroll position
     // TODO fix to include scroll position
     $('#printCodebox').click(function () {
-      GUI.screenshotCodeView('code');
+      var filename = $('#codeboxTitle b').text().substring(1);
+      if(!filename)
+        filename = 'DiffVisualizer-Screenshot';
+      else
+        filename = filename + '-Screenshot';
+      GUI.screenshotCodeView(filename);
     });
   }
 
