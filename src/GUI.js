@@ -9,24 +9,62 @@
  * does various things regarding DOM manipulation
  */
 import DiffDrawer from './DiffDrawer';
+import Utility from './Utility';
 import _ from 'lodash';
 import {
   client
 } from '../config/default.json';
+import domtoimage from './DomToImage';
 
 class GUI {
 
   constructor() {
-    $('#metaDataPanel').hide();
-    $('#metaDataPanel .panel-heading').click(function() {
-      GUI.hideMetaData();
-    });
+    this.setupMetadataPanel();
     this.enableEasterEgg();
     this.setupToggleSidebar();
     this.setupDiffList();
 
     this.matcherSelector = $('#matcherID');
     $('#baseurl').text('(' + client.apibase + ')');
+
+    //code to print the code View, ignores scroll position
+    // TODO fix to include scroll position
+    $('#printCodebox').click(function () {
+      GUI.screenshotCodeView('code');
+    });
+  }
+
+  static screenshotCodeView(filename) {
+    $('.minimap').hide();
+    $('.dst').css('overflow-x', 'visible !important');
+    $('#codeboxTitle a').hide();
+    var node = document.getElementById('codeView');
+
+    domtoimage.toPng(node, {
+        style: {
+          overflow: 'visible !important'
+        },
+        scrollFix: true
+      })
+      .then(function(dataUrl) {
+        var link = document.createElement('a');
+        link.download = filename + '.png';
+        link.href = dataUrl;
+        link.click();
+
+        $('.minimap').show();
+        $('#codeboxTitle a').show();
+      })
+      .catch(function(error) {
+        Utility.showError('Error generating Screenshot: ', error);
+      });
+  }
+
+  setupMetadataPanel() {
+    $('#metaDataPanel').hide();
+    $('#metaDataPanel .panel-heading').click(function() {
+      GUI.hideMetaData();
+    });
   }
 
   setupDiffList() {
@@ -48,7 +86,7 @@ class GUI {
   setupToggleSidebar() {
     $('#toggleSidebar').click(function() {
       //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
-      $('#accordion').toggle();
+      $('#accordion').toggle(400);
       $('#codeView').toggleClass('col-sm-9');
       $('#codeView').toggleClass('col-sm-12');
       DiffDrawer.refreshMinimap();
