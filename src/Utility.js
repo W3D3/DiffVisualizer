@@ -91,48 +91,47 @@ class Utility {
     }
   }
 
-  static showError(message) {
+  static showNotify(title, message, type, icon, delay)
+  {
     $.notify({
       // options
+      icon: icon,
+      title: title,
       message: message
     }, {
       // settings
-      delay: 0,
-      type: 'danger',
+      delay: delay,
+      type: type,
       animate: {
         enter: 'animated fadeInDown',
         exit: 'animated fadeOutUp'
-      }
+      },
+      offset: {
+        y: 70,
+        x: 10
+      },
+      //showProgressbar: true,
+      placement: {
+        from: 'top',
+        align: 'right'
+      },
     });
-    //console.error(message);
+  }
+
+  static showError(message) {
+    Utility.showNotify('ERROR!', message, 'danger', 'glyphicon glyphicon-remove-sign', 0);
   }
 
   static showMessage(message) {
-    $.notify({
-      // options
-      message: message
-    }, {
-      // settings
-      type: 'info',
-      animate: {
-        enter: 'animated fadeInDown',
-        exit: 'animated fadeOutUp'
-      }
-    });
+    Utility.showNotify('', message, 'info', 'glyphicon glyphicon-info-sign', 3000);
+  }
+
+  static showWarning(message) {
+    Utility.showNotify('', message, 'warning', 'glyphicon glyphicon-alert', 5000);
   }
 
   static showSuccess(message) {
-    $.notify({
-      // options
-      message: message
-    }, {
-      // settings
-      type: 'success',
-      animate: {
-        enter: 'animated fadeInDown',
-        exit: 'animated fadeOutUp'
-      }
-    });
+    Utility.showNotify('', message, 'success', 'glyphicon glyphicon-ok-sign', 2000);
   }
 
 }
