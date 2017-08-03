@@ -106,6 +106,7 @@ function matcherChangerSetup() {
   gui.setMatcherChangeHandler(function() {
     NProgress.start();
     dv.clear();
+    $('.minimap').hide();
     settings.saveSetting('matcher', matchers[this.value - 1]);
     //console.log(settings.loadSetting('matcher'));
     dv.setMatcher(settings.loadSetting('matcher'));
@@ -159,6 +160,7 @@ function diffListSetup() {
       parent: '#codeView'
     });
     NProgress.start();
+    $('.minimap').hide();
     axios.get(srcUrl, configSrc)
       .then(function(src) {
         viewer.setSource(src.data);

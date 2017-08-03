@@ -26,6 +26,8 @@ class GUI {
 
     this.matcherSelector = $('#matcherID');
     this.styleSelector = $('#themePicker');
+    
+    $('.minimap').hide();
 
     $('#baseurl').text('(' + client.apibase + ')');
 
