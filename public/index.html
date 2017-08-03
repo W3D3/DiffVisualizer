@@ -191,11 +191,11 @@
         <div class="panel-heading" id="codeboxTitle">DiffViewer	&trade;</div>
         <div class="row content panel-body" style="padding: 0" id="codeContent">
           <div id="minimap" class="srcminimap minimap"></div>
-          <div class="col-sm-6 codebox src scrollbar-chrome">
+          <div class="col-sm-6 codebox src scrollbar-chrome hljs">
             <pre><code class="language-java" id="src"></code></pre>
           </div>
           <div id="minimap" class="dstminimap minimap"></div>
-          <div class="col-sm-6 codebox dst scrollbar-chrome">
+          <div class="col-sm-6 codebox dst scrollbar-chrome hljs">
             <pre><code class="language-java" id="dst"></code></pre>
           </div>
         </div>
@@ -264,8 +264,9 @@
   <!-- EDITOR -->
   <!-- minimap -->
   <script src="js/jquery-minimap.js" charset="utf-8"></script>
-  <!-- <script src="js/dom-to-image.js" charset="utf-8"></script> -->
-  <!-- <script src="js/jquery.scrollbar.min.js" charset="utf-8"></script> -->
+  <!-- bootstrap prompts -->
+  <script src="js/bootbox.min.js" charset="utf-8"></script>
+  <!-- scrolling -->
     <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
   <!-- ace editor -->
   <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>

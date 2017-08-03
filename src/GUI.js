@@ -97,7 +97,6 @@ class GUI {
 
   setupToggleSidebar() {
     $('#toggleSidebar').click(function() {
-      //TODO (christoph) animate this, add more state visuals to #toggleSidebar content
       $('#accordion').toggle();
       $('#codeView').toggleClass('col-sm-9');
       $('#codeView').toggleClass('col-sm-12');

@@ -1,4 +1,4 @@
-/* global $ */
+/* global $ bootbox */
 /**
  * @file Main file that acts as the entry point
  * @author Christoph Wedenig <christoph@wedenig.org>
@@ -36,6 +36,7 @@ $(document).ready(function() {
 
   gui = new GUI();
   gui.setVersion(version);
+  NProgress.configure({ trickle: false });
 
   settings = new Settings();
   $('.scrollbar-chrome').perfectScrollbar();
@@ -165,12 +166,61 @@ function diffListSetup() {
           .then(function(dst) {
             viewer.setDestination(dst.data);
             viewer.setFilter(filter);
-            viewer.diffAndDraw();
-            dv = viewer;
-            var titlestring = `<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
-            titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
-            titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
-            $('#codeboxTitle').html(titlestring);
+
+            var avg = (src.data.split(/\r\n|\r|\n/).length + dst.data.split(/\r\n|\r|\n/).length) / 2;
+
+            if(avg > 32000)
+            {
+              bootbox.confirm({
+                title: 'Warning',
+                closeButton: false,
+                message: 'You are about to load a huge file with ' + avg + ' LOC on average. This could cause the browser to hang, do you want to continue?',
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (accepted) {
+                    if(accepted)
+                    {
+                      // var t0 = performance.now();
+                      viewer.diffAndDraw();
+                      // var t1 = performance.now();
+                      // console.log('Call to doSomething took ' + (t1 - t0) + ' milliseconds.');
+
+                      dv = viewer;
+                      var titlestring = `<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
+                      //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
+                      //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
+                      $('#codeboxTitle').html(titlestring);
+                    }
+                    else {
+                      NProgress.done();
+                      $('#codeboxTitle').html('<span class="label label-default">${diffId}</span><span class="label label-danger">Aborted</span><b>${fileName}</b>');
+                    }
+                }
+              });
+            }
+            else {
+
+              // var t0 = performance.now();
+              viewer.diffAndDraw();
+              // var t1 = performance.now();
+              // console.log('Call to doSomething took ' + (t1 - t0) + ' milliseconds.');
+
+              dv = viewer;
+              var titlestring = `<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
+              //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
+              //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
+              $('#codeboxTitle').html(titlestring);
+            }
+
+
           });
       });
 

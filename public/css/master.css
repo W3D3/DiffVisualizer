@@ -184,6 +184,7 @@ pre, code {
   padding-right: 0;
   padding-left: 0;
   border: 1px solid #CCC;
+  padding: 0;
 }
 
 .sidebar {
@@ -264,14 +265,14 @@ pre, code {
   border-top: 1px solid #DDD !important;
 }
 
-.modal-dialog {
+#myModal .modal-dialog {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-.modal-content {
+#myModal .modal-content {
   position: relative;
   height: auto;
   min-height: 100%;
