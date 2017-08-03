@@ -203,7 +203,7 @@ function diffListSetup() {
                     }
                     else {
                       NProgress.done();
-                      $('#codeboxTitle').html('<span class="label label-default">${diffId}</span><span class="label label-danger">Aborted</span><b>${fileName}</b>');
+                      $('#codeboxTitle').html(`<span class="label label-default">${diffId}</span><span class="label label-danger">Aborted</span><b>${fileName}</b>`);
                     }
                 }
               });

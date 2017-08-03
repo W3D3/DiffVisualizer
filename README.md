@@ -1,6 +1,6 @@
 # DiffVisualizer
 
-![v 1.6.4](https://img.shields.io/badge/version-1.6.4-brightgreen.svg) [![Codeship](https://img.shields.io/codeship/01939780-4ced-0135-0db8-1a20c3f2c8a7.svg)](https://app.codeship.com/projects/232991)
+![v 1.6.5](https://img.shields.io/badge/version-1.6.5-brightgreen.svg) [![Codeship](https://img.shields.io/codeship/01939780-4ced-0135-0db8-1a20c3f2c8a7.svg)](https://app.codeship.com/projects/232991)
 
 ## Installation
 
