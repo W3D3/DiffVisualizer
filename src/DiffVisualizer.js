@@ -190,13 +190,11 @@ function diffListSetup() {
                 callback: function (accepted) {
                     if(accepted)
                     {
-                      // var t0 = performance.now();
+                      viewer.setEnableMinimap(false); //temporarily disable minimap for huge file
                       viewer.diffAndDraw();
-                      // var t1 = performance.now();
-                      // console.log('Call to doSomething took ' + (t1 - t0) + ' milliseconds.');
 
                       dv = viewer;
-                      var titlestring = `<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
+                      var titlestring = `<span class="label label-default">${diffId}</span><span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
                       //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
                       //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
                       $('#codeboxTitle').html(titlestring);
@@ -266,7 +264,8 @@ function diffListSetup() {
 
   $('#filterListClear').click(function() {
     $('#listFilterText').val('');
-    $('#listFilterText').keyup();
+    $('#listFilterText').keyup(); //listPanel
+    $('#diffsList').scrollTo(0); //listPanel
   });
 }
 

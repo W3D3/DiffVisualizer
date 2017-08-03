@@ -48,6 +48,13 @@ class DiffDrawer {
     this.setBaseUrl(client.apibase);
 
     this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
+
+    this.enableMinimap = true;
+  }
+
+  setEnableMinimap(value)
+  {
+    this.enableMinimap = value;
   }
 
   setAsCurrentJob() {
@@ -168,10 +175,14 @@ class DiffDrawer {
       $('#src').html(srcString);
       this.enableSyntaxHighlighting();
 
-      DiffDrawer.refreshMinimap();
-      $('.minimap').show();
+      if(this.enableMinimap)
+      {
+        DiffDrawer.refreshMinimap();
+        $('.minimap').show();
 
-      $(window).resize(_.debounce(DiffDrawer.refreshMinimap, 150));
+        $(window).resize(_.debounce(DiffDrawer.refreshMinimap, 150));
+      }
+
       NProgress.done();
     }
 

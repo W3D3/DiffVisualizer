@@ -77,5 +77,16 @@ class Settings {
 
   }
 
+  parseSetting(val)
+  {
+    if(val == 'true'){
+      return true;
+    } else if(val == 'false'){
+      return false;
+    } else {
+      return JSON.parse(val);
+    }
+  }
+
 }
 export default Settings;
