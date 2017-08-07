@@ -26,7 +26,7 @@ class GUI {
 
     this.matcherSelector = $('#matcherID');
     this.styleSelector = $('#themePicker');
-    
+
     $('.minimap').hide();
 
     $('#baseurl').text('(' + client.apibase + ')');
@@ -100,8 +100,8 @@ class GUI {
   setupToggleSidebar() {
     $('#toggleSidebar').click(function() {
       $('#accordion').toggle();
-      $('#codeView').toggleClass('col-sm-9');
-      $('#codeView').toggleClass('col-sm-12');
+      $('#codeView').toggleClass('col-xs-9');
+      $('#codeView').toggleClass('col-xs-12');
       DiffDrawer.refreshMinimap();
     });
   }

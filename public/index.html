@@ -44,7 +44,7 @@
           <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
               <li>
-                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i></i></i> Toggle Sidebar</a>
+                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i></i></i><span class="hidden-md hidden-sm"> Toggle Sidebar</span></a>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -93,7 +93,7 @@
       </nav>
     </div>
     <div class="row content">
-      <div class="col-sm-3 sidebar" style="overflow: hidden">
+      <div class="col-xs-3 sidebar" style="overflow: hidden">
         <!-- START ACCORDION NAV  -->
         <div class="panel-group" id="accordion">
           <div class="panel panel-default">
@@ -187,15 +187,15 @@
         </div>
         <!-- END ACCORDION NAV -->
       </div>
-      <div class="col-sm-9 box panel panel-default" id="codeView">
+      <div class="col-xs-9 box panel panel-default" id="codeView">
         <div class="panel-heading" id="codeboxTitle">DiffViewer	&trade;</div>
         <div class="row content panel-body" style="padding: 0" id="codeContent">
           <div id="minimap" class="srcminimap minimap"></div>
-          <div class="col-sm-6 codebox src scrollbar-chrome hljs">
+          <div class="col-xs-6 codebox src scrollbar-chrome hljs">
             <pre><code class="language-java" id="src"></code></pre>
           </div>
           <div id="minimap" class="dstminimap minimap"></div>
-          <div class="col-sm-6 codebox dst scrollbar-chrome hljs">
+          <div class="col-xs-6 codebox dst scrollbar-chrome hljs">
             <pre><code class="language-java" id="dst"></code></pre>
           </div>
         </div>
@@ -227,13 +227,13 @@
         </div>
         <div class="modal-body" style="height: 100%">
           <div class="row">
-            <div class="col-sm-6" style="position: relative;height: 700px">
+            <div class="col-xs-6" style="position: relative;height: 700px">
               <h3>Source code</h3>
               <hr />
               <div id="editorSrc" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
               <!-- <textarea name="srcInput" rows="25" style="width:100%"></textarea> -->
             </div>
-            <div class="col-sm-6" style="height: 700px">
+            <div class="col-xs-6" style="height: 700px">
               <h3>Destination code</h3>
               <hr />
               <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
@@ -267,7 +267,7 @@
   <!-- bootstrap prompts -->
   <script src="js/bootbox.min.js" charset="utf-8"></script>
   <!-- scrolling -->
-    <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
+  <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
   <!-- ace editor -->
   <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
 

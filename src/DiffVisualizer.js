@@ -116,8 +116,14 @@ function matcherChangerSetup() {
     //console.log(settings.loadSetting('matcher'));
     dv.setMatcher(settings.loadSetting('matcher'));
     Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
-    dv.diffAndDraw();
-    $('#currentMatcher').text(settings.loadSetting('matcher').name);
+
+    $('#codeboxTitle').html(Utility.generateTitle(dv.getDiffId(), dv.getMatcher().name, dv.getFilename(), 0));
+    //TODO improve visual inducators
+    dv.diffAndDraw(function() {
+      $('#codeboxTitle').html(Utility.generateTitle(dv.getDiffId(), dv.getMatcher().name, dv.getFilename(), 1));
+    }, function() {
+      $('#codeboxTitle').html(Utility.generateTitle(dv.getDiffId(), dv.getMatcher().name, dv.getFilename(), -1));
+    });
   });
 }
 
@@ -138,10 +144,13 @@ function diffListSetup() {
     $(this).addClass('active');
     var srcUrl = $(this).data('rawsrcurl');
     var dstUrl = $(this).data('rawdsturl');
+
     var diffId = $(this).data('id');
     var fileName = $(this).find('b').text();
 
+
     var viewer = new DiffDrawer();
+    viewer.setIdAndFilname(diffId, fileName);
     viewer.setJobId(diffId);
     if (settings.loadSetting('matcher')) {
       viewer.setMatcher(settings.loadSetting('matcher'));
@@ -166,6 +175,8 @@ function diffListSetup() {
     });
     NProgress.start();
     $('.minimap').hide();
+    $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, 0));
+
     axios.get(srcUrl, configSrc)
       .then(function(src) {
         viewer.setSource(src.data);
@@ -196,33 +207,36 @@ function diffListSetup() {
                     if(accepted)
                     {
                       viewer.setEnableMinimap(false); //temporarily disable minimap for huge file
-                      viewer.diffAndDraw();
-
                       dv = viewer;
-                      var titlestring = `<span class="label label-default">${diffId}</span><span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
-                      //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
-                      //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
-                      $('#codeboxTitle').html(titlestring);
+                      viewer.diffAndDraw(function() {
+                        //success
+                        $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, 1));
+                      }, function (msg) {
+                        //error
+                        $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, -1));
+                        Utility.showError(msg);
+                        NProgress.done();
+                      });
+
+
                     }
                     else {
                       NProgress.done();
-                      $('#codeboxTitle').html(`<span class="label label-default">${diffId}</span><span class="label label-danger">Aborted</span><b>${fileName}</b>`);
+                      $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, -2));
                     }
                 }
               });
             }
             else {
-
-              // var t0 = performance.now();
-              viewer.diffAndDraw();
-              // var t1 = performance.now();
-              // console.log('Call to doSomething took ' + (t1 - t0) + ' milliseconds.');
-
               dv = viewer;
-              var titlestring = `<span class="label label-default">${diffId}</span> <span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
-              //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
-              //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
-              $('#codeboxTitle').html(titlestring);
+              viewer.diffAndDraw(function() {
+
+                var titlestring = `<span class="label label-default">${diffId}</span><span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
+                //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
+                //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
+                $('#codeboxTitle').html(titlestring);
+              });
+
             }
 
 

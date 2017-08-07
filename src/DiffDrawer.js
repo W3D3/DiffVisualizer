@@ -57,6 +57,22 @@ class DiffDrawer {
     this.enableMinimap = value;
   }
 
+  setIdAndFilname(id, filename)
+  {
+    this.id = id;
+    this.filename = filename;
+  }
+
+  getFilename()
+  {
+    return this.filename;
+  }
+
+  getDiffId()
+  {
+    return this.id;
+  }
+
   setAsCurrentJob() {
     DiffDrawer.currentJobId = this.jobId;
   }
@@ -147,7 +163,7 @@ class DiffDrawer {
   showChanges() {
     if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
       Utility.showError('There are no changes to show');
-      return;
+      return false;
     }
 
     var filteredSrcMarkers;
@@ -184,7 +200,9 @@ class DiffDrawer {
       }
 
       NProgress.done();
+      return true;
     }
+    return false;
 
   }
 
@@ -198,7 +216,7 @@ class DiffDrawer {
     $('.minimap').css('height', minimapHeight);
     $('.minimap').css('top', minimapTop);
 
-    var right = parseInt($('.dst').css('width')) + 0 + 'px';
+    var right = parseInt($('.dst').innerWidth() + 'px');
     $('.srcminimap').css('right', right);
     $('.dstminimap').css('right', '0px');
     //console.log($('.dst').css('width'));
@@ -297,7 +315,7 @@ class DiffDrawer {
    * @param {Marker[]} markersSorted - sorted marker array of the given code string
    * @param {string} codeString - code string to be used, contained html tags will be escaped
    */
-  diffAndDraw() {
+  diffAndDraw(callback, err) {
 
     if (this.src == null || this.dst == null) {
       NProgress.done();
@@ -380,14 +398,17 @@ class DiffDrawer {
 
         if (!diffdrawer.checkIfCurrentJob()) {
           //console.log('Aborted Operation wiht id ' + diffdrawer.currentJobId);
-          return;
+          return false;
         }
-        diffdrawer.showChanges();
+
+        if(diffdrawer.showChanges())
+        {
+          callback();
+        }
 
       })
       .catch(function(error) {
-        Utility.showError(error + '(using matcher ' + diffdrawer.matcherName + ')');
-        NProgress.done();
+        err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
       });
   }
 }
