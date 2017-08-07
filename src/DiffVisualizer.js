@@ -117,12 +117,12 @@ function matcherChangerSetup() {
     dv.setMatcher(settings.loadSetting('matcher'));
     Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
 
-    $('#codeboxTitle').html(Utility.generateTitle(dv.getDiffId(), dv.getMatcher().name, dv.getFilename(), 0));
+    $('#codeboxTitle').html(dv.generateTitle(0));
     //TODO improve visual inducators
     dv.diffAndDraw(function() {
-      $('#codeboxTitle').html(Utility.generateTitle(dv.getDiffId(), dv.getMatcher().name, dv.getFilename(), 1));
+      $('#codeboxTitle').html(dv.generateTitle(1));
     }, function() {
-      $('#codeboxTitle').html(Utility.generateTitle(dv.getDiffId(), dv.getMatcher().name, dv.getFilename(), -1));
+      $('#codeboxTitle').html(dv.generateTitle(-1));
     });
   });
 }
