@@ -2,7 +2,8 @@
 .ps {
   -ms-touch-action: auto;
   touch-action: auto;
-  overflow: hidden !important;
+  /*fix for ctrl f*/
+  overflow: scroll !important;
   -ms-overflow-style: none; }
   @supports (-ms-overflow-style: none) {
     .ps {

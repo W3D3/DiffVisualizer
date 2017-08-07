@@ -24,6 +24,10 @@ body {
   /*background-color: rgba(92, 90, 168, 1);*/
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 [data-notify="progressbar"] {
 	margin-bottom: 0px;
 	position: absolute;

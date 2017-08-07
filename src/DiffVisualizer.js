@@ -39,7 +39,12 @@ $(document).ready(function() {
   NProgress.configure({ trickle: false });
 
   settings = new Settings();
-  $('.scrollbar-chrome').perfectScrollbar();
+
+  if(navigator.userAgent.indexOf('AppleWebKit') != -1){
+    //this is webkit, use custom scrollbars because we hide the default ones
+    $('.scrollbar-chrome').perfectScrollbar();
+  }
+
 
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
@@ -52,7 +57,7 @@ $(document).ready(function() {
   //setup on change and fill with all available matchers
   matcherChangerSetup();
 
-  //
+  // setup style changer
   styleChangerSetup();
 
   // initialize clickhandler and filter on the diff list
