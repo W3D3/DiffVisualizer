@@ -138,13 +138,13 @@
 					// 	hM = 3;
 					//var xM = ($child.position().left + $mapSource.scrollLeft()) * ratioX;
 					var yM = ($child.position().top + $mapSource.scrollTop()) * ratioY;
-					var bgC = $child.css('border-color');
-
+					var bgC = $child.css('border-top-color');
+					
 					mini.css( {
-						width : minimapWidth,
-						height : Math.round( hM ),
-						left : 0,
-						top : Math.round( yM ),
+						'width' : minimapWidth,
+						'height' : Math.round( hM ),
+						'left' : 0,
+						'top' : Math.round( yM ),
 						'background-color': bgC
 					} );
 				}
