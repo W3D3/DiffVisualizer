@@ -147,31 +147,5 @@ class Utility {
     document.getElementsByTagName('head').item(0).replaceChild(newlink, oldlink);
   }
 
-  //status
-  // -2 aborted
-  // -1 error
-  // 0 = in progress
-  // 1 = done
-  static generateTitle(id, matcher, filename, status)
-  {
-    var titlestring = `<span class="label label-default">${id}</span><span class="label label-info" id="currentMatcher">${matcher}</span>`;
-
-    //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
-    //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
-
-    if(status === 0) {
-      titlestring += '<span class="label label-primary">IN PROGRESS</span>';
-    }
-    else if(status === -1) {
-      titlestring += '<span class="label label-danger">ERROR</span>';
-    }
-    else if(status === -2) {
-      titlestring += '<span class="label label-danger">ABORTED</span>';
-    }
-    titlestring += ` <b>${filename}</b> `;
-
-    return titlestring;
-  }
-
 }
 export default Utility;

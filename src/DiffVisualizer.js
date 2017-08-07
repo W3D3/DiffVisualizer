@@ -175,7 +175,7 @@ function diffListSetup() {
     });
     NProgress.start();
     $('.minimap').hide();
-    $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, 0));
+    $('#codeboxTitle').html(viewer.generateTitle(0));
 
     axios.get(srcUrl, configSrc)
       .then(function(src) {
@@ -210,10 +210,10 @@ function diffListSetup() {
                       dv = viewer;
                       viewer.diffAndDraw(function() {
                         //success
-                        $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, 1));
+                        $('#codeboxTitle').html(dv.generateTitle(1));
                       }, function (msg) {
                         //error
-                        $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, -1));
+                        $('#codeboxTitle').html(dv.generateTitle(-1));
                         Utility.showError(msg);
                         NProgress.done();
                       });
@@ -222,7 +222,7 @@ function diffListSetup() {
                     }
                     else {
                       NProgress.done();
-                      $('#codeboxTitle').html(Utility.generateTitle(diffId, dv.getMatcher().name, fileName, -2));
+                      $('#codeboxTitle').html(dv.generateTitle(-2));
                     }
                 }
               });
@@ -230,15 +230,9 @@ function diffListSetup() {
             else {
               dv = viewer;
               viewer.diffAndDraw(function() {
-
-                var titlestring = `<span class="label label-default">${diffId}</span><span class="label label-info" id="currentMatcher">${dv.getMatcher().name}</span> <b>${fileName}</b>`;
-                //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
-                //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
-                $('#codeboxTitle').html(titlestring);
+                $('#codeboxTitle').html(dv.generateTitle(1));
               });
-
             }
-
 
           });
       });
