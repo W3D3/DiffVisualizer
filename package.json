@@ -34,6 +34,7 @@
     "babel-register": "^6.24.1",
     "chai": "^4.1.0",
     "chai-html": "^1.1.4",
+    "copy-webpack-plugin": "^4.0.1",
     "eslint": "^3.19.0",
     "mikro-config": "^1.1.0",
     "mocha": "^3.4.2",
