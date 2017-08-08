@@ -9,6 +9,7 @@ import Loader from './Loader';
 import Utility from './Utility';
 import GUI from './GUI';
 import Settings from './Settings';
+import SearchController from './SearchController';
 import {
   version
 } from '../package.json';
@@ -45,7 +46,13 @@ $(document).ready(function() {
     $('.scrollbar-chrome').perfectScrollbar();
   }
 
-
+  var sc = new SearchController({
+    focusChangeEvent: 'mouseover'
+  });
+  sc.addContainer($('.src'));
+  sc.addContainer($('.dst'));
+  sc.addContainer($('.navbar'));
+  console.log(sc);
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
 

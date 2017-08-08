@@ -95,6 +95,7 @@ body {
 pre {
   padding: 0;
   line-height: 20px;
+  height: 0
 }
 
 pre, code {
@@ -159,7 +160,10 @@ pre, code {
   /*border: 1px solid rgba(222, 166, 166, 0.7);*/
 }
 
-
+.scriptmarker {
+  padding: 2px;
+  margin: 2px;
+}
 /*.scriptmarker {
   padding: 4px;
   margin: 4px;
@@ -326,13 +330,13 @@ pre, code {
   background-color: #EEE;
   border: 1px solid #AAA;
   opacity: 0.8;
-  z-index: 1;
+  z-index: 200;
 }
 
 .minimap-node {
   position: absolute;
   background-color: rgb(102, 120, 129);
-  z-index: 2;
+  z-index: 250;
 }
 
 .minimap-viewport {
@@ -340,7 +344,7 @@ pre, code {
   width: 100%;
   box-sizing: border-box;
   background-color: rgba(140, 163, 173, 0.4);
-  z-index: 3;
+  z-index: 300;
   cursor: move;
 }
 
@@ -420,7 +424,8 @@ pre, code {
 .selected {
   border-width: 1px;
   border-style: solid;
-  border-color: #2780E3 z-index: 100;
+  border-color: #2780E3;
+  z-index: 100;
   position: relative;
   /*font-weight: bold;*/
   box-shadow: 2px 2px 5px #2780E3;
