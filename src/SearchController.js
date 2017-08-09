@@ -1,7 +1,6 @@
 /* global $ */
-import Utility from './Utility';
+// import Utility from './Utility';
 import _ from 'lodash';
-import mark from 'mark.js/dist/jquery.mark';
 
 class SearchController{
 
@@ -13,13 +12,14 @@ class SearchController{
     var defaults = {
         focusChangeEvent: 'click',
         searchBarTop: '100px',
-        searchBarWidth: '20%',
-        animationDuration: 400
+        searchBarWidth: '30%',
+        animationDuration: 400,
+        enableGlobalSearch: false,
+        globalScope: 'body'
     };
     this.options = this.setDefaults(options, defaults);
 
     this.hijackCrtlF();
-    console.log(mark);
   }
 
   setDefaults(options, defaults){
@@ -44,7 +44,6 @@ class SearchController{
               var searchPanel = me.searchPanelList[me.focussedIndex];
               searchPanel.toggle(me.options.animationDuration);
               searchPanel.find('#sb-input-'+me.focussedIndex).focus();
-              // $elem.css('padding-top', '50px');
             }
         }
     });
@@ -54,9 +53,9 @@ class SearchController{
     var me = this;
     me.containerList.push($container);
     this.generateSearchBar($container);
+
     $container.on(me.options.focusChangeEvent, function() {
       me.focussedIndex = me.containerList.indexOf($container);
-      console.log(me.focussedIndex);
     });
 
   }
@@ -66,19 +65,19 @@ class SearchController{
   //var $elem = this.containerList[index];
     // var me = this;
     var index = this.containerList.indexOf($elem);
-    var $searchbar = $('<div class="input-group">'+
-                // '<div class="input-group-btn search-panel">'+
-                //     '<button type="button" class="btn btn-default">'+
-                //       '<span id="search_concept">Regex</span>'+
+    var $searchbar = $('<div class="input-group searchbar">'+
+                '<div class="input-group-btn search-panel">'+
+                    '<input id="globalToggle" data-on="GLOBAL" data-off="LOCAL" type="checkbox" data-toggle="toggle" data-onstyle="info" data-height="43" data-width="80" data-style="globalToggle" />'+
+                      // '<span id="search_concept">Regex</span>'+
                 // '  </button>'+
-                // '</div>' +
-                ' <input type="hidden" name="search_param" value="all" id="search_param"> ' +
-                ` <input type="text" class="form-control" id="sb-input-${index}" placeholder="Search term..."> `+
-                ' <span class="input-group-btn"> ' +
+                '</div>' +
+                // ' <input type="hidden" name="search_param" value="all" id="search_param"> ' +
+                ` <input type="text" class="form-control" id="sb-input-${index}" placeholder=""> <span class="overInput"></span>`+
+                ' <span class="input-group-btn">' +
                   // `  <button class="btn btn-default" id="sb-submit-${index}" type="button"><span class="glyphicon glyphicon-search"></span></button> ` +
-                  ' <button class="btn btn-default" data-search="clear" type="button"><span class="glyphicon glyphicon-remove"></span></button> ' +
-                  ' <button class="btn btn-primary" data-search="next" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button> ' +
-                  ' <button class="btn btn-primary" data-search="prev" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button> ' +
+                  ' <button class="btn btn-sm btn-default" data-search="clear" type="button"><span class="glyphicon glyphicon-remove"></span></button> ' +
+                  ' <button class="btn btn-sm btn-primary" data-search="next" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button> ' +
+                  ' <button class="btn btn-sm btn-primary" data-search="prev" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button> ' +
                 '</span></div>');
     //position: fixed; width: 20%; top: 100px; z-index: 5000
     $searchbar.css({
@@ -94,10 +93,10 @@ class SearchController{
     this.searchPanelList[index] = $searchbar;
 
     $elem.append($searchbar);
-    // $(`#sb-submit-${index}`).on('click', function () {
-    //   console.log('sb sumbit clicked');
-    //   me.executeSearch($elem, $input.val());
-    // });
+    $searchbar.find('#globalToggle').bootstrapToggle();
+    $searchbar.find('#globalToggle').on('change', function () {
+      console.log('globalToggle clicked');
+    });
 
       // the input field
     var $clearBtn = $searchbar.find('button[data-search=\'clear\']'),
@@ -129,6 +128,7 @@ class SearchController{
         //position = $current.offset().top - offsetTop;
         var localOffset = $content.offset().top;
         //Utility.scrollToElementRelativeTo($current, $content);
+        $searchbar.find('.overInput').text(parseInt(currentIndex + 1 )+ ' of ' + $results.length);
         $($content).scrollTo($current, 100, {
           offset: 0 - localOffset - 100
         });
@@ -146,10 +146,23 @@ class SearchController{
         done: function() {
           $content.mark(searchVal, {
             separateWordSearch: true,
-            done: function() {
-              $results = $content.find('mark');
-              currentIndex = 0;
-              jumpTo();
+            exclude: ['.searchbar *'],
+            // noMatch: function(){
+            //     $searchbar.find('.overInput').text('No match');
+            //     $searchbar.find('.overInput').addClass('danger');
+            // },
+            done: function(counter) {
+              if(counter > 0)
+              {
+                $searchbar.find('.overInput').removeClass('danger');
+                $results = $content.find('mark');
+                currentIndex = 0;
+                jumpTo();
+              } else {
+                $searchbar.find('.overInput').text('0 of 0');
+                $searchbar.find('.overInput').addClass('danger');
+              }
+
             }
           });
         }
@@ -171,6 +184,7 @@ class SearchController{
      */
     $clearBtn.on('click', function() {
       $content.unmark();
+      $searchbar.find('.overInput').text('0 of 0');
       $input.val('').focus();
     });
 
@@ -189,14 +203,6 @@ class SearchController{
         jumpTo();
       }
     });
-  }
-
-  executeSearch($elem, searchstring)
-  {
-    console.log($elem, searchstring);
-    $elem.mark(searchstring);
-
-
   }
 
 } export default SearchController;

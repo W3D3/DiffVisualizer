@@ -482,3 +482,38 @@ mark.current {
   background: orange;
   padding: 0;
 }
+
+.globalToggle
+{
+  height: 43px;
+  width: 80px;
+  font-size: 5pt
+}
+
+.globalToggle label
+{
+  font-size: 8pt;
+  padding-top: 12px
+}
+
+.btn-sm
+{
+  height: 43px
+}
+
+.overInput
+{
+  position: absolute;
+  color: rgba(145, 145, 145, 0.6);
+  /*top: -10px;*/
+  /*left: 30px*/
+  z-index: 301;
+  top: 10px;
+  left: calc(100% - 170px);
+  text-align: right;
+}
+
+.overInput.danger
+{
+  color: rgba(198, 25, 25, 0.6);
+}

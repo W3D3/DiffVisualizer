@@ -51,7 +51,7 @@ $(document).ready(function() {
   });
   sc.addContainer($('.src'));
   sc.addContainer($('.dst'));
-  console.log(sc);
+  
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
 
