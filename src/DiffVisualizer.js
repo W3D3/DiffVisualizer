@@ -47,11 +47,12 @@ $(document).ready(function() {
   }
 
   var sc = new SearchController({
-    focusChangeEvent: 'mouseover'
+    focusChangeEvent: 'mouseover',
+    globalScope: '#codeContent'
   });
   sc.addContainer($('.src'));
   sc.addContainer($('.dst'));
-  
+
   //create first DiffDrawer object to work on
   dv = new DiffDrawer();
 
