@@ -1,6 +1,6 @@
 {
   "name": "diffvisualizer",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "engines": {
     "node": "6.11.1"
   },
@@ -65,7 +65,7 @@
     "docker-build": "docker-build",
     "docker-run": "docker-run",
     "docker-push": "docker-push",
-    "deploy": "docker-build && docker-push"
+    "deploy": "./scripts/docker-build && ./scripts/docker-push"
   },
   "babel": {
     "presets": [

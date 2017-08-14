@@ -125,7 +125,6 @@ function matcherChangerSetup() {
     //console.log(settings.loadSetting('matcher'));
         dv.setMatcher(settings.loadSetting('matcher'));
         Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
-
         $('#codeboxTitle').html(dv.generateTitle(0));
     //TODO improve visual inducators
         dv.diffAndDraw(function() {
@@ -328,7 +327,10 @@ function filterSetup() {
       //clear last selected
             dv.setFilter(filter);
             dv.showChanges();
-            Utility.showSuccess('Now only showing nodes of type: ' + filter.join(', '));
+            var filterNodes = filter.map(function(filtertype) {
+                return `<span class="${filtertype}">${filtertype}</span>`;
+            });
+            Utility.showMessage('Now showing nodes of: ' + filterNodes.join(', '));
         } else {
             var $target = $(event.currentTarget),
                 val = $target.attr('data-value'),

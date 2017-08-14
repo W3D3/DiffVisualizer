@@ -91,8 +91,7 @@ class Utility {
         }
     }
 
-    static showNotify(title, message, type, icon, delay)
-  {
+    static showNotify(title, message, type, icon, delay) {
         $.notify({
             // options
             icon: icon,

@@ -13,12 +13,12 @@ import NProgress from 'nprogress';
 
 class Loader {
     constructor() {
-    //Configure dropzone
+        //Configure dropzone
         Dropzone.options.jsonUploader = {
             paramName: 'file', // The name that will be used to transfer the file
             maxFilesize: 2, // MB
             accept: function(file, done) {
-        //accept all files for now
+                //accept all files for now
                 NProgress.configure({
                     parent: '#jsonUploader'
                 });
@@ -42,16 +42,17 @@ class Loader {
             }
         };
 
-    //show all the already uploaded elements
+        //show all the already uploaded elements
         Loader.showUploadedElements();
     }
 
     static showUploadedElements() {
-        var alreadyUploaded = Settings.getAllSettingsKeysPersistent();
+        var alreadyUploaded = Settings.getAllFiles();
+        console.log(alreadyUploaded);
         $('#uploadedFiles').html('');
         alreadyUploaded.forEach(filename => {
             $('#uploadedFiles').append(`<a href="#" class="list-group-item fileButton" data-key="${filename}"> ${filename}</a>`);
-      //<i class="fa fa-times pull-right" style="color: red"></i></a>
+            //<i class="fa fa-times pull-right" style="color: red"></i></a>
         });
 
         $('.fileButton').on('click', function() {
@@ -61,24 +62,24 @@ class Loader {
             NProgress.start();
             $(this).parent().find('.fileButton').removeClass('active');
             $(this).addClass('active');
-            Loader.createDiffList(Settings.loadSettingPersistent($(this).data('key')));
+            Loader.createDiffList(Settings.loadFile($(this).data('key')));
             Utility.showSuccess('Finished loading <i>' + $(this).data('key') + '</i>');
         });
     }
 
     loadDiffsFromFile(file, filename) {
         axios.get('/uploads/' + filename)
-      .then(response => {
-          Settings.saveSettingPersistent(file.name, response.data);
-          Loader.showUploadedElements();
-          Loader.createDiffList(response.data);
+            .then(response => {
+                Settings.saveFile(file.name, response.data);
+                Loader.showUploadedElements();
+                Loader.createDiffList(response.data);
 
-          Utility.showSuccess('Finished importing <i>' + file.name + '</i>');
-      })
-      .catch(function(error) {
-          Utility.showError(error);
-          NProgress.done();
-      });
+                Utility.showSuccess('Finished importing <i>' + file.name + '</i>');
+            })
+            .catch(function(error) {
+                Utility.showError(error);
+                NProgress.done();
+            });
     }
 
     static createDiffList(data) {
