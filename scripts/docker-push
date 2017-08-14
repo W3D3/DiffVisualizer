@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+if [ -z "$VERSION" ]; then
+    VERSION=$(node -e "console.log(require('./package.json').version)")
+fi
+
+if [ -z "$REPO" ]; then
+    REPO=$(node -e "console.log(require('./package.json').name.split('/').pop())")
+fi
+
+PREFIX=$(node -e "console.log(require('./package.json')['docker-registry'] || '')")
+if [ -z "$PREFIX" ]; then
+    PREFIX=$(node -e "console.log(require('./package.json')['docker-user'] || '')")
+fi
+
+if [ -z "$PREFIX" ]; then
+    echo "docker push requires either docker-registry or docker-user in package.json"
+    exit 1
+fi
+
+echo "$VERSION"
+
+docker tag "$REPO:$VERSION" "$PREFIX/$REPO"
+docker push "$PREFIX/$REPO"
+docker tag "$REPO:$VERSION" "$PREFIX/$REPO:$VERSION"
+docker push "$PREFIX/$REPO:$VERSION"
+docker tag -f "$REPO:$VERSION" "$PREFIX/$REPO:latest"
+docker push "$PREFIX/$REPO:latest"

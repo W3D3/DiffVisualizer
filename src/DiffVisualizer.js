@@ -272,8 +272,8 @@ function diffListSetup() {
         $list.hide();
         $list.filter(function() {
             var currentObject;
-            if (filterText == '')
-                return true;
+            if (filterText == '') return true;
+
             if ($.isNumeric(filterText)) {
                 currentObject = $(this).data('id') + ''; //adding empty string so it can be substring searched
             } else {

@@ -17,6 +17,7 @@
             0,
             "unix"
         ],
+        "curly": [2, "multi-line"],
         "quotes": [
             "error",
             "single"
