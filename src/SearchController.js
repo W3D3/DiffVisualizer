@@ -70,7 +70,6 @@ class SearchController {
                 var searchPanel;
                 var container;
                 var input;
-                console.log(me.focussedIndex + ' is visible '+ me.visibilityState[me.focussedIndex]);
                 if (me.focussedIndex >= 0) {
                     //hide all other searchpanels
                     for (var i = 0; i < me.searchPanelList.length; i++) {
