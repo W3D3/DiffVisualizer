@@ -1,5 +1,13 @@
 /* global $ */
-// import Utility from './Utility';
+/**
+ * @file Search Controller to add and configure Searchbars to containers
+ * @author Christoph Wedenig <christoph@wedenig.org>
+ */
+
+/**
+ * SearchController
+ * can search inside single / all added containers
+ */
 import _ from 'lodash';
 
 class SearchController {
@@ -9,7 +17,7 @@ class SearchController {
         this.searchPanelList = [];
         this.visibilityState = [];
         this.focussedIndex = -1;
-        this.lastSearched = "";
+        this.lastSearched = '';
 
         var defaults = {
             //on which event the focussed element should change
@@ -32,51 +40,80 @@ class SearchController {
         return _.defaults({}, _.clone(options), defaults);
     }
 
+    hideAll()
+    {
+        for (var i = 0; i < this.searchPanelList.length; i++) {
+            this.hideSearchbar(i);
+        }
+    }
+
+    hideSearchbar(id)
+    {
+        var searchPanel = this.searchPanelList[id];
+        var container = this.containerList[id];
+        var input = searchPanel.find('#sb-input-' + id);
+
+        this.visibilityState[id] = false;
+        input.val('');
+        input.trigger('input');
+        searchPanel.hide(this.options.animationDuration);
+        $(container).css({
+            'padding-top': '0'
+        });
+    }
+
     hijackCrtlF() {
         var me = this;
+
         $(window).keydown(function(e) {
             if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
-
+                var searchPanel;
+                var container;
+                var input;
+                console.log(me.focussedIndex + ' is visible '+ me.visibilityState[me.focussedIndex]);
                 if (me.focussedIndex >= 0) {
                     //hide all other searchpanels
                     for (var i = 0; i < me.searchPanelList.length; i++) {
-                        if (i !== me.focussedIndex)
-                        {
-                          var searchPanel = me.searchPanelList[i];
-                          var container = me.containerList[i];
-                          var input = searchPanel.find('#sb-input-' + i);
+                        if (i !== me.focussedIndex) {
+                            searchPanel = me.searchPanelList[i];
+                            container = me.containerList[i];
+                            input = searchPanel.find('#sb-input-' + i);
 
-                          input.val('');
-                          input.trigger('input');
-                          searchPanel.hide(me.options.animationDuration);
+                            me.visibilityState[i] = false;
+                            input.val('');
+                            input.trigger('input');
+                            searchPanel.hide(me.options.animationDuration);
+                            $(container).css({
+                                'padding-top': '0'
+                            });
                         }
 
                     }
                     //prevent browser search
                     e.preventDefault();
                     //show and focus searchpanel to last focussed container
-                    var searchPanel = me.searchPanelList[me.focussedIndex];
-                    var container = me.containerList[me.focussedIndex];
-                    var input = searchPanel.find('#sb-input-' + me.focussedIndex);
+                    searchPanel = me.searchPanelList[me.focussedIndex];
+                    container = me.containerList[me.focussedIndex];
+                    input = searchPanel.find('#sb-input-' + me.focussedIndex);
 
                     me.visibilityState[me.focussedIndex] = !me.visibilityState[me.focussedIndex];
-                    if(me.visibilityState[me.focussedIndex]) //if is visible
+                    if (me.visibilityState[me.focussedIndex]) //if is visible
                     {
-                      $(container).css({
-                        'padding-top': '50px'
-                      });
-                      input.val(me.lastSearched);
-                      searchPanel.show(me.options.animationDuration);
-                      input.focus();
-                      input.trigger('input');
+                        $(container).css({
+                            'padding-top': '50px'
+                        });
+                        input.val(me.lastSearched);
+                        searchPanel.show(me.options.animationDuration);
+                        input.focus();
+                        input.trigger('input');
                     } else {
-                      $(container).css({
-                        'padding-top': '0'
-                      });
-                      me.lastSearched = input.val();
-                      input.val('');
-                      input.trigger('input');
-                      searchPanel.hide(me.options.animationDuration);
+                        $(container).css({
+                            'padding-top': '0'
+                        });
+                        me.lastSearched = input.val();
+                        input.val('');
+                        input.trigger('input');
+                        searchPanel.hide(me.options.animationDuration);
                     }
 
                 }
@@ -96,23 +133,22 @@ class SearchController {
     }
 
     generateSearchBar($elem) {
-        //var $elem = this.containerList[index];
+    //var $elem = this.containerList[index];
         var me = this;
         var index = this.containerList.indexOf($elem);
         var searchbarhtml = '<div class="input-group searchbar">';
-        if(me.options.enableGlobalSearch)
-        {
-          searchbarhtml += '<div class="input-group-btn search-panel">' +
-          '<input id="globalToggle" data-on="GLOBAL" data-off="LOCAL" type="checkbox" data-toggle="toggle" data-onstyle="info" data-height="43" data-width="80" data-style="globalToggle" />' +
-          '</div>';
+        if (me.options.enableGlobalSearch) {
+            searchbarhtml += '<div class="input-group-btn search-panel">' +
+        '<input id="globalToggle" data-on="GLOBAL" data-off="LOCAL" type="checkbox" data-toggle="toggle" data-onstyle="info" data-height="43" data-width="80" data-style="globalToggle" />' +
+        '</div>';
         }
         searchbarhtml += ` <input type="text" class="form-control" id="sb-input-${index}" placeholder=""> <span class="overInput"></span>` +
-            ' <span class="input-group-btn">' +
-            // `  <button class="btn btn-default" id="sb-submit-${index}" type="button"><span class="glyphicon glyphicon-search"></span></button> ` +
-            // ' <button class="btn btn-sm btn-default" data-search="clear" type="button"><span class="glyphicon glyphicon-remove"></span></button> ' +
-            ' <button class="btn btn-sm btn-primary" data-search="next" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button> ' +
-            ' <button class="btn btn-sm btn-primary" data-search="prev" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button> ' +
-            '</span></div>';
+      ' <span class="input-group-btn">' +
+      // `  <button class="btn btn-default" id="sb-submit-${index}" type="button"><span class="glyphicon glyphicon-search"></span></button> ` +
+      // ' <button class="btn btn-sm btn-default" data-search="clear" type="button"><span class="glyphicon glyphicon-remove"></span></button> ' +
+      ' <button class="btn btn-sm btn-primary" data-search="next" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button> ' +
+      ' <button class="btn btn-sm btn-primary" data-search="prev" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button> ' +
+      '</span></div>';
 
         var $searchbar = $(searchbarhtml);
 
@@ -151,66 +187,59 @@ class SearchController {
             currentIndex = 0;
 
         $searchbar.find('#globalToggle').on('change', function() {
-            console.log('globalToggle clicked');
             if (me.options.enableGlobalSearch) {
-                if ($(this).prop('checked'))
-                {
-                  //$content = $(me.options.globalScope);
-                  $content = $($.map(me.containerList, function(el){return $.makeArray(el)}));
-                  $input.trigger('input');
-                  $input.focus();
-                }
-                else {
-                  $content.unmark({done: function() {
-                    $content = $elem;
+                if ($(this).prop('checked')) {
+                    $content = $($.map(me.containerList, function(el) {
+                        return $.makeArray(el);
+                    }));
                     $input.trigger('input');
                     $input.focus();
-                  }});
+                } else {
+                    $content.unmark({
+                        done: function() {
+                            $content = $elem;
+                            $input.trigger('input');
+                            $input.focus();
+                        }
+                    });
                 }
             }
         });
 
-        /**
-         * Jumps to the element matching the currentIndex
-         */
+    /**
+     * Jumps to the element matching the currentIndex
+     */
         function jumpTo() {
             if ($results.length) {
                 var $current = $results.eq(currentIndex);
                 $results.removeClass(currentClass);
                 if ($current.length) {
                     $current.addClass(currentClass);
-                    //position = $current.offset().top - offsetTop;
                     var localOffset = $content.offset().top;
-                    //Utility.scrollToElementRelativeTo($current, $content);
                     $searchbar.find('.overInput').text(parseInt(currentIndex + 1) + ' of ' + $results.length);
-                    if ($searchbar.find('#globalToggle').prop('checked'))
-                    {
-                      console.log('global search on and looking jumping');
-                      for (var i = 0; i < me.containerList.length; i++) {
-                        console.log(me.containerList[i].attr('id'));
+                    if ($searchbar.find('#globalToggle').prop('checked')) {
+                        for (var i = 0; i < me.containerList.length; i++) {
 
-                        if(me.containerList[i].has('.'+currentClass).length > 0)
-                        {
-                          $(me.containerList[i]).scrollTo($current, 100, {
-                              offset: 0 - localOffset - 100
-                          });
+                            if (me.containerList[i].has('.' + currentClass).length > 0) {
+                                $(me.containerList[i]).scrollTo($current, 100, {
+                                    offset: 0 - localOffset - 100
+                                });
+                            }
                         }
-                      }
-
                     } else {
-                      $($content).scrollTo($current, 100, {
-                          offset: 0 - localOffset - 100
-                      });
+                        $($content).scrollTo($current, 100, {
+                            offset: 0 - localOffset - 100
+                        });
                     }
 
                 }
             }
         }
 
-        /**
-         * Searches for the entered keyword in the
-         * specified context on input
-         */
+    /**
+     * Searches for the entered keyword in the
+     * specified context on input
+     */
         $input.on('input', _.debounce(function() {
             var searchVal = this.value;
             $content.unmark({
@@ -218,10 +247,6 @@ class SearchController {
                     $content.mark(searchVal, {
                         separateWordSearch: true,
                         exclude: ['.searchbar *'],
-                        // noMatch: function(){
-                        //     $searchbar.find('.overInput').text('No match');
-                        //     $searchbar.find('.overInput').addClass('danger');
-                        // },
                         done: function(counter) {
                             if (counter > 0) {
                                 $searchbar.find('.overInput').removeClass('danger');
@@ -242,24 +267,24 @@ class SearchController {
         $input.on('keydown', function(event) {
             if (event.which === 13) {
                 $nextBtn.click();
-                // Disable sending the related form
+        // Disable sending the related form
                 event.preventDefault();
                 return false;
             }
         });
 
-        /**
-         * Clears the search
-         */
+    /**
+     * Clears the search
+     */
         $clearBtn.on('click', function() {
             $content.unmark();
             $searchbar.find('.overInput').text('0 of 0');
             $input.val('').focus();
         });
 
-        /**
-         * Next and previous search jump to
-         */
+    /**
+     * Next and previous search jump to
+     */
         $nextBtn.add($prevBtn).on('click', function() {
             if ($results.length) {
                 currentIndex += $(this).is($prevBtn) ? -1 : 1;
