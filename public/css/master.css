@@ -5,210 +5,180 @@
  safari is new internet explorer confirmed */
 
 html, body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  min-width: 1060px;
-  /*workaround for windows scrollbars adding to the height*/
-}
-
-body {
-  /*background-color: rgb(255, 143, 220);*/
-  /*background-color: rgba(92, 90, 168, 1);*/
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    min-width: 1060px;
+    /*workaround for windows scrollbars adding to the height*/
 }
 
 ::-webkit-scrollbar {
     display: none;
+    /* disable scrollbar for webkit browser because we can use perfect scrollbar instead which autohides */
 }
 
 [data-notify="progressbar"] {
-	margin-bottom: 0px;
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	width: 100%;
-	height: 5px;
+    margin-bottom: 0px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 5px;
 }
 
 .row {
-  margin: 0;
+    margin: 0;
 }
 
 .box {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-  padding: 0;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    padding: 0;
 }
 
 .box .row.header {
-  flex: 0 1 auto;
-  /* The above is shorthand for:
-  flex-grow: 0,
-  flex-shrink: 1,
-  flex-basis: auto
-  */
+    flex: 0 1 auto;
+    /* The above is shorthand for:
+      flex-grow: 0,
+      flex-shrink: 1,
+      flex-basis: auto
+      */
 }
 
 .box .row.content {
-  position: relative;
-  flex: 1 1 1px;
-  overflow: hidden;
-  /* fixes hover scrollbar on windows... */
+    position: relative;
+    flex: 1 1 1px;
+    overflow: hidden;
+    /* fixes hover scrollbar on windows... */
 }
 
 @media (min-width: 768px) {
-  .codebox {
-    height: 100%;
-    overflow: scroll;
-  }
+    .codebox {
+        height: 100%;
+        overflow: scroll;
+    }
 }
 
 .box .row.footer {
-  flex: 0 1 1.5em;
-  /*RESIZE HERE IF NEEDED*/
-  background-color: rgb(98, 98, 98);
+    flex: 0 1 1.5em;
+    /*RESIZE HERE IF NEEDED*/
+    background-color: rgb(98, 98, 98);
 }
 
 
 /* END FLEXBOX CONFIG */
 
 .navbar {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 
 /*LINE NUMBERS*/
 
 .hljs-line-numbers {
-  text-align: right;
-  border-right: 1px solid #ccc;
-  color: #999;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    text-align: right;
+    border-right: 1px solid #ccc;
+    color: #999;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 pre {
-  padding: 0;
-  line-height: 20px;
-  height: 0
+    padding: 0;
+    line-height: 20px;
+    height: 0
 }
 
 pre, code {
-  white-space: pre !important;
+    white-space: pre !important;
 }
 
 
 /*marker highlighting*/
 
 .INSERT {
-  background-color: rgba(155, 245, 144, 0.7);
-  text-shadow: none;
-  padding: 1px;
-  margin: 1px;
-  border: none;
-  border-color: rgba(32, 212, 10, 0.7);
-  /*border: 1px solid rgba(155, 245, 144, 0.7);*/
+    background-color: rgba(155, 245, 144, 0.7);
+    text-shadow: none;
+    padding: 1px;
+    margin: 1px;
+    border: none;
+    border-color: rgba(32, 212, 10, 0.7);
+    /*border: 1px solid rgba(155, 245, 144, 0.7);*/
 }
 
 .MOVE {
-  background-color: rgba(238, 135, 244, 0.7);
-  text-shadow: none;
-  padding: 1px;
-  margin: 1px;
-  cursor: pointer;
-  border: none;
-  border-color: rgba(200, 48, 209, 0.7);
-  /*border: 2px solid rgba(238, 135, 244, 0.7);*/
+    background-color: rgba(238, 135, 244, 0.7);
+    text-shadow: none;
+    padding: 1px;
+    margin: 1px;
+    cursor: pointer;
+    border: none;
+    border-color: rgba(200, 48, 209, 0.7);
+    /*border: 2px solid rgba(238, 135, 244, 0.7);*/
 }
-
-
-/*.MOVE:hover:not(.selected) {
-  z-index: 50;
-  position: relative;
-  border: 2px dashed rgba(192, 5, 203, 1);
-}*/
 
 .UPDATE {
-  background-color: rgba(243, 250, 110, 0.7);
-  /*background-color: rgba(240, 210, 0, 0.7);*/
-  text-shadow: none;
-  padding: 1px;
-  margin: 1px;
-  cursor: pointer;
-  border: none;
-  border-color: rgba(240, 210, 0, 0.7);
-  /*border: 2px solid rgba(231, 194, 3, 0.7);*/
+    background-color: rgba(243, 250, 110, 0.7);
+    /*background-color: rgba(240, 210, 0, 0.7);*/
+    text-shadow: none;
+    padding: 1px;
+    margin: 1px;
+    cursor: pointer;
+    border: none;
+    border-color: rgba(240, 210, 0, 0.7);
+    /*border: 2px solid rgba(231, 194, 3, 0.7);*/
 }
 
-
-/*.UPDATE:hover:not(.selected) {
-  border: 2px dashed rgba(231, 194, 3, 1);
-}*/
-
 .DELETE {
-  background-color: rgba(222, 166, 166, 0.7);
-  text-shadow: none;
-  padding: 1px;
-  margin: 1px;
-  border: none;
-  border-color: rgba(218, 1, 1, 0.7);
-  /*border: 1px solid rgba(222, 166, 166, 0.7);*/
+    background-color: rgba(222, 166, 166, 0.7);
+    text-shadow: none;
+    padding: 1px;
+    margin: 1px;
+    border: none;
+    border-color: rgba(218, 1, 1, 0.7);
+    /*border: 1px solid rgba(222, 166, 166, 0.7);*/
 }
 
 .scriptmarker {
-  padding: 2px;
-  margin: 2px;
+    padding: 2px;
+    margin: 2px;
 }
-/*.scriptmarker {
-  padding: 4px;
-  margin: 4px;
-  border-width: 1px;
-}
-.scriptmarker .scriptmarker {
-  padding: 3px;
-  margin: 3px;
-  border-width: 1px;
-}
-
-.scriptmarker .scriptmarker .scriptmarker {
-  padding: 2px;
-  margin: 2px;
-  border-width: 1px;
-}*/
 
 .codebox {
-  padding-right: 0;
-  padding-left: 0;
-  border: 1px solid #CCC;
-  padding: 0;
+    /*padding-left: 0;*/
+    border: 1px solid #CCC;
+    padding: 0;
+
 }
 
 .sidebar {
-  padding-left: 5px;
-  padding-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .content {
-  /*padding: 5px;*/
-  padding-top: 0;
+    /*padding: 5px;*/
+    padding-top: 0;
 }
 
 .codebox pre {
-  padding-top: 0;
-  padding-bottom: 0;
-  overflow: visible;
-  border: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 20px;
+    overflow: visible;
+    border: none;
 }
 
 .codebox pre code {
-  overflow: visible;
+    overflow: visible;
+    display:inline-block;
+    margin-right: 20px
 }
-
 
 /* selected element style */
 
@@ -216,304 +186,286 @@ pre, code {
 /* accordion nav */
 
 #accordion .glyphicon {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .panel-collapse>.list-group .list-group-item:first-child {
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
 }
 
 .panel-collapse>.list-group .list-group-item {
-  border-width: 1px 0;
+    border-width: 1px 0;
 }
 
 .panel-collapse>.list-group {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .panel-collapse .list-group-item {
-  border-radius: 0;
+    border-radius: 0;
 }
 
 .panel-collapse .list-group .list-group {
-  margin: 0;
-  margin-top: 10px;
+    margin: 0;
+    margin-top: 10px;
 }
 
 .panel-collapse .list-group-item li.list-group-item {
-  margin: 0 -15px;
-  border-top: 1px solid #ddd !important;
-  border-bottom: 0;
-  padding-left: 30px;
+    margin: 0 -15px;
+    border-top: 1px solid #ddd !important;
+    border-bottom: 0;
+    padding-left: 30px;
 }
 
 .panel-collapse .list-group-item li.list-group-item:last-child {
-  padding-bottom: 0;
+    padding-bottom: 0;
 }
 
 .panel-collapse div.list-group div.list-group {
-  margin: 0;
+    margin: 0;
 }
 
 .panel-collapse div.list-group .list-group a.list-group-item {
-  border-top: 1px solid #ddd !important;
-  border-bottom: 0;
-  padding-left: 30px;
+    border-top: 1px solid #ddd !important;
+    border-bottom: 0;
+    padding-left: 30px;
 }
 
 .panel-collapse .list-group-item li.list-group-item {
-  border-top: 1px solid #DDD !important;
+    border-top: 1px solid #DDD !important;
 }
 
 #myModal .modal-dialog {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 #myModal .modal-content {
-  position: relative;
-  height: auto;
-  min-height: 100%;
-  border-radius: 0;
+    position: relative;
+    height: auto;
+    min-height: 100%;
+    border-radius: 0;
 }
 
 .panel-heading {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .skill-unit .bar .progress {
-  background: #24ff09;
+    background: #24ff09;
 }
 
 .skill-unit .bar .progress span {
-  color: #24ff09;
-  background: #24ff09;
+    color: #24ff09;
+    background: #24ff09;
 }
-
 
 #diffsList {
-  overflow-y: scroll;
-  overflow-x: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
+
 
 /* panel close fix */
 
 .clickable {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .panel-heading span {
-  font-size: 15px;
+    font-size: 15px;
 }
 
 #metaDataPanel .panel-heading span {
-  margin-top: -20px;
-  font-size: 15px;
+    margin-top: -20px;
+    font-size: 15px;
 }
 
 .selectedLine {
-  background-color: blue;
-  color: white
+    background-color: blue;
+    color: white
 }
 
 
 /* minimap */
 
 #minimap {
-  position: fixed;
-  width: 20px;
-  top: 100px !important;
-  /*right: 620px !important;*/
-  background-color: #EEE;
-  border: 1px solid #AAA;
-  opacity: 0.8;
-  z-index: 200;
+    position: fixed;
+    width: 20px;
+    top: 100px !important;
+    /*right: 620px !important;*/
+    background-color: #EEE;
+    border: 1px solid #AAA;
+    opacity: 0.8;
+    z-index: 200;
 }
 
 .minimap-node {
-  position: absolute;
-  background-color: rgb(102, 120, 129);
-  z-index: 250;
+    position: absolute;
+    background-color: rgb(102, 120, 129);
+    z-index: 250;
 }
 
 .minimap-viewport {
-  position: absolute;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: rgba(140, 163, 173, 0.4);
-  z-index: 300;
-  cursor: move;
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: rgba(140, 163, 173, 0.4);
+    z-index: 300;
+    cursor: move;
 }
 
-.ps__scrollbar-y
-{
-  visibility: hidden;
+.ps__scrollbar-y {
+    visibility: hidden;
 }
+
 
 /*nice colors <3*/
 
 .rainbowwrapper {
-
-  background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-  background-size: 1800% 1800%;
-  -webkit-animation: rainbow 18s ease infinite;
-  -z-animation: rainbow 18s ease infinite;
-  -o-animation: rainbow 18s ease infinite;
-  animation: rainbow 18s ease infinite;
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 1800% 1800%;
+    -webkit-animation: rainbow 18s ease infinite;
+    -z-animation: rainbow 18s ease infinite;
+    -o-animation: rainbow 18s ease infinite;
+    animation: rainbow 18s ease infinite;
 }
 
 @-webkit-keyframes rainbow {
-  0% {
-    background-position: 0% 82%
-  }
-  50% {
-    background-position: 100% 19%
-  }
-  100% {
-    background-position: 0% 82%
-  }
+    0% {
+        background-position: 0% 82%
+    }
+    50% {
+        background-position: 100% 19%
+    }
+    100% {
+        background-position: 0% 82%
+    }
 }
 
 @-moz-keyframes rainbow {
-  0% {
-    background-position: 0% 82%
-  }
-  50% {
-    background-position: 100% 19%
-  }
-  100% {
-    background-position: 0% 82%
-  }
+    0% {
+        background-position: 0% 82%
+    }
+    50% {
+        background-position: 100% 19%
+    }
+    100% {
+        background-position: 0% 82%
+    }
 }
 
 @-o-keyframes rainbow {
-  0% {
-    background-position: 0% 82%
-  }
-  50% {
-    background-position: 100% 19%
-  }
-  100% {
-    background-position: 0% 82%
-  }
+    0% {
+        background-position: 0% 82%
+    }
+    50% {
+        background-position: 100% 19%
+    }
+    100% {
+        background-position: 0% 82%
+    }
 }
 
 @keyframes rainbow {
-  0% {
-    background-position: 0% 82%
-  }
-  50% {
-    background-position: 100% 19%
-  }
-  100% {
-    background-position: 0% 82%
-  }
+    0% {
+        background-position: 0% 82%
+    }
+    50% {
+        background-position: 100% 19%
+    }
+    100% {
+        background-position: 0% 82%
+    }
 }
 
 .hovered {
-  z-index: 50;
-  position: relative;
-  border: black 1px dashed;
-  padding: 2px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 50;
+    position: relative;
+    border: black 1px dashed;
+    padding: 2px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .selected {
-  border-width: 1px;
-  border-style: solid;
-  border-color: #2780E3;
-  z-index: 100;
-  position: relative;
-  /*font-weight: bold;*/
-  box-shadow: 2px 2px 5px #2780E3;
-  padding: 2px
+    border-width: 1px;
+    border-style: solid;
+    border-color: #2780E3;
+    z-index: 100;
+    position: relative;
+    /*font-weight: bold;*/
+    box-shadow: 2px 2px 5px #2780E3;
+    padding: 2px
 }
 
 .selected.MOVE {
-  box-shadow: 2px 2px 5px rgba(192, 5, 203, 1);
-  border-color: rgba(192, 5, 203, 1)
+    box-shadow: 2px 2px 5px rgba(192, 5, 203, 1);
+    border-color: rgba(192, 5, 203, 1)
 }
 
 .selected.UPDATE {
-  box-shadow: 2px 2px 5px rgba(117, 84, 0, 0.7);
-  border-color: rgba(117, 84, 0, 0.7);
-}
-
-.scriptmarker[data-boundto] {
-  /*prevent selecting clickable nodes when clicking them */
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-   -khtml-user-select: none; /* Konqueror HTML */
-     -moz-user-select: none; /* Firefox */
-      -ms-user-select: none; /* Internet Explorer/Edge */
-          user-select: none; /* Non-prefixed version, currently
-                                supported by Chrome and Opera */
+    box-shadow: 2px 2px 5px rgba(117, 84, 0, 0.7);
+    border-color: rgba(117, 84, 0, 0.7);
 }
 
 .scriptmarker .subnode {
-  margin: 2px;
-  padding: 2px;
-  border: none;
+    margin: 2px;
+    padding: 2px;
+    border: none;
 }
 
-.glyphicon
-{
-  font-weight: 100 !important;
+.glyphicon {
+    font-weight: 100 !important;
 }
 
 #metaDataPanel {
-  position: absolute;
-  right: 25px;
-  left: 25px;
-  bottom: 25px;
-  z-index: 1500;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: absolute;
+    right: 25px;
+    left: 25px;
+    bottom: 25px;
+    z-index: 1500;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 mark {
-  background: yellow;
-  padding: 0;
+    background: yellow;
+    padding: 0;
 }
 
 mark.current {
-  background: orange;
-  padding: 0;
+    background: orange;
+    padding: 0;
 }
 
-.globalToggle
-{
-  height: 43px;
-  width: 80px;
-  font-size: 5pt
+.globalToggle {
+    height: 43px;
+    width: 80px;
+    font-size: 5pt
 }
 
-.globalToggle label
-{
-  font-size: 8pt;
-  padding-top: 12px
+.globalToggle label {
+    font-size: 8pt;
+    padding-top: 12px
 }
 
-.btn-sm
-{
-  height: 43px
+.btn-sm {
+    height: 43px
 }
 
-.overInput
-{
-  position: absolute;
-  color: rgba(145, 145, 145, 0.6);
-  /*top: -10px;*/
-  /*left: 30px*/
-  z-index: 301;
-  top: 10px;
-  left: calc(100% - 170px);
-  text-align: right;
+.overInput {
+    position: absolute;
+    color: rgba(145, 145, 145, 0.6);
+    /*top: -10px;*/
+    /*left: 30px*/
+    z-index: 301;
+    top: 10px;
+    left: calc(100% - 170px);
+    text-align: right;
 }
 
-.overInput.danger
-{
-  color: rgba(198, 25, 25, 0.6);
+.overInput.danger {
+    color: rgba(198, 25, 25, 0.6);
 }
