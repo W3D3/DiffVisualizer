@@ -75,13 +75,9 @@ class Settings {
     }
 
     static getAllFiles() {
-        var arr = [];
-        for (var i = 0; i < localStorage.length; i++){
-            arr[i] = localStorage.key(i);
-        }
+        var arr = Settings.getAllSettingsKeysPersistent();
         var regex = new RegExp('^'+Settings.filePrefix(), 'g');
         return arr.map(function (e) {
-            console.log(e);
             if(e.match(regex))
             {
                 return e.replace(Settings.filePrefix(), '');
@@ -110,15 +106,15 @@ class Settings {
 
     }
 
-    parseSetting(val) {
-        if(val == 'true'){
-            return true;
-        } else if(val == 'false'){
-            return false;
-        } else {
-            return JSON.parse(val);
-        }
-    }
+    // parseSetting(val) {
+    //     if(val == 'true'){
+    //         return true;
+    //     } else if(val == 'false'){
+    //         return false;
+    //     } else {
+    //         return JSON.parse(val);
+    //     }
+    // }
 
 }
 export default Settings;

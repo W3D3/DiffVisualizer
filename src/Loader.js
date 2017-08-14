@@ -48,7 +48,6 @@ class Loader {
 
     static showUploadedElements() {
         var alreadyUploaded = Settings.getAllFiles();
-        console.log(alreadyUploaded);
         $('#uploadedFiles').html('');
         alreadyUploaded.forEach(filename => {
             $('#uploadedFiles').append(`<a href="#" class="list-group-item fileButton" data-key="${filename}"> ${filename}</a>`);

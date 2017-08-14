@@ -159,6 +159,7 @@ class GUI {
 
     setSelectedStyle(id) {
         this.styleSelector.val(id);
+        this.styleSelector.trigger('change');
     }
 
     setHoverEffect(container, selector) {

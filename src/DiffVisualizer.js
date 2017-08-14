@@ -137,10 +137,15 @@ function matcherChangerSetup() {
 
 function styleChangerSetup() {
 
-  // matcher on change
+    // matcher on change
     gui.setStyleChangeHandler(function() {
         Utility.changeCodeStyle(this.value);
+        Settings.saveSettingPersistent('codestyle', this.value);
     });
+
+    if(Settings.loadSettingPersistent('codestyle')) {
+        gui.setSelectedStyle(Settings.loadSettingPersistent('codestyle'));
+    }
 }
 
 function diffListSetup() {
@@ -330,7 +335,7 @@ function filterSetup() {
             var filterNodes = filter.map(function(filtertype) {
                 return `<span class="${filtertype}">${filtertype}</span>`;
             });
-            Utility.showMessage('Now showing nodes of: ' + filterNodes.join(', '));
+            Utility.showMessage('Now showing: ' + filterNodes.join(', '));
         } else {
             var $target = $(event.currentTarget),
                 val = $target.attr('data-value'),
