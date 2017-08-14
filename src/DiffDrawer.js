@@ -216,9 +216,9 @@ class DiffDrawer {
     $('.minimap').css('height', minimapHeight);
     $('.minimap').css('top', minimapTop);
 
-    var right = parseInt($('.dst').innerWidth() + 'px');
+    var right = parseInt($('.dst').innerWidth() + 3 + 'px');
     $('.srcminimap').css('right', right);
-    $('.dstminimap').css('right', '0px');
+    $('.dstminimap').css('right', '1px');
     //console.log($('.dst').css('width'));
 
     $('.minimap-viewport').remove();
