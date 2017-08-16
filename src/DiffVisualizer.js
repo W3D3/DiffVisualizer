@@ -326,17 +326,38 @@ function jumptToLineSetup() {
 }
 
 function filterSetup() {
-  //filter on click
+
+    var lastFiltered = filter.slice(0);
+
+    //filter on click
     $('.dropdown-menu a').on('click', function(event) {
+        //user pressed apply
         if ($(event.currentTarget).attr('id') == 'applyFilter') {
-      //clear last selected
+
+            filter = _.sortBy(filter);
+            lastFiltered = _.sortBy(lastFiltered);
+
+            if(dv.getDiffId() == null)
+            {
+                lastFiltered = filter.slice(0);
+                Utility.showWarning('No Diff loaded');
+                return;
+            }
+            if(_.isEqual(lastFiltered, filter))
+            {
+                Utility.showMessage('Already filtered');
+                return;
+            }
+
             dv.setFilter(filter);
             dv.showChanges();
+            lastFiltered = filter.slice(0);
             var filterNodes = filter.map(function(filtertype) {
                 return `<span class="${filtertype}">${filtertype}</span>`;
             });
             Utility.showMessage('Now showing: ' + filterNodes.join(', '));
         } else {
+            //user pressed any of the toggle buttons
             var $target = $(event.currentTarget),
                 val = $target.attr('data-value'),
                 $inp = $target.find('input'),
