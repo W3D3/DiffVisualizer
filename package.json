@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.1",
+    "bootbox": "^4.4.0",
     "chalk": "^2.0.1",
     "console-stamp": "^0.2.5",
     "cors": "^2.8.3",
