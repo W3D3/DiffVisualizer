@@ -244,7 +244,10 @@ class SearchController {
             $content.unmark({
                 done: function() {
                     $content.mark(searchVal, {
-                        separateWordSearch: true,
+                        separateWordSearch: false,
+                        ignoreJoiners: true,
+                        acrossElements: true,
+                        wildcards: 'enabled',
                         exclude: ['.searchbar *'],
                         done: function(counter) {
                             if (counter > 0) {

@@ -137,7 +137,6 @@ class Utility {
 
         var oldlink = document.getElementById('codestyle');
         var oldmarker = document.getElementById('markerstyle');
-        console.log(oldmarker);
 
         var newlink = document.createElement('link');
         newlink.setAttribute('rel', 'stylesheet');
@@ -152,15 +151,12 @@ class Utility {
         newmarker.setAttribute('id', 'markerstyle');
 
         if(darkmode) {
-            console.log('darkmode');
             newmarker.setAttribute('href', 'css/marker-dark.css');
         } else {
-            console.log('lightmode');
             newmarker.setAttribute('href', 'css/marker-light.css');
         }
         document.getElementsByTagName('head').item(0).replaceChild(newmarker, oldmarker);
         document.getElementsByTagName('head').item(0).replaceChild(newlink, oldlink);
-        //
     }
 
 }

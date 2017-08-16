@@ -411,7 +411,7 @@ class DiffDrawer {
         })
       .catch(function(error) {
           Utility.showError(error + ' (using matcher ' + diffdrawer.matcherName + ')');
-        //   err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
+          err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
       });
     }
 
