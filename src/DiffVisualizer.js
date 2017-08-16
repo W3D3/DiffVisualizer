@@ -69,7 +69,6 @@ $(document).ready(function() {
               // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
               // http.ClientRequest in node.js
             Utility.showError(dv.getBaseUrl() + ' did not answer to request.');
-            console.log(error.request);
         } else {
             // Something happened in setting up the request that triggered an Error
             Utility.showError('Cannot connect to ' + dv.getBaseUrl() + ' with request ' + error.request);
@@ -78,28 +77,28 @@ $(document).ready(function() {
 
     new Loader();
 
-  //setup ace editor and all clickhandlers
+    //setup ace editor and all clickhandlers
     editorSetup();
 
-  //setup on change and fill with all available matchers
+    //setup on change and fill with all available matchers
     matcherChangerSetup();
 
-  // setup style changer
+    // setup style changer
     styleChangerSetup();
 
-  // initialize clickhandler and filter on the diff list
+    // initialize clickhandler and filter on the diff list
     diffListSetup();
 
-  // initializes INSERT/UPDATE/DELETE/MOVE filter
+    // initializes INSERT/UPDATE/DELETE/MOVE filter
     filterSetup();
 
-  // enables clickhandler on bound markers inside codeboxes
+    // enables clickhandler on bound markers inside codeboxes
     clickBoundMarkersSetup();
 
-  // enables jumping to lines
+    // enables jumping to lines
     jumptToLineSetup();
 
-  //register hover handler for all the UPDATEs and MOVEs
+    //register hover handler for all the UPDATEs and MOVEs
     gui.setHoverEffect('.codebox', '.scriptmarker');
 });
 
@@ -124,7 +123,7 @@ function editorSetup() {
 }
 
 function matcherChangerSetup() {
-  // fill dropdown box with available matchers
+    // fill dropdown box with available matchers
     dv.getAvailableMatchers().then(response => {
         gui.setMatcherSelectionSource(response.data.matchers);
         matchers = response.data.matchers;
@@ -134,18 +133,17 @@ function matcherChangerSetup() {
 
     });
 
-  // matcher on change
+    // matcher on change
     gui.setMatcherChangeHandler(function() {
         NProgress.start();
         dv.clear();
         $('.minimap').hide();
 
         settings.saveSetting('matcher', matchers[this.value - 1]);
-    //console.log(settings.loadSetting('matcher'));
         dv.setMatcher(settings.loadSetting('matcher'));
         Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
         $('#codeboxTitle').html(dv.generateTitle(0));
-    //TODO improve visual inducators
+
         dv.diffAndDraw(function() {
             $('#codeboxTitle').html(dv.generateTitle(1));
         }, function() {
@@ -158,7 +156,7 @@ function styleChangerSetup() {
 
     // matcher on change
     gui.setStyleChangeHandler(function() {
-        Utility.changeCodeStyle(this.value);
+        Utility.changeCodeStyle(this.value, $(this).find(':selected').data('dark'));
         Settings.saveSettingPersistent('codestyle', this.value);
     });
 
@@ -215,66 +213,70 @@ function diffListSetup() {
         $('#codeboxTitle').html(viewer.generateTitle(0));
         sc.hideAll();
 
-        //Loading src and dst from proxy
-        axios.get(srcUrl, configSrc)
-        .then(function(src) {
-            viewer.setSource(src.data);
-            axios.get(dstUrl, configDst)
-            .then(function(dst) {
-                viewer.setDestination(dst.data);
-                viewer.setFilter(filter);
+        function getSrcFile() {
+            return axios.get(srcUrl, configSrc);
+        }
 
-                var avg = (src.data.split(/\r\n|\r|\n/).length + dst.data.split(/\r\n|\r|\n/).length) / 2;
+        function getDstFile() {
+            return axios.get(dstUrl, configDst);
+        }
 
-                if(avg > 32000)
-              {
-                    bootbox.confirm({
-                        title: 'Warning',
-                        closeButton: false,
-                        message: 'You are about to load a huge file with ' + avg + ' LOC on average. This could cause the browser to hang, do you want to continue?',
-                        buttons: {
-                            confirm: {
-                                label: 'Yes',
-                                className: 'btn-success'
-                            },
-                            cancel: {
-                                label: 'No',
-                                className: 'btn-danger'
-                            }
-                        },
-                        callback: function (accepted) {
-                            if(accepted)
-                    {
-                                viewer.setEnableMinimap(false); //temporarily disable minimap for huge file
-                                dv = viewer;
-                                viewer.diffAndDraw(function() {
-                        //success
-                                    $('#codeboxTitle').html(dv.generateTitle(1));
-                                }, function (msg) {
-                        //error
-                                    $('#codeboxTitle').html(dv.generateTitle(-1));
-                                    Utility.showError(msg);
-                                    NProgress.done();
-                                });
+        axios.all([getSrcFile(), getDstFile()])
+          .then(axios.spread(function (src, dst) {
+              // Both requests are now complete
+
+              viewer.setSource(src.data);
+              viewer.setDestination(dst.data);
+
+              viewer.setFilter(filter);
+
+              var avg = (src.data.split(/\r\n|\r|\n/).length + dst.data.split(/\r\n|\r|\n/).length) / 2;
+
+              if(avg > 32000) {
+                  bootbox.confirm({
+                      title: 'Warning',
+                      closeButton: false,
+                      message: 'You are about to load a huge file with ' + avg + ' LOC on average. This could cause the browser to hang, do you want to continue?',
+                      buttons: {
+                          confirm: {
+                              label: 'Yes',
+                              className: 'btn-success'
+                          },
+                          cancel: {
+                              label: 'No',
+                              className: 'btn-danger'
+                          }
+                      },
+                      callback: function (accepted) {
+                          if(accepted) {
+                              viewer.setEnableMinimap(false); //temporarily disable minimap for huge file
+                              dv = viewer;
+                              viewer.diffAndDraw(function() {
+                                  //success
+                                  $('#codeboxTitle').html(dv.generateTitle(1));
+                              }, function (msg) {
+                                  //error
+                                  $('#codeboxTitle').html(dv.generateTitle(-1));
+                                  Utility.showError(msg);
+                                  NProgress.done();
+                              });
 
 
-                            }
-                            else {
-                                NProgress.done();
-                                $('#codeboxTitle').html(dv.generateTitle(-2));
-                            }
-                        }
-                    });
-                }
-                else {
-                    dv = viewer;
-                    viewer.diffAndDraw(function() {
-                        $('#codeboxTitle').html(dv.generateTitle(1));
-                    });
-                }
-
-            });
-        });
+                          }
+                          else {
+                              NProgress.done();
+                              $('#codeboxTitle').html(dv.generateTitle(-2));
+                          }
+                      }
+                  });
+              }
+              else {
+                  dv = viewer;
+                  viewer.diffAndDraw(function() {
+                      $('#codeboxTitle').html(dv.generateTitle(1));
+                  });
+              }
+          }));
 
     //stop propagation by returning
         return false;

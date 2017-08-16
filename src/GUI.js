@@ -167,14 +167,14 @@ class GUI {
           .on('mouseover', selector, function(e) {
             // console.log( 'mouse over ' + $(this).attr('id'));
               $(this).focus();
-              $(this).css('border', 'black 1px dashed');
+            //   $(this).css('border', 'black 1px dashed');
               $(this).addClass('hovered');
               $(this).find('.scriptmarker').addClass('subnode');
               e.stopPropagation();
           })
           .on('mouseout', selector, function(e) {
             // console.log( 'mouse out ' + $(this).attr('id'));
-              $(this).css('border', '');
+            //   $(this).css('border', '');
               $(this).removeClass('hovered');
               $(this).find('.scriptmarker').removeClass('subnode');
               e.stopPropagation();

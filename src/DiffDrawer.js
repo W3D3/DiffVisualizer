@@ -410,7 +410,8 @@ class DiffDrawer {
 
         })
       .catch(function(error) {
-          err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
+          Utility.showError(error + ' (using matcher ' + diffdrawer.matcherName + ')');
+        //   err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
       });
     }
 

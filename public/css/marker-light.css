@@ -1,0 +1,65 @@
+/*marker highlighting*/
+
+.INSERT {
+    background-color: rgba(155, 245, 144, 0.7);
+    text-shadow: none;
+    border: none;
+    border-color: rgba(32, 212, 10, 0.7);
+    /*border: 1px solid rgba(155, 245, 144, 0.7);*/
+}
+
+.MOVE {
+    background-color: rgba(238, 135, 244, 0.7);
+    text-shadow: none;
+    cursor: pointer;
+    border: none;
+    border-color: rgba(200, 48, 209, 0.7);
+    /*border: 2px solid rgba(238, 135, 244, 0.7);*/
+}
+
+.UPDATE {
+    background-color: rgba(243, 250, 110, 0.7);
+    /*background-color: rgba(240, 210, 0, 0.7);*/
+    text-shadow: none;
+    cursor: pointer;
+    border: none;
+    border-color: rgba(240, 210, 0, 0.7);
+    /*border: 2px solid rgba(231, 194, 3, 0.7);*/
+}
+
+.DELETE {
+    background-color: rgba(222, 166, 166, 0.7);
+    text-shadow: none;
+    border: none;
+    border-color: rgba(218, 1, 1, 0.7);
+    /*border: 1px solid rgba(222, 166, 166, 0.7);*/
+}
+
+.hovered {
+    z-index: 50;
+    position: relative;
+    border: black 1px dashed;
+    padding: 2px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.selected {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #2780E3;
+    z-index: 100;
+    position: relative;
+    /*font-weight: bold;*/
+    box-shadow: 2px 2px 5px #2780E3;
+    padding: 2px
+}
+
+.selected.MOVE {
+    box-shadow: 2px 2px 5px rgba(192, 5, 203, 1);
+    border-color: rgba(192, 5, 203, 1)
+}
+
+.selected.UPDATE {
+    box-shadow: 2px 2px 5px rgba(117, 84, 0, 0.7);
+    border-color: rgba(117, 84, 0, 0.7);
+}

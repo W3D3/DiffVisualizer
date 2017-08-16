@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/perfect-scrollbar.css">
   <!-- master style -->
   <link rel="stylesheet" href="css/master.css">
+  <link rel="stylesheet" href="css/marker-light.css" id="markerstyle">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -147,12 +148,15 @@
                       <h4>Appearance</h4>
                       <label for="matcherID">Select Theme</label>
                       <select class="form-control" id="themePicker">
-                        <option value="default">Default</option>
-                        <option value="github">GitHub</option>
-                        <option value="vs">Visual Studio</option>
-                        <option value="mono-blue">Mono Blue</option>
-                        <option value="atom-one-light">Atom One Light</option>
-                        <option value="color-brewer">Color Brewer</option>
+                        <option value="default" data-dark="false">Default</option>
+                        <option value="github" data-dark="false">GitHub</option>
+                        <option value="vs" data-dark="false">Visual Studio</option>
+                        <option value="mono-blue" data-dark="false">Mono Blue</option>
+                        <option value="atom-one-light" data-dark="false">Atom One Light</option>
+                        <option value="atom-one-dark" data-dark="true">Atom One Dark</option>
+                        <option value="color-brewer" data-dark="false">Color Brewer</option>
+                        <option value="railscasts" data-dark="true">Railscasts</option>
+                        <option value="monokai-sublime" data-dark="true">Monokai</option>
                       </select>
 
                   </div>

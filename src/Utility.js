@@ -133,9 +133,11 @@ class Utility {
         Utility.showNotify('', message, 'success', 'glyphicon glyphicon-ok-sign', 2000);
     }
 
-    static changeCodeStyle(style) {
+    static changeCodeStyle(style, darkmode) {
 
         var oldlink = document.getElementById('codestyle');
+        var oldmarker = document.getElementById('markerstyle');
+        console.log(oldmarker);
 
         var newlink = document.createElement('link');
         newlink.setAttribute('rel', 'stylesheet');
@@ -144,7 +146,21 @@ class Utility {
         //TODO change this to local
         newlink.setAttribute('href', 'http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/'+style+'.min.css');
 
+        var newmarker = document.createElement('link');
+        newmarker.setAttribute('rel', 'stylesheet');
+        newmarker.setAttribute('type', 'text/css');
+        newmarker.setAttribute('id', 'markerstyle');
+
+        if(darkmode) {
+            console.log('darkmode');
+            newmarker.setAttribute('href', 'css/marker-dark.css');
+        } else {
+            console.log('lightmode');
+            newmarker.setAttribute('href', 'css/marker-light.css');
+        }
+        document.getElementsByTagName('head').item(0).replaceChild(newmarker, oldmarker);
         document.getElementsByTagName('head').item(0).replaceChild(newlink, oldlink);
+        //
     }
 
 }

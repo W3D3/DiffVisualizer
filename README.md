@@ -1,6 +1,6 @@
 # DiffVisualizer
 
-![v 1.9.1](https://img.shields.io/badge/version-1.9.1-brightgreen.svg) [![Codeship](https://img.shields.io/codeship/01939780-4ced-0135-0db8-1a20c3f2c8a7.svg)](https://app.codeship.com/projects/232991)
+![v 1.9.2](https://img.shields.io/badge/version-1.9.2-brightgreen.svg) [![Codeship](https://img.shields.io/codeship/01939780-4ced-0135-0db8-1a20c3f2c8a7.svg)](https://app.codeship.com/projects/232991)
 
 ## Installation
 
@@ -26,19 +26,4 @@ and to push it to the private registry (`swdyn.isys.uni-klu.ac.at:5000`)
 
 `npm run docker-push`
 
-### old method
-
-This repo contains a dockerfile. To build a docker container and add it to your registry follow these steps:
-
-We will use the image name of `wedenigc/diffviz` and the remote registry `swdyn.isys.uni-klu.ac.at:5000` in this example but these are interchangable!
-
-- `docker build -t wedenigc/diffviz .`
-
-(Optionally push it to the registry, not needed for using it locally)
-
-- `docker tag wedenigc/diffviz swdyn.isys.uni-klu.ac.at:5000/wedenigc/diffviz`
-- `docker push swdyn.isys.uni-klu.ac.at:5000/wedenigc/diffviz`
-
-Finally create a container based on the image with name "my-diffviz-container"
-
-- `docker run -d -p 80:9999 --name "my-diffviz-container" swdyn.isys.uni-klu.ac.at:8080/wedenigc/diffviz`
+and to combine those two things just run `npm run deploy`
