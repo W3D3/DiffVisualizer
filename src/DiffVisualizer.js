@@ -43,7 +43,7 @@ $(document).ready(function() {
     settings = new Settings();
 
     if(navigator.userAgent.indexOf('AppleWebKit') != -1){
-    //this is webkit, use custom scrollbars because we hide the default ones
+        //this is webkit, use custom scrollbars because we hide the default ones
         $('.scrollbar-chrome').perfectScrollbar();
     }
 
@@ -54,8 +54,27 @@ $(document).ready(function() {
     sc.addContainer($('.src'));
     sc.addContainer($('.dst'));
 
-  //create first DiffDrawer object to work on
+    //create first DiffDrawer object to work on
     dv = new DiffDrawer();
+
+    dv.checkAPIState().then(function() {
+        //working as expected
+    }).catch(function(error) {
+        if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+            Utility.showError(dv.getBaseUrl() + ' is down. Status: ' + error.response.status, + ' - ' + error.response.statusText);
+        } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+            Utility.showError(dv.getBaseUrl() + ' did not answer to request.');
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            Utility.showError('Cannot connect to ' + dv.getBaseUrl() + ' with request ' + error.request);
+        }
+    });
 
     new Loader();
 
@@ -151,16 +170,8 @@ function styleChangerSetup() {
 function diffListSetup() {
   //register clickhandler for all diffItems
     $('body').on('click', '#diffItem', _.debounce(function() {
-        $('code').html('');
-        $('.codebox').scrollTo(0);
-        $(this).parents().children().removeClass('active');
-        $(this).addClass('active');
-        var srcUrl = $(this).data('rawsrcurl');
-        var dstUrl = $(this).data('rawdsturl');
-
         var diffId = $(this).data('id');
         var fileName = $(this).find('b').text();
-
 
         var viewer = new DiffDrawer();
         viewer.setIdAndFilname(diffId, fileName);
@@ -168,6 +179,19 @@ function diffListSetup() {
         if (settings.loadSetting('matcher')) {
             viewer.setMatcher(settings.loadSetting('matcher'));
         }
+        if(dv.generateHashWithoutData() == viewer.generateHashWithoutData())
+        {
+            Utility.showWarning('Not loading same file with same matcher again');
+            return;
+        }
+
+        $('code').html('');
+        $('.codebox').scrollTo(0);
+        $(this).parents().children().removeClass('active');
+        $(this).addClass('active');
+        var srcUrl = $(this).data('rawsrcurl');
+        var dstUrl = $(this).data('rawdsturl');
+
         viewer.setAsCurrentJob();
 
         var configSrc = {
@@ -182,7 +206,7 @@ function diffListSetup() {
                 NProgress.set(0.33 + percentCompleted / 100);
             }
         };
-    //Loading div from proxy
+
         NProgress.configure({
             parent: '#codeView'
         });
@@ -191,6 +215,7 @@ function diffListSetup() {
         $('#codeboxTitle').html(viewer.generateTitle(0));
         sc.hideAll();
 
+        //Loading src and dst from proxy
         axios.get(srcUrl, configSrc)
         .then(function(src) {
             viewer.setSource(src.data);

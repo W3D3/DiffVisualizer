@@ -43,13 +43,18 @@ class DiffDrawer {
         this.matcherID = 1; //default to first matcher (ClassicGumtree)
         this.matcherName = 'ClassicGumtree';
 
-    //set default base URL
+        //set default base URL
         this.DIFF_API = axios.create();
         this.setBaseUrl(client.apibase);
 
         this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
 
         this.enableMinimap = true;
+    }
+
+    checkAPIState()
+    {
+        return this.DIFF_API.get('/matchers');
     }
 
     setEnableMinimap(value) {
@@ -63,6 +68,14 @@ class DiffDrawer {
 
     getFilename() {
         return this.filename;
+    }
+
+    generateHash() {
+        return hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
+    }
+
+    generateHashWithoutData() {
+        return hash(this.id + this.filename + this.matcherID);
     }
 
     getDiffId() {
