@@ -11,12 +11,17 @@
   "dependencies": {
     "axios": "^0.16.1",
     "bootbox": "^4.4.0",
+    "bootstrap-notify": "^3.1.3",
+    "bootstrap-sass": "^3.3.7",
+    "bootswatch": "^3.3.7",
+    "bootswatch-sass": "^3.2.0",
     "chalk": "^2.0.1",
     "console-stamp": "^0.2.5",
     "cors": "^2.8.3",
     "docker-build-run-push": "^3.0.0",
     "dropzone": "^4.3.0",
     "express": "^4.15.2",
+    "file-loader": "^0.11.2",
     "highlightjs": "^9.10.0",
     "highlightjs-line-numbers.js": "^1.1.0",
     "jquery": "^3.2.1",
@@ -26,7 +31,8 @@
     "multer": "^1.3.0",
     "nprogress": "^0.2.0",
     "object-hash": "^1.1.8",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "url-loader": "^0.5.9"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -36,15 +42,20 @@
     "chai": "^4.1.0",
     "chai-html": "^1.1.4",
     "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.5",
     "eslint": "^3.19.0",
+    "extract-text-webpack-plugin": "^3.0.0",
     "mikro-config": "^1.1.0",
     "mocha": "^3.4.2",
+    "node-sass": "^4.5.3",
     "nodemon": "^1.11.0",
     "npm-run-all": "^4.0.2",
     "nyc": "^11.0.3",
     "pm2": "^2.4.6",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
     "webdriver-manager": "^11.1.1",
-    "webpack": "^2.5.1"
+    "webpack": "^3.3.0"
   },
   "scripts": {
     "lint": "eslint src/*.js",

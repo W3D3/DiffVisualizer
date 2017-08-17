@@ -1,39 +1,85 @@
-/* global require module __dirname */
+/* global require module __dirname process */
 var path = require('path');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+// var CopyWebpackPlugin = require('copy-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const extractSass = new ExtractTextPlugin({
+//     filename: '[name].[contenthash].css',
+//     // disable: process.env.NODE_ENV === 'development'
+// });
 
 module.exports = {
-    entry: './src/DiffVisualizer.js',
+    entry: ['./src/DiffVisualizer.js', './src/sass/main.scss'],
     output: {
-        path: path.join(__dirname, 'public/js'),
-        filename: 'diffvisualizer.js'
+        path: path.join(__dirname, 'public/dist'),
+        filename: 'bundle.js'
+    },
+    devServer: {
+        contentBase: './public/'
     },
     module: {
-        loaders: [{
-            test: path.join(__dirname, 'es6'),
-            loader: 'babel-loader'
-        }]
-    },
-    plugins: [
-        new CopyWebpackPlugin([
-
-            // {output}/to/file.txt
+        loaders: [
+            // {
+            //     test: /\.js$/,
+            //     loader: 'babel-loader'
+            // },
+            // { // regular css files
+            //     test: /\.css$/,
+            //     loader: ExtractTextPlugin.extract({
+            //         loader: 'css-loader?importLoaders=1'
+            //     })
+            // },
             {
-                context: __dirname,
-                from: 'node_modules/mark.js/dist/jquery.mark.min.js',
-                to: 'jquery.mark.min.js'
+                test: /\.(sass|scss)$/,
+                loader: ExtractTextPlugin.extract([{
+                    loader: 'css-loader',
+                    options: process.env.NODE_ENV === 'production' ? {
+                        minimize: true
+                    } : {
+                        minimize: false
+                    }
+                }, {
+                    loader: 'sass-loader'
+                }]),
+
             },
             {
-                context: __dirname,
-                from: 'node_modules/bootbox/bootbox.min.js',
-                to: 'bootbox.min.js'
+                test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'url-loader'
             }
-
-        ], {
-            // By default, we only copy modified files during
-            // a watch or webpack-dev-server build. Setting this
-            // to `true` copies all files.
-            copyUnmodified: true
+        ]
+    },
+    plugins: [
+        // new CopyWebpackPlugin([
+        //
+        //     // {output}/to/file.txt
+        //
+        //     //mark.js
+        //     {
+        //         context: __dirname,
+        //         from: 'node_modules/mark.js/dist/jquery.mark.min.js',
+        //         to: 'jquery.mark.min.js'
+        //     },
+        //     //bootbox
+        //     {
+        //         context: __dirname,
+        //         from: 'node_modules/bootbox/bootbox.min.js',
+        //         to: 'bootbox.min.js'
+        //     },
+        //     // boostrap notify
+        //     {
+        //         context: __dirname,
+        //         from: 'node_modules/bootstrap-notify/bootstrap-notify.min.js',
+        //         to: 'bootstrap-notify.min.js'
+        //     }
+        //
+        // ], {
+        //     // By default, we only copy modified files during
+        //     // a watch or webpack-dev-server build. Setting this
+        //     // to `true` copies all files.
+        //     copyUnmodified: true
+        // }),
+        new ExtractTextPlugin({
+            filename: 'main.bundle.css'
         })
     ]
 };

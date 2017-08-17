@@ -10,10 +10,6 @@ class BlockMarker extends Marker {
         this.isEndMarker = false;
     }
 
-  // setIsEndMarker(isEndMarker) {
-  //   this.isEndMarker = isEndMarker;
-  // }
-
     generateTag() {
         if (this.isEndMarker) {
             return '</span>';
