@@ -1,0 +1,55 @@
+/*FULL SIZE AND ONLY DIV SCROLL!*/
+
+/* this does not work on safari,
+ safari is new internet explorer confirmed */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    min-width: 1060px;
+    /*workaround for windows scrollbars adding to the height*/
+}
+
+.row {
+    margin: 0;
+}
+
+.box {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    padding: 0;
+}
+
+.box .row.header {
+    flex: 0 1 auto;
+    /* The above is shorthand for:
+      flex-grow: 0,
+      flex-shrink: 1,
+      flex-basis: auto
+      */
+}
+
+.box .row.content {
+    position: relative;
+    flex: 1 1 1px;
+    overflow: hidden;
+    /* fixes hover scrollbar on windows... */
+}
+
+@media (min-width: 768px) {
+    .codebox {
+        height: 100%;
+        overflow: scroll;
+    }
+}
+
+.box .row.footer {
+    flex: 0 1 1.5em;
+    /*RESIZE HERE IF NEEDED*/
+    background-color: rgb(98, 98, 98);
+}
+
+
+/* END FLEXBOX CONFIG */

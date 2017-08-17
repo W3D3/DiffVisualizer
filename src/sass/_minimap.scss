@@ -1,0 +1,30 @@
+/* minimap */
+
+#minimap {
+    position: fixed;
+    width: 20px;
+    top: 100px !important;
+    background-color: #EEE;
+    border: 1px solid #AAA;
+    opacity: 0.8;
+    z-index: 200;
+}
+
+.minimap-node {
+    position: absolute;
+    background-color: rgb(102, 120, 129);
+    z-index: 250;
+}
+
+.minimap-viewport {
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: rgba(140, 163, 173, 0.4);
+    z-index: 300;
+    cursor: move;
+}
+
+.ps__scrollbar-y {
+    visibility: hidden;
+}

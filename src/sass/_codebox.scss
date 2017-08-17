@@ -1,0 +1,53 @@
+/*LINE NUMBERS*/
+
+.hljs-line-numbers {
+    text-align: right;
+    border-right: 1px solid #ccc;
+    color: #999;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+pre, code {
+    white-space: pre !important;
+}
+
+.scriptmarker {
+    padding: 2px;
+    margin: 2px;
+}
+
+.codebox {
+    /*padding-left: 0;*/
+    border: 1px solid #CCC;
+    padding: 0;
+}
+
+.codebox pre {
+    padding: 0;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 20px;
+    overflow: visible;
+    border: none;
+    /*zoom: 0.5;*/
+    line-height: 20px;
+    font-size: 11pt
+}
+
+.codebox pre code {
+    overflow: visible;
+    display:inline-block;
+    margin-right: 20px;
+    /*zoom: 0.9;*/
+    /*font-size: 9pt;*/
+}
+
+code.hljs-line-numbers {
+    margin-right: 0px !important;
+}

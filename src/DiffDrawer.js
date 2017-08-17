@@ -1,10 +1,8 @@
-/* global $ hljs require */
+/* global $ hljs */
 /**
  * @file Represents and draws Diffs
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
-require('./jquery/MiniMap');
-
 import Marker from './Marker';
 import Utility from './Utility';
 

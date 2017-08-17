@@ -2,10 +2,11 @@
 var path = require('path');
 // var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const extractSass = new ExtractTextPlugin({
-//     filename: '[name].[contenthash].css',
-//     // disable: process.env.NODE_ENV === 'development'
-// });
+
+const extractSass = new ExtractTextPlugin({
+    filename: '[name].bundle.css',
+    allChunks: true
+});
 
 module.exports = {
     entry: ['./src/DiffVisualizer.js', './src/sass/main.scss'],
@@ -30,7 +31,7 @@ module.exports = {
             // },
             {
                 test: /\.(sass|scss)$/,
-                loader: ExtractTextPlugin.extract([{
+                loader: extractSass.extract([{
                     loader: 'css-loader',
                     options: process.env.NODE_ENV === 'production' ? {
                         minimize: true
@@ -78,8 +79,6 @@ module.exports = {
         //     // to `true` copies all files.
         //     copyUnmodified: true
         // }),
-        new ExtractTextPlugin({
-            filename: 'main.bundle.css'
-        })
+        extractSass
     ]
 };

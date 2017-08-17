@@ -3,6 +3,7 @@
  * @file Main file that acts as the entry point
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
+import 'jquery';
 
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';

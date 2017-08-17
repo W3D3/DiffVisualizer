@@ -3,6 +3,7 @@ node_modules
 .vscode
 public/uploads
 public/js
+public/dist
 /.gtm/
 npm-debug.log
 .nyc_output
