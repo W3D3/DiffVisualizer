@@ -4,9 +4,13 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 @import "cosmo"; //bootswatch theme
 
+//css dependencies
 @import '~animate.css/animate.css';
 @import '~dropzone/src/dropzone';
+@import '~nprogress/nprogress.css';
+@import '~perfect-scrollbar/src/css/main';
 
+//project specific code
 @import 'flexbox';
 @import 'codebox';
 @import 'accordion';
@@ -14,9 +18,11 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import 'rainbow';
 
 ::-webkit-scrollbar {
-    display: none;
     /* disable scrollbar for webkit browser because we can use perfect scrollbar instead which autohides */
+    display: none;
 }
+
+// custom NProgress
 
 [data-notify="progressbar"] {
     margin-bottom: 0px;
@@ -25,6 +31,15 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
     left: 0px;
     width: 100%;
     height: 5px;
+}
+
+.skill-unit .bar .progress {
+    background: #24ff09;
+}
+
+.skill-unit .bar .progress span {
+    color: #24ff09;
+    background: #24ff09;
 }
 
 .navbar {
@@ -37,12 +52,10 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 }
 
 .content {
-    /*padding: 5px;*/
     padding-top: 0;
 }
 
-/* selected element style */
-
+// Ace editor modal
 #myModal .modal-dialog {
     width: 100%;
     height: 100%;
@@ -59,15 +72,6 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 
 .panel-heading {
     cursor: pointer;
-}
-
-.skill-unit .bar .progress {
-    background: #24ff09;
-}
-
-.skill-unit .bar .progress span {
-    color: #24ff09;
-    background: #24ff09;
 }
 
 #diffsList {
@@ -137,8 +141,6 @@ mark.current {
 .overInput {
     position: absolute;
     color: rgba(145, 145, 145, 0.6);
-    /*top: -10px;*/
-    /*left: 30px*/
     z-index: 301;
     top: 10px;
     left: calc(100% - 170px);
