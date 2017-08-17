@@ -2,7 +2,7 @@ node_modules
 .idea
 .vscode
 public/uploads
-public/js/diffvisualizer.js
+public/js
 /.gtm/
 npm-debug.log
 .nyc_output

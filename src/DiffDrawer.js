@@ -1,11 +1,14 @@
-/* global $ hljs */
+/* global $ hljs require */
 /**
  * @file Represents and draws Diffs
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
+require('./jquery/MiniMap');
 
 import Marker from './Marker';
 import Utility from './Utility';
+
+
 import axios from 'axios';
 import Base64 from 'js-base64/base64';
 var base64 = Base64.Base64; //very nice packaging indeed.
