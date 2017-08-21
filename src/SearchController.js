@@ -180,8 +180,6 @@ class SearchController {
             // the class that will be appended to the current
             // focused element
             currentClass = 'current',
-            // top offset for the jump (the search bar)
-            //offsetTop = 100,
             // the current index of the focused element
             currentIndex = 0;
 

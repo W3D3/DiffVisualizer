@@ -1,6 +1,6 @@
 /* global require module __dirname process */
 var path = require('path');
-// var CopyWebpackPlugin = require('copy-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const extractSass = new ExtractTextPlugin({
@@ -50,35 +50,35 @@ module.exports = {
         ]
     },
     plugins: [
-        // new CopyWebpackPlugin([
-        //
-        //     // {output}/to/file.txt
-        //
-        //     //mark.js
-        //     {
-        //         context: __dirname,
-        //         from: 'node_modules/mark.js/dist/jquery.mark.min.js',
-        //         to: 'jquery.mark.min.js'
-        //     },
-        //     //bootbox
-        //     {
-        //         context: __dirname,
-        //         from: 'node_modules/bootbox/bootbox.min.js',
-        //         to: 'bootbox.min.js'
-        //     },
-        //     // boostrap notify
-        //     {
-        //         context: __dirname,
-        //         from: 'node_modules/bootstrap-notify/bootstrap-notify.min.js',
-        //         to: 'bootstrap-notify.min.js'
-        //     }
-        //
-        // ], {
-        //     // By default, we only copy modified files during
-        //     // a watch or webpack-dev-server build. Setting this
-        //     // to `true` copies all files.
-        //     copyUnmodified: true
-        // }),
+        new CopyWebpackPlugin([
+
+            // {output}/to/file.txt
+
+            //mark.js
+            {
+                context: __dirname,
+                from: 'node_modules/mark.js/dist/jquery.mark.min.js',
+                to: 'jquery.mark.min.js'
+            },
+            //bootbox
+            {
+                context: __dirname,
+                from: 'node_modules/bootbox/bootbox.min.js',
+                to: 'bootbox.min.js'
+            },
+            // boostrap notify
+            {
+                context: __dirname,
+                from: 'node_modules/bootstrap-notify/bootstrap-notify.min.js',
+                to: 'bootstrap-notify.min.js'
+            }
+
+        ], {
+            // By default, we only copy modified files during
+            // a watch or webpack-dev-server build. Setting this
+            // to `true` copies all files.
+            copyUnmodified: true
+        }),
         extractSass
     ]
 };

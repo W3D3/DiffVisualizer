@@ -3,7 +3,6 @@
  * @file Main file that acts as the entry point
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
-import 'jquery';
 
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
@@ -31,12 +30,13 @@ var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 var matchers;
 
 var settings;
+
 /**
  * This sets up all handlers and
  * initializes the DiffVisualizer application
  */
 $(document).ready(function() {
-
+    
     gui = new GUI();
     gui.setVersion(version);
     NProgress.configure({ trickle: false });

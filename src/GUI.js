@@ -35,8 +35,7 @@ class GUI {
     // TODO fix to include scroll position
         $('#printCodebox').click(function () {
             var filename = $('#codeboxTitle b').text().substring(1);
-            if(!filename)
-      {
+            if(!filename) {
                 filename = 'DiffVisualizer-Screenshot';
                 Utility.showWarning('No file loaded to generate Image from.');
             }
