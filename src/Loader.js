@@ -13,6 +13,7 @@ import NProgress from 'nprogress';
 
 class Loader {
     constructor() {
+        console.log('loading laoder');
         //Configure dropzone
         Dropzone.options.jsonUploader = {
             paramName: 'file', // The name that will be used to transfer the file
@@ -41,6 +42,7 @@ class Loader {
                 this.addFile(file);
             }
         };
+        console.log(Dropzone.options.jsonUploader);
 
         //show all the already uploaded elements
         Loader.showUploadedElements();

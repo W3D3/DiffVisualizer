@@ -411,8 +411,10 @@ class DiffDrawer {
 
         })
       .catch(function(error) {
-          Utility.showError(error + ' (using matcher ' + diffdrawer.matcherName + ')');
-          err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
+          //make sure we don't throw errors for old jobs!
+          if (diffdrawer.checkIfCurrentJob()) {
+              err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
+          }
       });
     }
 

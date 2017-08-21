@@ -36,7 +36,7 @@ var settings;
  * initializes the DiffVisualizer application
  */
 $(document).ready(function() {
-    
+    console.log('wow');
     gui = new GUI();
     gui.setVersion(version);
     NProgress.configure({ trickle: false });
@@ -76,8 +76,8 @@ $(document).ready(function() {
         }
     });
 
-    new Loader();
-
+    var l = new Loader();
+    console.log(l);
     //setup ace editor and all clickhandlers
     editorSetup();
 
@@ -139,16 +139,24 @@ function matcherChangerSetup() {
         NProgress.start();
         dv.clear();
         $('.minimap').hide();
-
         settings.saveSetting('matcher', matchers[this.value - 1]);
-        dv.setMatcher(settings.loadSetting('matcher'));
-        Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
-        $('#codeboxTitle').html(dv.generateTitle(0));
 
-        dv.diffAndDraw(function() {
-            $('#codeboxTitle').html(dv.generateTitle(1));
+        var changedDv = new DiffDrawer(dv.src, dv.dst);
+        changedDv.setMatcher(settings.loadSetting('matcher'));
+        changedDv.setIdAndFilname(dv.getDiffId(), dv.getFilename());
+        changedDv.setJobId(dv.getDiffId());
+        changedDv.setFilter(dv.getFilter());
+        changedDv.setAsCurrentJob();
+
+        Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
+        $('#codeboxTitle').html(changedDv.generateTitle(0));
+
+        changedDv.diffAndDraw(function() {
+            $('#codeboxTitle').html(changedDv.generateTitle(1));
+            dv = changedDv;
         }, function() {
-            $('#codeboxTitle').html(dv.generateTitle(-1));
+            $('#codeboxTitle').html(changedDv.generateTitle(-1));
+            NProgress.done();
         });
     });
 }
@@ -274,7 +282,13 @@ function diffListSetup() {
               else {
                   dv = viewer;
                   viewer.diffAndDraw(function() {
+                      //success
                       $('#codeboxTitle').html(dv.generateTitle(1));
+                  }, function (msg) {
+                      //error
+                      $('#codeboxTitle').html(dv.generateTitle(-1));
+                      Utility.showError(msg);
+                      NProgress.done();
                   });
               }
           }));
