@@ -53,7 +53,42 @@ module.exports = {
         new CopyWebpackPlugin([
 
             // {output}/to/file.txt
-
+            //jquery
+            {
+                context: __dirname,
+                from: 'node_modules/jquery/dist/jquery.min.js',
+                to: 'jquery.min.js'
+            },
+            //bootstrap
+            {
+                context: __dirname,
+                from: 'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
+                to: 'bootstrap.min.js'
+            },
+            //scrollTo jquery
+            {
+                context: __dirname,
+                from: 'node_modules/jquery.scrollto/jquery.scrollTo.min.js',
+                to: 'jquery.scrollTo.min.js'
+            },
+            //highlightjs
+            {
+                context: __dirname,
+                from: 'node_modules/highlightjs/highlight.pack.min.js',
+                to: 'highlight.pack.min.js'
+            },
+            //highlightjs line numbers
+            {
+                context: __dirname,
+                from: 'node_modules/highlightjs-line-numbers.js/dist/highlightjs-line-numbers.min.js',
+                to: 'highlightjs-line-numbers.min.js'
+            },
+            //bootstrap-toggle
+            {
+                context: __dirname,
+                from: 'node_modules/bootstrap-toggle/js/bootstrap2-toggle.min.js',
+                to: 'bootstrap2-toggle.min.js'
+            },
             //mark.js
             {
                 context: __dirname,
