@@ -22,26 +22,6 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
     display: none;
 }
 
-// custom NProgress
-
-[data-notify="progressbar"] {
-    margin-bottom: 0px;
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    height: 5px;
-}
-
-.skill-unit .bar .progress {
-    background: #24ff09;
-}
-
-.skill-unit .bar .progress span {
-    color: #24ff09;
-    background: #24ff09;
-}
-
 .navbar {
     margin-bottom: 5px;
 }

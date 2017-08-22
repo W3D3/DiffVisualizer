@@ -8,6 +8,6 @@ if [ -z "$REPO" ]; then
     REPO=$(node -e "console.log(require('./package.json').name.split('/').pop())")
 fi
 
-echo "$VERSION"
+echo "Building $REPO $VERSION"
 
 docker build -t "$REPO:$VERSION" "$@" .

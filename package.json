@@ -1,8 +1,8 @@
 {
   "name": "diffvisualizer",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "engines": {
-    "node": "6.11.1"
+    "node": "8.2.1"
   },
   "docker-registry": "swdyn-isys.aau.at:5000",
   "main": "server/index.js",
@@ -76,9 +76,8 @@
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register test/*-test.js",
     "preunittest": "npm run lint",
     "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-core/register test/*-test.js",
-    "docker-build": "docker-build",
-    "docker-run": "docker-run",
-    "docker-push": "docker-push",
+    "docker-build": "./scripts/docker-build",
+    "docker-push": "./scripts/docker-push",
     "deploy": "./scripts/docker-build && ./scripts/docker-push"
   },
   "babel": {

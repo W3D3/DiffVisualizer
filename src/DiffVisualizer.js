@@ -36,7 +36,6 @@ var settings;
  * initializes the DiffVisualizer application
  */
 $(document).ready(function() {
-    console.log('wow');
     gui = new GUI();
     gui.setVersion(version);
     NProgress.configure({ trickle: false });
@@ -76,8 +75,8 @@ $(document).ready(function() {
         }
     });
 
-    var l = new Loader();
-    console.log(l);
+    new Loader();
+
     //setup ace editor and all clickhandlers
     editorSetup();
 
@@ -154,8 +153,9 @@ function matcherChangerSetup() {
         changedDv.diffAndDraw(function() {
             $('#codeboxTitle').html(changedDv.generateTitle(1));
             dv = changedDv;
-        }, function() {
+        }, function(msg) {
             $('#codeboxTitle').html(changedDv.generateTitle(-1));
+            Utility.showError(msg);
             NProgress.done();
         });
     });
@@ -293,14 +293,14 @@ function diffListSetup() {
               }
           }));
 
-    //stop propagation by returning
+        //stop propagation by returning
         return false;
     }, 1000, {
         'leading': true,
         'trailing': false
     }));
 
-  //filter diff list on keyup
+    //filter diff list on keyup
     $('#listFilterText').keyup(_.debounce(function() {
         var filterText = $('#listFilterText').val().toLowerCase();
         $('#listFilterText').css('border', '');
@@ -308,7 +308,7 @@ function diffListSetup() {
 
         var $list = $('#diffsList #diffItem');
         if (filterText.length < 4 && filterText.length > 0 && !$.isNumeric(filterText)) {
-      //won't filter when text is this short, alert user
+            //won't filter when text is this short, alert user
             $('#listFilterText').css('border', 'red 1px solid');
             $('#listFilterText').tooltip({
                 'title': 'Filter input is too short'
@@ -327,8 +327,8 @@ function diffListSetup() {
             }
 
             return _.includes(currentObject, filterText);
-        })
-      .show();
+        }).show();
+        $('#diffsList').scrollTo(0);
     }, 300));
 
     $('#filterListClear').click(function() {
