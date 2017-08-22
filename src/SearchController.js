@@ -218,13 +218,13 @@ class SearchController {
                         for (var i = 0; i < me.containerList.length; i++) {
 
                             if (me.containerList[i].has('.' + currentClass).length > 0) {
-                                $(me.containerList[i]).scrollTo($current, 100, {
+                                $(me.containerList[i]).scrollTo($current, 50, {
                                     offset: 0 - localOffset - 100
                                 });
                             }
                         }
                     } else {
-                        $($content).scrollTo($current, 100, {
+                        $($content).scrollTo($current, 50, {
                             offset: 0 - localOffset - 100
                         });
                     }
@@ -239,6 +239,12 @@ class SearchController {
      */
         $input.on('input', _.debounce(function() {
             var searchVal = this.value;
+            // disable search when length is 3 or less characters
+            if(searchVal.length > 0 && searchVal.length < 4) {
+                $searchbar.find('.overInput').addClass('danger');
+                $searchbar.find('.overInput').text('input too short');
+                return;
+            }
             $content.unmark({
                 done: function() {
                     $content.mark(searchVal, {
