@@ -2,7 +2,7 @@
 var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-const Uglify = require('uglifyjs-webpack-plugin');
+// const Uglify = require('uglifyjs-webpack-plugin');
 
 const extractSass = new ExtractTextPlugin({
     filename: '[name].bundle.css',
@@ -116,6 +116,6 @@ module.exports = {
             copyUnmodified: true
         }),
         extractSass,
-        new Uglify()
+        // new Uglify()
     ]
 };

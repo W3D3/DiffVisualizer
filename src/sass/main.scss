@@ -8,14 +8,14 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~animate.css/animate.css';
 @import '~dropzone/src/dropzone';
 @import 'nprogress';
-@import '~perfect-scrollbar/src/css/main';
 
 //project specific code
-@import 'flexbox';
 @import 'codebox';
+@import 'flexbox';
 @import 'accordion';
 @import 'minimap';
 @import 'rainbow';
+@import 'scrollbar';
 
 ::-webkit-scrollbar {
     /* disable scrollbar for webkit browser because we can use perfect scrollbar instead which autohides */
