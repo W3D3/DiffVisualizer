@@ -199,6 +199,9 @@ function diffListSetup() {
         var srcUrl = $(this).data('rawsrcurl');
         var dstUrl = $(this).data('rawdsturl');
 
+        viewer.setSrcUrl(srcUrl);
+        viewer.setDstUrl(dstUrl);
+
         viewer.setAsCurrentJob();
 
         var configSrc = {

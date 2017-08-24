@@ -58,6 +58,14 @@ class DiffDrawer {
         return this.DIFF_API.get('/matchers');
     }
 
+    setSrcUrl(value) {
+        this.srcUrl = value;
+    }
+
+    setDstUrl(value) {
+        this.dstUrl = value;
+    }
+
     setEnableMinimap(value) {
         this.enableMinimap = value;
     }
@@ -430,10 +438,6 @@ class DiffDrawer {
         }
         var titlestring = `<span class="label label-default">${this.id}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
 
-        //TODO reimplement github raw link
-        //titlestring += `<a href="${dstUrl}" target="dst"><span class="label label-default pull-right"><i class="fa fa-github"></i> Destination</span>`;
-        //titlestring += `<a href="${srcUrl}" target="src"><span class="label label-default pull-right"><i class="fa fa-github"></i> Source</span></a>`;
-
         if(status === 0) {
             titlestring += '<span class="label label-primary">IN PROGRESS</span>';
         }
@@ -444,6 +448,9 @@ class DiffDrawer {
             titlestring += '<span class="label label-danger">ABORTED</span>';
         }
         titlestring += ` <b>${this.filename}</b> `;
+
+        if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-github"></i> SRC</span></a>`;
+        if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-github"></i> DST</span>`;
 
         return titlestring;
     }
