@@ -30,7 +30,7 @@ pre, code {
 }
 
 .codebox {
-    /*padding-left: 0;*/
+    padding-left: 0;
     border: 1px solid #CCC;
     padding: 0;
 }
@@ -58,4 +58,8 @@ pre, code {
 
 code.hljs-line-numbers {
     margin-right: 0px !important;
+}
+
+code.hljs {
+    padding-left: 5px !important;
 }

@@ -98,13 +98,14 @@ class SearchController {
                     me.visibilityState[me.focussedIndex] = !me.visibilityState[me.focussedIndex];
                     if (me.visibilityState[me.focussedIndex]) //if is visible
                     {
-                        $(container).css({
-                            'padding-top': '50px'
-                        });
+
                         input.val(me.lastSearched);
                         searchPanel.show(me.options.animationDuration);
                         input.focus();
                         input.trigger('input');
+                        $(container).css({
+                            'padding-top': input.outerHeight()
+                        });
                     } else {
                         $(container).css({
                             'padding-top': '0'
@@ -141,10 +142,11 @@ class SearchController {
         '<input id="globalToggle" data-on="GLOBAL" data-off="LOCAL" type="checkbox" data-toggle="toggle" data-onstyle="info" data-height="43" data-width="80" data-style="globalToggle" />' +
         '</div>';
         }
-        searchbarhtml += ` <input type="text" class="form-control" id="sb-input-${index}" placeholder=""> <span class="overInput"></span>` +
+        searchbarhtml += ` <input type="text" class="form-control" id="sb-input-${index}" placeholder="">` +
       ' <span class="input-group-btn">' +
       // `  <button class="btn btn-default" id="sb-submit-${index}" type="button"><span class="glyphicon glyphicon-search"></span></button> ` +
       // ' <button class="btn btn-sm btn-default" data-search="clear" type="button"><span class="glyphicon glyphicon-remove"></span></button> ' +
+      ' <button class="btn btn-sm bg-default overInput" type="button" disabled="disabled">0 of 0</button> ' +
       ' <button class="btn btn-sm btn-primary" data-search="next" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button> ' +
       ' <button class="btn btn-sm btn-primary" data-search="prev" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button> ' +
       '</span></div>';
@@ -181,7 +183,9 @@ class SearchController {
             // focused element
             currentClass = 'current',
             // the current index of the focused element
-            currentIndex = 0;
+            currentIndex = 0,
+
+            numOfMatches = 0;
 
         $searchbar.find('#globalToggle').on('change', function() {
             if (me.options.enableGlobalSearch) {
@@ -247,12 +251,36 @@ class SearchController {
             }
             $content.unmark({
                 done: function() {
+
                     $content.mark(searchVal, {
                         separateWordSearch: false,
                         ignoreJoiners: true,
                         acrossElements: true,
                         wildcards: 'enabled',
                         exclude: ['.searchbar *'],
+                        // each: function(marked) {
+                        //     var markedText = $(marked).text();
+                        //     var splitVal = searchVal.split(' ');
+                        //     var ending = splitVal[splitVal.length - 1];
+                        //     if(searchVal.endsWith(' '))
+                        //     {
+                        //         if(markedText.endsWith(' '))
+                        //         {
+                        //             console.log('space ending, node found');
+                        //             numOfMatches++;
+                        //         }
+                        //     }
+                        //     else if(markedText.endsWith(ending))
+                        //     {
+                        //         console.log('same ending, node found ' + ending);
+                        //         numOfMatches++;
+                        //     }
+                        //     else {
+                        //         console.log('not ending node');
+                        //         console.log(markedText);
+                        //     }
+                        //     console.log(markedText);
+                        // },
                         done: function(counter) {
                             if (counter > 0) {
                                 $searchbar.find('.overInput').removeClass('danger');
@@ -263,6 +291,8 @@ class SearchController {
                                 $searchbar.find('.overInput').text('0 of 0');
                                 $searchbar.find('.overInput').addClass('danger');
                             }
+
+                            numOfMatches = 0;
 
                         }
                     });
