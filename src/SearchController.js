@@ -183,9 +183,9 @@ class SearchController {
             // focused element
             currentClass = 'current',
             // the current index of the focused element
-            currentIndex = 0,
+            currentIndex = 0;
 
-            numOfMatches = 0;
+            //numOfMatches = 0;
 
         $searchbar.find('#globalToggle').on('change', function() {
             if (me.options.enableGlobalSearch) {
@@ -258,7 +258,8 @@ class SearchController {
                         acrossElements: true,
                         wildcards: 'enabled',
                         exclude: ['.searchbar *'],
-                        // each: function(marked) {
+                        // each: function(marked, index) {
+                        //     console.log(index);
                         //     var markedText = $(marked).text();
                         //     var splitVal = searchVal.split(' ');
                         //     var ending = splitVal[splitVal.length - 1];
@@ -282,6 +283,7 @@ class SearchController {
                         //     console.log(markedText);
                         // },
                         done: function(counter) {
+                            // console.log($results);
                             if (counter > 0) {
                                 $searchbar.find('.overInput').removeClass('danger');
                                 $results = $content.find('mark');
@@ -292,7 +294,7 @@ class SearchController {
                                 $searchbar.find('.overInput').addClass('danger');
                             }
 
-                            numOfMatches = 0;
+                            // numOfMatches = 0;
 
                         }
                     });

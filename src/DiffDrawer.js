@@ -419,8 +419,13 @@ class DiffDrawer {
 
         })
       .catch(function(error) {
+
           //make sure we don't throw errors for old jobs!
           if (diffdrawer.checkIfCurrentJob()) {
+              if (error.response) {
+                  err(error + ' (using matcher ' + diffdrawer.matcherName + ')<pre>' + JSON.stringify(error.response.data, undefined, 2)  + '</pre>');
+                  return;
+              }
               err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
           }
       });

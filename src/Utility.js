@@ -118,7 +118,7 @@ class Utility {
     }
 
     static showError(message) {
-        Utility.showNotify('Critical Error', message, 'danger', 'glyphicon glyphicon-remove-sign', 0);
+        Utility.showNotify('Critical', message, 'danger', 'glyphicon glyphicon-remove-sign', 0);
     }
 
     static showMessage(message) {

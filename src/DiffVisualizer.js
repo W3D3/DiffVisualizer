@@ -42,6 +42,8 @@ $(document).ready(function() {
 
     settings = new Settings();
 
+    $('#accordion').collapse().height('auto');
+    
     if(navigator.userAgent.indexOf('AppleWebKit') != -1){
         //this is webkit, use custom scrollbars because we hide the default ones
         $('.scrollbar-chrome').perfectScrollbar();
@@ -140,11 +142,11 @@ function matcherChangerSetup() {
         $('.minimap').hide();
         settings.saveSetting('matcher', matchers[this.value - 1]);
 
-        var changedDv = new DiffDrawer(dv.src, dv.dst);
+        var changedDv = new DiffDrawer();
+        Object.assign(changedDv, dv);
+
         changedDv.setMatcher(settings.loadSetting('matcher'));
-        changedDv.setIdAndFilname(dv.getDiffId(), dv.getFilename());
-        changedDv.setJobId(dv.getDiffId());
-        changedDv.setFilter(dv.getFilter());
+        changedDv.setJobId(dv.getDiffId()); //to refresh job id
         changedDv.setAsCurrentJob();
 
         Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
