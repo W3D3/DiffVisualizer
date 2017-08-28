@@ -9,6 +9,9 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~dropzone/src/dropzone';
 @import 'nprogress';
 
+@import '~smartwizard/dist/css/smart_wizard';
+@import '~smartwizard/dist/css/smart_wizard_theme_arrows';
+
 //project specific code
 @import 'codebox';
 @import 'flexbox';
@@ -131,4 +134,15 @@ mark.current {
 .overInput.danger {
     color: rgba(198, 25, 25, 0.6) !important;;
 
+}
+
+.equal {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  padding: 0
+}
+
+.step-content {
+    padding: 10px
 }

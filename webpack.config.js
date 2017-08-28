@@ -107,7 +107,13 @@ module.exports = {
                 context: __dirname,
                 from: 'node_modules/bootstrap-notify/bootstrap-notify.min.js',
                 to: 'bootstrap-notify.min.js'
-            }
+            },
+            // jquery.smartWizard.min.js
+            {
+                context: __dirname,
+                from: 'node_modules/smartwizard/dist/js/jquery.smartWizard.min.js',
+                to: 'jquery.smartWizard.min.js'
+            },
 
         ], {
             // By default, we only copy modified files during

@@ -10,6 +10,7 @@ import Utility from './Utility';
 import GUI from './GUI';
 import Settings from './Settings';
 import SearchController from './SearchController';
+import GitHubWizard from './GitHubWizard';
 import {
   version
 } from '../package.json';
@@ -43,7 +44,7 @@ $(document).ready(function() {
     settings = new Settings();
 
     $('#accordion').collapse().height('auto');
-    
+
     if(navigator.userAgent.indexOf('AppleWebKit') != -1){
         //this is webkit, use custom scrollbars because we hide the default ones
         $('.scrollbar-chrome').perfectScrollbar();
@@ -102,6 +103,15 @@ $(document).ready(function() {
 
     //register hover handler for all the UPDATEs and MOVEs
     gui.setHoverEffect('.codebox', '.scriptmarker');
+
+    var wiz = new GitHubWizard({
+        wizardElement: $('#githubwizard')
+    });
+    console.log(wiz);
+    $('#githubImportButton').click(function() {
+        $('#wizard').modal('show');
+
+    });
 });
 
 function editorSetup() {

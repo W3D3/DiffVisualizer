@@ -101,20 +101,25 @@
             </div>
             <div id="import" class="panel-collapse collapse in">
 
-              <form action="/diffjson" class="dropzone" id="jsonUploader">
-              </form>
+            <div class="row equal">
+                <div class="col-xs-6" style="padding: 10px">
+                    <a class="btn btn-primary" style="height: 100%; text-align: center;
+vertical-align: middle; line-height: 100px;" id="githubImportButton">Import from GitHub</a></div>
+                <div class="col-xs-6" style="padding: 10px">
+                    <form action="/diffjson" class="dropzone" id="jsonUploader">
+                    </form>
+                </div>
+            </div>
 
               <div class="panel panel-info">
                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                   <h4 class="panel-title">
                       <a ><span class="glyphicon glyphicon-cloud-upload">
-                      </span>Cached entries:</a>
+                      </span>Cached sets</a>
                     </h4>
                 </div>
                 <div>
-
                   <div id="uploadedFiles"></div>
-
                 </div>
               </div>
 
@@ -247,6 +252,54 @@
     </div>
   </div>
 
+  <div class="modal fade" id="wizard" tabindex="0" role="dialog" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="padding: 0; margin: 0">
+        <!-- <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Change source code</h4>
+        </div> -->
+        <div class="modal-body" style="padding: 0;">
+            <div id="githubwizard">
+              <ul>
+                  <li><a href="#step-1">Chose Project<br /><small>from GitHub</small></a></li>
+                  <li><a href="#step-2">Step Title<br /><small>Step description</small></a></li>
+                  <li><a href="#step-3">Step Title<br /><small>Step description</small></a></li>
+                  <li><a href="#step-4">Step Title<br /><small>Step description</small></a></li>
+              </ul>
+
+              <div class="wrapper">
+                  <div id="step-1" class="">
+                      <!-- GitHub Project URL -->
+                      <div class="input-group">
+
+                      <span class="input-group-addon" id="sizing-addon2">GitHub Project URL</span>
+                      <input type="text" class="form-control" placeholder="GitHub Project URL" aria-describedby="sizing-addon2">
+
+
+                    </div>
+                    <button type="button" class="btn btn-primary">Next</button>
+                  </div>
+                  <div id="step-2" class="">
+                      Step 2
+                  </div>
+                  <div id="step-3" class="">
+                      Step Content
+                  </div>
+                  <div id="step-4" class="">
+                      Step Content
+                  </div>
+              </div>
+          </div>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
   <!-- jQuery & boostrap-->
   <script src="dist/jquery.min.js"></script>
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
@@ -273,6 +326,7 @@
   <!-- mark.js library -->
   <script src="dist/jquery.mark.min.js" charset="utf-8"></script>
 
+  <script type="text/javascript" src="dist/jquery.smartWizard.min.js"></script>
 
   <script src="dist/bundle.js"></script>
 
