@@ -26,55 +26,47 @@ class GitHubWizard {
         };
         this.options = this.setDefaults(options, defaults);
 
-        var $validator = $('#githubForm').validate({
-            // errorClass: 'has-error',
-            rules: {
-                emailfield: {
-                    required: true,
-                    email: true,
-                    minlength: 3
-                },
-                namefield: {
-                    required: true,
-                    minlength: 3
-                },
-                projecturl: {
-                    required: true,
-                    remote: {
-                        url: 'validate-githuburl',
-                        type: 'post'
-                    }
-                }
-            },
-            highlight: function(element) {
-                $(element).parent().addClass('has-error');
-            },
-            unhighlight: function(element) {
-                $(element).parent().removeClass('has-error');
-            },
-            onkeyup: function(element) {
-                return false;
-                // if (element.name == '#emailid') {
-                //     return false;
-                // }
-            }
+        $('#projecturl-next').on('click', function() {
+            var input = $('#projecturl').val();
+            var formgroup = $('#projecturl').parent().parent();
+            var errorspan = $('#projecturl-error');
+
+            axios.post('/validate-githuburl', {
+                projecturl: input
+            }).then(function(response) {
+                console.log(response);
+                formgroup.addClass('has-success');
+                errorspan.text(response.data.full_name + ' exists and will be loaded');
+                me.options.wizardElement.bootstrapWizard('show', 1);
+                $('#commit-list').html('');
+                response.data.forEach(commit => {
+                    console.log(commit);
+                    $('#commit-list').append('<a href="#" class="list-group-item">'+
+                      `<b class="list-group-item-heading commit-item" id="sha${commit.sha}">${commit.commit.message}</b><br/>`+
+                      `<small class="list-group-item-text">${commit.commit.author.name} ${commit.commit.author.email} ${commit.commit.author.date}</small>`+
+                    '</a>');
+
+                });
+
+            }).catch(function (error) {
+                console.log(error.response);
+                errorspan.text(error.response.data.message);
+                formgroup.removeClass('has-success');
+                formgroup.addClass('has-error');
+            });
         });
 
-
-        $.validator.setDefaults({
-
-        });
 
         me.options.wizardElement.bootstrapWizard({
             'tabClass': 'nav nav-pills',
-            'onNext': function(tab, navigation, index) {
-                var $valid = $('#githubForm').valid();
-                console.log($valid);
-                if (!$valid) {
-                    $validator.focusInvalid();
-                    return false;
-                }
-            },
+            // 'onNext': function (tab, navigation, index) {
+            //     console.log(index);
+            //     var isValid = $('#githubForm').valid();
+            //     if (!isValid) {
+            //         $validator.focusInvalid();
+            //         return false;
+            //     }
+            // },
             'onTabClick': function() {
                 return false;
             }
@@ -91,7 +83,6 @@ class GitHubWizard {
     setDefaults(options, defaults) {
         return _.defaults({}, _.clone(options), defaults);
     }
-
 
 }
 export default GitHubWizard;

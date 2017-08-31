@@ -1,8 +1,12 @@
 {
-  "server": {
-    "port": 9999
-  },
-  "client": {
-    "apibase": "http://swdyn.aau.at:8080/v1/"
-  }
+    "server": {
+        "port": 9999
+    },
+    "client": {
+        "apibase": "http://swdyn.aau.at:8080/v1/"
+    },
+    "auth": {
+        "user": "W3D3",
+        "pass": "7ae3db5ce123626d37b6213dfd5ce66bc8ded95f"
+    }
 }

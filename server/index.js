@@ -13,9 +13,7 @@ const bodyParser = require('body-parser');
 
 require('console-stamp')(console, '[HH:MM:ss.l]');
 var app = express();
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-    extended: true
-}));
+app.use(bodyParser.json());
 
 app.post('/diffjson', upload.single('file'), function(req, res) {
     // req.file is the file
@@ -64,15 +62,43 @@ app.get('/github/*', cors(), function(req, res) {
 app.post('/validate-githuburl', function(req, res) {
     console.info(req.body.projecturl);
     // console.info(req);
+    var githubregex = /(https?:\/\/)?(www\.)?github.com\//g;
+    var project = req.body.projecturl.replace(githubregex, '').split('/');
+    if(project.length != 2) {
+        res.status(400).send({
+            message: 'Invalid format. Try user/repo or the whole github url.'
+        });
+        return;
+    }
+
+    var url = 'https://api.github.com/repos/' + project[0] + '/' + project[1] + '/commits';
+    console.log(url);
     res.setHeader('Content-Type', 'text/plain');
-    // request.get({
-    //     url: url,
-    //     json: false
-    // }, function(err, resp, body) {
-    //     res.send(body);
-    // });
-    // res.send(false);
-    res.send(JSON.stringify('Not a valid github url'));
+    request.get({
+        url: url,
+        json: false,
+        auth: {
+            'user': 'W3D3',
+            'pass': '7ae3db5ce123626d37b6213dfd5ce66bc8ded95f'
+        },
+        headers: {
+            'User-Agent': 'DiffViz'
+        }
+    }, function(err, resp, body) {
+        console.log(resp.headers);
+        console.log(resp.statusCode);
+        console.log(body);
+        if(resp.statusCode != 200)
+        {
+            res.status(resp.statusCode).send(body);
+        } else {
+            console.log('valid url ' + url);
+            res.status(resp.statusCode).send(body);
+        }
+
+    });
+    //res.send(false);
+
 });
 
 //serve application
