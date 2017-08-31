@@ -108,13 +108,18 @@ module.exports = {
                 from: 'node_modules/bootstrap-notify/bootstrap-notify.min.js',
                 to: 'bootstrap-notify.min.js'
             },
-            // jquery.smartWizard.min.js
+            // twitter-bootstrap-wizard
             {
                 context: __dirname,
-                from: 'node_modules/smartwizard/dist/js/jquery.smartWizard.min.js',
-                to: 'jquery.smartWizard.min.js'
+                from: 'node_modules/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js',
+                to: 'jquery.bootstrap.wizard.min.js'
             },
-
+            //jquery.validate.min.js
+            {
+                context: __dirname,
+                from: 'node_modules/jquery-validation/dist/jquery.validate.min.js',
+                to: 'jquery.validate.min.js'
+            },
         ], {
             // By default, we only copy modified files during
             // a watch or webpack-dev-server build. Setting this

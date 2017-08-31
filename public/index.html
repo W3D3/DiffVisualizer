@@ -2,24 +2,24 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-  <title>Diff Visualizer</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <title>Diff Visualizer</title>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
-  <!-- changable code highlighting style -->
-  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" id="codestyle">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <!-- changable code highlighting style -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" id="codestyle">
 
-  <!-- master style -->
-  <link rel="stylesheet" href="dist/main.bundle.css">
-  <!-- changable marker styler -->
-  <link rel="stylesheet" href="css/marker-light.css" id="markerstyle">
+    <!-- master style -->
+    <link rel="stylesheet" href="dist/main.bundle.css">
+    <!-- changable marker styler -->
+    <link rel="stylesheet" href="css/marker-light.css" id="markerstyle">
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
@@ -28,126 +28,126 @@
 </head>
 
 <body>
-  <div class="box">
-    <div class="row header">
-      <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#"> <i class="mega-octicon octicon-diff"></i> Diff Visualizer <span class="badge versionNumber">v?</span></a>
-          </div>
+    <div class="box">
+        <div class="row header">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#"> <i class="mega-octicon octicon-diff"></i> Diff Visualizer <span class="badge versionNumber">v?</span></a>
+                    </div>
 
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="navbar">
-            <ul class="nav navbar-nav">
-              <li>
-                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i></i></i><span class="hidden-md hidden-sm"> Toggle Sidebar</span></a>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="navbar">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i></i></i><span class="hidden-md hidden-sm"> Toggle Sidebar</span></a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-filter"></i> Filter <span class="caret"></span>
                 </a>
-                <!-- Filter dropdown-menu -->
-                <ul class="dropdown-menu">
-                  <li><a href="#" class="small INSERT" data-value="INSERT" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;INSERT</a></li>
-                  <li><a href="#" class="small DELETE" data-value="DELETE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;DELETE</a></li>
-                  <li><a href="#" class="small UPDATE" data-value="UPDATE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;UPDATE</a></li>
-                  <li><a href="#" class="small MOVE" data-value="MOVE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;MOVE</a></li>
-                  <!-- Following button may be reenabled when files get too big? -->
-                  <div class="dropdown-divider"></div>
+                                <!-- Filter dropdown-menu -->
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="small INSERT" data-value="INSERT" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;INSERT</a></li>
+                                    <li><a href="#" class="small DELETE" data-value="DELETE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;DELETE</a></li>
+                                    <li><a href="#" class="small UPDATE" data-value="UPDATE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;UPDATE</a></li>
+                                    <li><a href="#" class="small MOVE" data-value="MOVE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;MOVE</a></li>
+                                    <!-- Following button may be reenabled when files get too big? -->
+                                    <div class="dropdown-divider"></div>
 
-                  <li><a href="#" id="applyFilter">Apply filter</a></li>
-                </ul>
-                <!-- end filter dropdown-menu -->
-              </li>
+                                    <li><a href="#" id="applyFilter">Apply filter</a></li>
+                                </ul>
+                                <!-- end filter dropdown-menu -->
+                            </li>
 
 
-            </ul>
-            <form class="navbar-form navbar-left" id="lineNumberForm">
-              <div class="form-group">
-                <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
-                <a class="btn btn-primary" id="jump"><i class="fa fa-play-circle"></i> GOTO</a>
-              </div>
-              <!-- <a class="btn btn-primary" id="jumpSrc">SRC</a>
+                        </ul>
+                        <form class="navbar-form navbar-left" id="lineNumberForm">
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
+                                <a class="btn btn-primary" id="jump"><i class="fa fa-play-circle"></i> GOTO</a>
+                            </div>
+                            <!-- <a class="btn btn-primary" id="jumpSrc">SRC</a>
               <a class="btn btn-primary" id="jumpDst">DST</a> -->
-              <!-- <input type="checkbox" name="my-checkbox" checked> -->
-              <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="warning" data-on="SRC" data-off="DST" data-height="43px" data-width="70px"/>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
+                            <!-- <input type="checkbox" name="my-checkbox" checked> -->
+                            <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="warning" data-on="SRC" data-off="DST" data-height="43px" data-width="70px" />
+                        </form>
+                        <ul class="nav navbar-nav navbar-right">
 
-              <li>
-                <a href="#" id="changeSource" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-list-alt"></span> Code editor</a>
-              </li>
-              <li>
-                <a href="#" id="printCodebox"><i class="glyphicon glyphicon-picture"></i> Screenshot</a>
-              </li>
+                            <li>
+                                <a href="#" id="changeSource" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-list-alt"></span> Code editor</a>
+                            </li>
+                            <li>
+                                <a href="#" id="printCodebox"><i class="glyphicon glyphicon-picture"></i> Screenshot</a>
+                            </li>
 
-            </ul>
-          </div>
-          <!-- /.navbar-collapse -->
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
         </div>
-        <!-- /.container-fluid -->
-      </nav>
-    </div>
-    <div class="row content">
-      <div class="col-xs-3 sidebar" style="overflow: hidden">
-        <!-- START ACCORDION NAV  -->
-        <div class="panel-group" id="accordion">
-          <div class="panel panel-default">
-            <div class="panel-heading" data-toggle="collapse" href="#import">
-              <h4 class="panel-title">
+        <div class="row content">
+            <div class="col-xs-3 sidebar" style="overflow: hidden">
+                <!-- START ACCORDION NAV  -->
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" href="#import">
+                            <h4 class="panel-title">
                   <a ><span class="glyphicon glyphicon-upload">
                   </span>Import</a>
                 </h4>
-            </div>
-            <div id="import" class="panel-collapse collapse in">
+                        </div>
+                        <div id="import" class="panel-collapse collapse in">
 
-            <div class="row equal">
-                <div class="col-xs-6" style="padding: 10px">
-                    <a class="btn btn-primary" style="height: 100%; text-align: center;
+                            <div class="row equal">
+                                <div class="col-xs-6" style="padding: 10px">
+                                    <a class="btn btn-primary" style="height: 100%; text-align: center;
 vertical-align: middle; line-height: 100px;" id="githubImportButton">Import from GitHub</a></div>
-                <div class="col-xs-6" style="padding: 10px">
-                    <form action="/diffjson" class="dropzone" id="jsonUploader">
-                    </form>
-                </div>
-            </div>
+                                <div class="col-xs-6" style="padding: 10px">
+                                    <form action="/diffjson" class="dropzone" id="jsonUploader">
+                                    </form>
+                                </div>
+                            </div>
 
-              <div class="panel panel-info">
-                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                  <h4 class="panel-title">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <h4 class="panel-title">
                       <a ><span class="glyphicon glyphicon-cloud-upload">
                       </span>Cached sets</a>
                     </h4>
-                </div>
-                <div>
-                  <div id="uploadedFiles"></div>
-                </div>
-              </div>
+                                </div>
+                                <div>
+                                    <div id="uploadedFiles"></div>
+                                </div>
+                            </div>
 
 
-            </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading" data-toggle="collapse" href="#settingsPanel">
-              <h4 class="panel-title">
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" href="#settingsPanel">
+                            <h4 class="panel-title">
                   <a><span class="glyphicon glyphicon-cog">
                   </span>Settings</a>
                 </h4>
-            </div>
-            <div id="settingsPanel" class="panel-collapse collapse">
-              <ul class="list-group">
-                <li class="list-group-item">
-                  <div class="form-group">
-                    <h4>Webservice</h4>
-                    <label for="matcherID">Select Matcher</label>
-                    <select class="form-control" id="matcherID">
+                        </div>
+                        <div id="settingsPanel" class="panel-collapse collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div class="form-group">
+                                        <h4>Webservice</h4>
+                                        <label for="matcherID">Select Matcher</label>
+                                        <select class="form-control" id="matcherID">
                       </select>
 
-                  </div>
-                  <hr>
-                  <div class="form-group">
-                      <h4>Appearance</h4>
-                      <label for="matcherID">Select Theme</label>
-                      <select class="form-control" id="themePicker">
+                                    </div>
+                                    <hr>
+                                    <div class="form-group">
+                                        <h4>Appearance</h4>
+                                        <label for="matcherID">Select Theme</label>
+                                        <select class="form-control" id="themePicker">
                         <option value="default" data-dark="false">Default</option>
                         <option value="github" data-dark="false">GitHub</option>
                         <option value="vs" data-dark="false">Visual Studio</option>
@@ -159,176 +159,200 @@ vertical-align: middle; line-height: 100px;" id="githubImportButton">Import from
                         <option value="monokai-sublime" data-dark="true">Monokai</option>
                       </select>
 
-                  </div>
+                                    </div>
 
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="panel panel-default" id="listPanel">
-            <!-- <div class="panel-heading" data-toggle="collapse" href="#diffsViewer"> -->
-            <div class="panel-heading">
-              <h4 class="panel-title">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" id="listPanel">
+                        <!-- <div class="panel-heading" data-toggle="collapse" href="#diffsViewer"> -->
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
                   <a><i class="glyphicon glyphicon-file"></i>Diffs</a>
                 </h4>
-            </div>
+                        </div>
 
-            <div id="diffsViewer" class="panel-collapse box">
-              <div class="input-group">
-                  <input type="text" class="form-control" id="listFilterText" placeholder="ID / filename" style="width: 100%">
-                  <span class="input-group-btn">
+                        <div id="diffsViewer" class="panel-collapse box">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="listFilterText" placeholder="ID / filename" style="width: 100%">
+                                <span class="input-group-btn">
                       <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
-                      <a class="btn btn-default" id="filterListClear"><i class="fa fa-times"></i></span></a>
-                  </span>
-              </div>
-              <div class="list-group" id="diffsList">
-              </div>
+                                <a class="btn btn-default" id="filterListClear"><i class="fa fa-times"></i></span></a>
+                                </span>
+                            </div>
+                            <div class="list-group" id="diffsList">
+                            </div>
 
+                        </div>
+                    </div>
+
+                </div>
+                <!-- END ACCORDION NAV -->
             </div>
-          </div>
-
-        </div>
-        <!-- END ACCORDION NAV -->
-      </div>
-      <div class="col-xs-9 box panel panel-default" id="codeView">
-        <div class="panel-heading" id="codeboxTitle">DiffViewer	&trade;</div>
-        <div class="row content panel-body" style="padding: 0" id="codeContent">
-          <div id="minimap" class="srcminimap minimap"></div>
-          <div class="col-xs-6 codebox src scrollbar-chrome hljs">
-            <pre><code class="language-java" id="src"></code></pre>
-          </div>
-          <div id="minimap" class="dstminimap minimap"></div>
-          <div class="col-xs-6 codebox dst scrollbar-chrome hljs">
-            <pre><code class="language-java" id="dst"></code></pre>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="row footer">
-      <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1 <span id="baseurl"></span></span>
-
-      <div class="panel panel-primary" id="metaDataPanel">
-        <div class="panel-heading">
-          <h3 class="panel-title" id="metadataTitle">MetaData Title</h3>
-          <span class="pull-right clickable" id="closeMetaDataPanel"><i class="fa fa-times"></i></span>
-        </div>
-        <div class="panel-body" id="metadataContent">MetaData Panel content</div>
-      </div>
-
-      <span class="label label-info" style="position: absolute; right:0; bottom: 0"><b>Metrics: </b><span class="time"></span></span>
-
-    </div>
-  </div>
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document" style="width: 100%; height: 100%">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Change source code</h4>
-        </div>
-        <div class="modal-body" style="height: 100%">
-          <div class="row">
-            <div class="col-xs-6" style="position: relative;height: 700px">
-              <h3>Source code</h3>
-              <hr />
-              <div id="editorSrc" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-              <!-- <textarea name="srcInput" rows="25" style="width:100%"></textarea> -->
+            <div class="col-xs-9 box panel panel-default" id="codeView">
+                <div class="panel-heading" id="codeboxTitle">DiffViewer &trade;</div>
+                <div class="row content panel-body" style="padding: 0" id="codeContent">
+                    <div id="minimap" class="srcminimap minimap"></div>
+                    <div class="col-xs-6 codebox src scrollbar-chrome hljs">
+                        <pre><code class="language-java" id="src"></code></pre>
+                    </div>
+                    <div id="minimap" class="dstminimap minimap"></div>
+                    <div class="col-xs-6 codebox dst scrollbar-chrome hljs">
+                        <pre><code class="language-java" id="dst"></code></pre>
+                    </div>
+                </div>
             </div>
-            <div class="col-xs-6" style="height: 700px">
-              <h3>Destination code</h3>
-              <hr />
-              <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-              <!-- <textarea name="dstInput" rows="25" style="width:100%"></textarea> -->
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="modal fade" id="wizard" tabindex="0" role="dialog" data-backdrop="static">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content" style="padding: 0; margin: 0">
-        <!-- <div class="modal-header">
+        </div>
+        <div class="row footer">
+            <span class="label label-default" style="position: absolute; left:0; bottom: 0">Designed to work with the ChangeVisSpikes REST API v1 <span id="baseurl"></span></span>
+
+            <div class="panel panel-primary" id="metaDataPanel">
+                <div class="panel-heading">
+                    <h3 class="panel-title" id="metadataTitle">MetaData Title</h3>
+                    <span class="pull-right clickable" id="closeMetaDataPanel"><i class="fa fa-times"></i></span>
+                </div>
+                <div class="panel-body" id="metadataContent">MetaData Panel content</div>
+            </div>
+
+            <span class="label label-info" style="position: absolute; right:0; bottom: 0"><b>Metrics: </b><span class="time"></span></span>
+
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="width: 100%; height: 100%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Change source code</h4>
+                </div>
+                <div class="modal-body" style="height: 100%">
+                    <div class="row">
+                        <div class="col-xs-6" style="position: relative;height: 700px">
+                            <h3>Source code</h3>
+                            <hr />
+                            <div id="editorSrc" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
+                            <!-- <textarea name="srcInput" rows="25" style="width:100%"></textarea> -->
+                        </div>
+                        <div class="col-xs-6" style="height: 700px">
+                            <h3>Destination code</h3>
+                            <hr />
+                            <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
+                            <!-- <textarea name="dstInput" rows="25" style="width:100%"></textarea> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="wizard" tabindex="0" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Change source code</h4>
         </div> -->
-        <div class="modal-body" style="padding: 0;">
-            <div id="githubwizard">
-              <ul>
-                  <li><a href="#step-1">Chose Project<br /><small>from GitHub</small></a></li>
-                  <li><a href="#step-2">Step Title<br /><small>Step description</small></a></li>
-                  <li><a href="#step-3">Step Title<br /><small>Step description</small></a></li>
-                  <li><a href="#step-4">Step Title<br /><small>Step description</small></a></li>
-              </ul>
+                <div class="modal-body" style="padding: 0">
+                    <form id="githubForm" method="get" action="" class="form-horizontal">
+                        <div id="githubwizard">
 
-              <div class="wrapper">
-                  <div id="step-1" class="">
-                      <!-- GitHub Project URL -->
-                      <div class="input-group">
 
-                      <span class="input-group-addon" id="sizing-addon2">GitHub Project URL</span>
-                      <input type="text" class="form-control" placeholder="GitHub Project URL" aria-describedby="sizing-addon2">
+                            <ul>
+                                <li><a href="#tab1" data-toggle="tab">Step 1<br /><small>Step description</small></a></li>
+                                <li><a href="#tab2" data-toggle="tab">Step 2<br /><small>Step description</small></a></li>
+                                <li><a href="#tab3" data-toggle="tab">Step 3<br /><small>Step description</small></a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane" id="tab1">
+                                    <!-- <div class="control-group">
+                                        <label class="control-label" for="url">GitHub Project URL</label>
+                                        <div class="controls">
+                                            <input type="text" id="projecturl" name="projecturl">
+                                        </div>
+                                    </div> -->
+
+                                    <div class="form-group">
+                                      <label class="control-label" for="projecturl">GitHub Project URL</label>
+                                      <input type="text" class="form-control" id="projecturl" name="projecturl">
+                                    </div>
+
+                                    <!-- <div class="control-group">
+                                        <label class="control-label" for="name">Name</label>
+                                        <div class="controls">
+                                            <input type="text" id="namefield" name="namefield" class="required">
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <div class="control-group">
+                                        <label class="control-label" for="url">URL</label>
+                                        <div class="controls">
+                                            <input type="text" id="urlfield" name="urlfield" class="required url">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab3">
+                                    3
+                                </div>
+                                <ul class="pager wizard">
+                                    <li class="previous first" style="display:none;"><a href="#">First</a></li>
+                                    <li class="previous"><a href="#">Previous</a></li>
+                                    <li class="next last" style="display:none;"><a href="#">Last</a></li>
+                                    <li class="next"><a href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+
 
 
                     </div>
-                    <button type="button" class="btn btn-primary">Next</button>
-                  </div>
-                  <div id="step-2" class="">
-                      Step 2
-                  </div>
-                  <div id="step-3" class="">
-                      Step Content
-                  </div>
-                  <div id="step-4" class="">
-                      Step Content
-                  </div>
-              </div>
-          </div>
-        </div>
-        <!-- <div class="modal-footer">
+                </div>
+                <!-- <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
         </div> -->
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- jQuery & boostrap-->
-  <script src="dist/jquery.min.js"></script>
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
-  <script src="dist/bootstrap.min.js"></script>
-  <!-- boostrap notify -->
-  <script src="dist/bootstrap-notify.min.js" charset="utf-8"></script>
-  <!-- jquery scroll to plugin -->
-  <script src="dist/jquery.scrollTo.min.js"></script>
- <!-- highlight js -->
-  <script src="dist/highlight.pack.min.js"></script>
-  <script src="dist/highlightjs-line-numbers.min.js" charset="utf-8"></script>
-  <!-- bootstrap-toggle -->
-  <script src="dist/bootstrap2-toggle.min.js"></script>
-  <!-- <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script> -->
-  <!-- EDITOR -->
-  <!-- bootstrap prompts -->
-  <script src="js/bootbox.min.js" charset="utf-8"></script>
-  <!-- scrolling -->
-  <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
-  <!-- ace editor -->
-  <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
+    <!-- jQuery & boostrap-->
+    <script src="dist/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+    <script src="dist/bootstrap.min.js"></script>
+    <!-- boostrap notify -->
+    <script src="dist/bootstrap-notify.min.js" charset="utf-8"></script>
+    <!-- jquery scroll to plugin -->
+    <script src="dist/jquery.scrollTo.min.js"></script>
+    <!-- highlight js -->
+    <script src="dist/highlight.pack.min.js"></script>
+    <script src="dist/highlightjs-line-numbers.min.js" charset="utf-8"></script>
+    <!-- bootstrap-toggle -->
+    <script src="dist/bootstrap2-toggle.min.js"></script>
+    <!-- <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script> -->
+    <!-- EDITOR -->
+    <!-- bootstrap prompts -->
+    <script src="js/bootbox.min.js" charset="utf-8"></script>
+    <!-- scrolling -->
+    <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
+    <!-- ace editor -->
+    <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
 
-  <script src="js/minimap.js" charset="utf-8"></script>
-  <!-- mark.js library -->
-  <script src="dist/jquery.mark.min.js" charset="utf-8"></script>
+    <script src="js/minimap.js" charset="utf-8"></script>
+    <!-- mark.js library -->
+    <script src="dist/jquery.mark.min.js" charset="utf-8"></script>
 
-  <script type="text/javascript" src="dist/jquery.smartWizard.min.js"></script>
+    <script type="text/javascript" src="dist/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="dist/jquery.bootstrap.wizard.min.js"></script>
 
-  <script src="dist/bundle.js"></script>
+    <script src="dist/bundle.js"></script>
 
-  <script type="text/javascript" src="https://js-cdn.dynatrace.com/jstag/15a8a271790/afd87532/7e45cd256ca73de9_bs.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://js-cdn.dynatrace.com/jstag/15a8a271790/afd87532/7e45cd256ca73de9_bs.js" crossorigin="anonymous"></script>
 </body>

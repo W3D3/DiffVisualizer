@@ -26,78 +26,66 @@ class GitHubWizard {
         };
         this.options = this.setDefaults(options, defaults);
 
-        // Smart Wizard
-        this.options.wizardElement.smartWizard({
-            selected: 0,  // Initial selected step, 0 = first step
-            keyNavigation:true, // Enable/Disable keyboard navigation(left and right keys are used if enabled)
-            autoAdjustHeight:true, // Automatically adjust content height
-            cycleSteps: false, // Allows to cycle the navigation of steps
-            backButtonSupport: false, // Enable the back button support
-            useURLhash: false, // Enable selection of the step based on url hash
-            lang: {  // Language variables
-                next: 'Next',
-                previous: 'Previous'
+        var $validator = $('#githubForm').validate({
+            // errorClass: 'has-error',
+            rules: {
+                emailfield: {
+                    required: true,
+                    email: true,
+                    minlength: 3
+                },
+                namefield: {
+                    required: true,
+                    minlength: 3
+                },
+                projecturl: {
+                    required: true,
+                    remote: {
+                        url: 'validate-githuburl',
+                        type: 'post'
+                    }
+                }
             },
-            toolbarSettings: {
-                toolbarPosition: 'bottom', // none, top, bottom, both
-                toolbarButtonPosition: 'right', // left, right
-                showNextButton: false, // show/hide a Next button
-                showPreviousButton: false, // show/hide a Previous button
-                toolbarExtraButtons: [
-                    // $('<button></button>').text('Finish')
-                    // .addClass('btn btn-info')
-                    // .on('click', function(){
-                    //     alert('Finsih button click');
-                    // }),
-                    $('<button></button>').text('Next')
-                    .addClass('btn btn-primary')
-                    .on('click', function(){
-                        alert('next button click');
-                    }),
-                    $('<button></button>').text('Cancel')
-                    .addClass('btn btn-danger')
-                    .on('click', function(){
-                        alert('Cancel button click');
-                    })
-                ]
+            highlight: function(element) {
+                $(element).parent().addClass('has-error');
             },
-            anchorSettings: {
-                anchorClickable: true, // Enable/Disable anchor navigation
-                enableAllAnchors: false, // Activates all anchors clickable all times
-                markDoneStep: true, // add done css
-                enableAnchorOnDoneStep: true // Enable/Disable the done steps navigation
+            unhighlight: function(element) {
+                $(element).parent().removeClass('has-error');
             },
-            contentURL: null, // content url, Enables Ajax content loading. can set as data data-content-url on anchor
-            disabledSteps: [],    // Array Steps disabled
-            errorSteps: [],    // Highlight step with errors
-            theme: 'arrows',
-            transitionEffect: 'fade', // Effect on navigation, none/slide/fade
-            transitionSpeed: '400'
-        });
-
-        // Initialize the leaveStep event
-        this.options.wizardElement.on('leaveStep', function(e, anchorObject, stepNumber, stepDirection) {
-            console.log(stepDirection);
-            //return confirm('Do you want to leave the step '+stepNumber+'?');
-            if(stepNumber == 0 && stepDirection == 'forward')
-            {
-                var p1 = me.githubAPI.get('repos/W3D3/difftest/commits').then(function (response) {
-                    $('#step-2').text(response);
-                });
-
-                // const json = await p1();
-                // var outcome = json.then(function (res) {
-                //     return res;
-                // });
+            onkeyup: function(element) {
+                return false;
+                // if (element.name == '#emailid') {
+                //     return false;
+                // }
             }
-            return true;
         });
 
-        // Initialize the showStep event
-        this.options.wizardElement.on('showStep', function(e, anchorObject, stepNumber, stepDirection) {
-            console.log(stepDirection);
-            alert('You are on step '+stepNumber+' now');
+
+        $.validator.setDefaults({
+
         });
+
+        me.options.wizardElement.bootstrapWizard({
+            'tabClass': 'nav nav-pills',
+            'onNext': function(tab, navigation, index) {
+                var $valid = $('#githubForm').valid();
+                console.log($valid);
+                if (!$valid) {
+                    $validator.focusInvalid();
+                    return false;
+                }
+            },
+            'onTabClick': function() {
+                return false;
+            }
+        });
+        //
+        // $('input#address').elementValidAndInvalid(function(element) {
+        //     console.log(['validations just ran for this element and it was valid!', element]);
+        // }, function(element){
+        //     console.log(['validations just ran for this element and it was INVALID!', element]);
+        // });
+        me.options.wizardElement.bootstrapWizard();
     }
 
     setDefaults(options, defaults) {

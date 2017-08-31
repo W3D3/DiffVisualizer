@@ -9,8 +9,8 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~dropzone/src/dropzone';
 @import 'nprogress';
 
-@import '~smartwizard/dist/css/smart_wizard';
-@import '~smartwizard/dist/css/smart_wizard_theme_arrows';
+// @import '~smartwizard/dist/css/smart_wizard';
+// @import '~smartwizard/dist/css/smart_wizard_theme_arrows';
 
 //project specific code
 @import 'codebox';
@@ -19,6 +19,7 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import 'minimap';
 @import 'rainbow';
 @import 'scrollbar';
+@import 'wizard';
 
 ::-webkit-scrollbar {
     /* disable scrollbar for webkit browser because we can use perfect scrollbar instead which autohides */
@@ -141,8 +142,4 @@ mark.current {
   display: -webkit-flex;
   flex-wrap: wrap;
   padding: 0
-}
-
-.step-content {
-    padding: 10px
 }

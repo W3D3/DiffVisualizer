@@ -1,17 +1,21 @@
 /* global require process */
-var express = require('express');
-var multer = require('multer');
-var upload = multer({
+const express = require('express');
+const multer = require('multer');
+const upload = multer({
     dest: 'public/uploads/'
 });
-var fs = require('fs');
-var request = require('request');
-var cors = require('cors');
+const fs = require('fs');
+const request = require('request');
+const cors = require('cors');
 const config = require('mikro-config');
 const chalk = require('chalk');
+const bodyParser = require('body-parser');
 
 require('console-stamp')(console, '[HH:MM:ss.l]');
 var app = express();
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+}));
 
 app.post('/diffjson', upload.single('file'), function(req, res) {
     // req.file is the file
@@ -54,6 +58,23 @@ app.get('/github/*', cors(), function(req, res) {
         res.send(body);
     });
 });
+
+//validator rules
+
+app.post('/validate-githuburl', function(req, res) {
+    console.info(req.body.projecturl);
+    // console.info(req);
+    res.setHeader('Content-Type', 'text/plain');
+    // request.get({
+    //     url: url,
+    //     json: false
+    // }, function(err, resp, body) {
+    //     res.send(body);
+    // });
+    // res.send(false);
+    res.send(JSON.stringify('Not a valid github url'));
+});
+
 //serve application
 app.use(express.static('public'));
 //serve uploaded files
