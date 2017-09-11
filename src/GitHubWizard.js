@@ -10,6 +10,7 @@
  */
 import _ from 'lodash';
 import axios from 'axios';
+import hash from 'object-hash';
 import Utility from './Utility';
 
 class GitHubWizard {
@@ -126,7 +127,7 @@ class GitHubWizard {
             $('#wizard').modal('hide');
             me.diffObject =
             {
-                'Id': 123,
+                'Id': hash(me.selectedCommitSha + me.selectedParentSha + me.selectedFileName),
                 'BaseUrl': 'https://github.com/'+me.selectedRepoString,
                 'ParentCommit': me.selectedParentSha,
                 'Commit': me.selectedCommitSha,

@@ -78,7 +78,7 @@ $(document).ready(function() {
         }
     });
 
-    new Loader();
+    var loader = new Loader();
 
     //setup ace editor and all clickhandlers
     editorSetup();
@@ -104,12 +104,13 @@ $(document).ready(function() {
     //register hover handler for all the UPDATEs and MOVEs
     gui.setHoverEffect('.codebox', '.scriptmarker');
 
-    var wiz = new GitHubWizard({
+    new GitHubWizard({
         wizardElement: $('#githubwizard'),
         finish: function(diffObject) {
             //var srcUrl =
-            Loader.createDiffList([diffObject]);
+            loader.createDiffList([diffObject], true);
             // loadIntoViewer(diffObject.srcUrl, diffObject.dstUrl, )
+            console.log(loader.loadedDiffObjects);
         }
     });
     $('#githubImportButton').click(function() {

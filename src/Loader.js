@@ -13,9 +13,11 @@ import NProgress from 'nprogress';
 
 class Loader {
     constructor() {
+        this.loadedDiffObjects = [];
         //Configure dropzone
         Dropzone.options.jsonUploader = {
             paramName: 'file', // The name that will be used to transfer the file
+            dictDefaultMessage: 'Import as JSON file (Drag and Drop)',
             maxFilesize: 2, // MB
             accept: function(file, done) {
                 //accept all files for now
@@ -43,10 +45,11 @@ class Loader {
         };
 
         //show all the already uploaded elements
-        Loader.showUploadedElements();
+        this.showUploadedElements();
     }
 
-    static showUploadedElements() {
+    showUploadedElements() {
+        var me = this;
         var alreadyUploaded = Settings.getAllFiles();
         $('#uploadedFiles').html('');
         alreadyUploaded.forEach(filename => {
@@ -61,17 +64,18 @@ class Loader {
             NProgress.start();
             $(this).parent().find('.fileButton').removeClass('active');
             $(this).addClass('active');
-            Loader.createDiffList(Settings.loadFile($(this).data('key')));
+            me.createDiffList(Settings.loadFile($(this).data('key')));
             Utility.showSuccess('Finished loading <i>' + $(this).data('key') + '</i>');
         });
     }
 
     loadDiffsFromFile(file, filename) {
+        var me = this;
         axios.get('/uploads/' + filename)
             .then(response => {
                 Settings.saveFile(file.name, response.data);
-                Loader.showUploadedElements();
-                Loader.createDiffList(response.data);
+                me.showUploadedElements();
+                me.createDiffList(response.data);
 
                 Utility.showSuccess('Finished importing <i>' + file.name + '</i>');
             })
@@ -81,8 +85,9 @@ class Loader {
             });
     }
 
-    static createDiffList(data) {
-        $('#diffsList').html('');
+    createDiffList(data, append) {
+        var me = this;
+        if(!append) $('#diffsList').html('');
         data.forEach(function(diff) {
 
             var userRepo = diff.BaseUrl.replace(/\/$/, '').replace(/^(https?:\/\/)?(github\.com\/)/, '');
@@ -97,7 +102,8 @@ class Loader {
                 diffTitle += '</br> >> ' + diffDstTitle;
             }
 
-            $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}"><span class="label label-default">${diff.Id}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
+            me.loadedDiffObjects.push(diff);
+            $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}"><span class="label label-default">${String(diff.Id).substring(0,8)}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
 
         });
         GUI.recalcDiffListHeight();
