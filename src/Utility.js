@@ -114,11 +114,12 @@ class Utility {
                 from: 'top',
                 align: 'right'
             },
+            z_index: 999999
         });
     }
 
     static showError(message) {
-        Utility.showNotify('Critical', message, 'danger', 'glyphicon glyphicon-remove-sign', 0);
+        Utility.showNotify('Critical - ', message, 'danger', 'glyphicon glyphicon-remove-sign', 0);
     }
 
     static showMessage(message) {

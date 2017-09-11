@@ -105,12 +105,15 @@ $(document).ready(function() {
     gui.setHoverEffect('.codebox', '.scriptmarker');
 
     var wiz = new GitHubWizard({
-        wizardElement: $('#githubwizard')
+        wizardElement: $('#githubwizard'),
+        finish: function(diffObject) {
+            //var srcUrl =
+            Loader.createDiffList([diffObject]);
+            // loadIntoViewer(diffObject.srcUrl, diffObject.dstUrl, )
+        }
     });
-    console.log(wiz);
     $('#githubImportButton').click(function() {
         $('#wizard').modal('show');
-
     });
 });
 
@@ -186,6 +189,108 @@ function styleChangerSetup() {
     }
 }
 
+function loadIntoViewer(srcUrl, dstUrl, viewer) {
+    viewer.setSrcUrl(srcUrl);
+    viewer.setDstUrl(dstUrl);
+
+    viewer.setAsCurrentJob();
+
+    var configSrc = {
+        onDownloadProgress: progressEvent => {
+            let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
+            NProgress.set(percentCompleted / 100);
+        }
+    };
+    var configDst = {
+        onDownloadProgress: progressEvent => {
+            let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
+            NProgress.set(0.33 + percentCompleted / 100);
+        }
+    };
+
+    NProgress.configure({
+        parent: '#codeView'
+    });
+    NProgress.start();
+    $('.minimap').hide();
+    $('#codeboxTitle').html(viewer.generateTitle(0));
+    sc.hideAll();
+
+    function getSrcFile() {
+        return axios.get(srcUrl, configSrc);
+    }
+
+    function getDstFile() {
+        return axios.get(dstUrl, configDst);
+    }
+
+    axios.all([getSrcFile(), getDstFile()])
+      .then(axios.spread(function (src, dst) {
+          // Both requests are now complete
+
+          viewer.setSource(src.data);
+          viewer.setDestination(dst.data);
+
+          viewer.setFilter(filter);
+
+          var avg = (src.data.split(/\r\n|\r|\n/).length + dst.data.split(/\r\n|\r|\n/).length) / 2;
+
+          if(avg > 32000) {
+              bootbox.confirm({
+                  title: 'Warning',
+                  closeButton: false,
+                  message: 'You are about to load a huge file with ' + avg + ' LOC on average. This could cause the browser to hang, do you want to continue?',
+                  buttons: {
+                      confirm: {
+                          label: 'Yes',
+                          className: 'btn-success'
+                      },
+                      cancel: {
+                          label: 'No',
+                          className: 'btn-danger'
+                      }
+                  },
+                  callback: function (accepted) {
+                      if(accepted) {
+                          viewer.setEnableMinimap(false); //temporarily disable minimap for huge file
+                          dv = viewer;
+                          viewer.diffAndDraw(function() {
+                              //success
+                              $('#codeboxTitle').html(dv.generateTitle(1));
+                          }, function (msg) {
+                              //error
+                              $('#codeboxTitle').html(dv.generateTitle(-1));
+                              Utility.showError(msg);
+                              NProgress.done();
+                          });
+
+
+                      }
+                      else {
+                          NProgress.done();
+                          $('#codeboxTitle').html(dv.generateTitle(-2));
+                      }
+                  }
+              });
+          }
+          else {
+              dv = viewer;
+              viewer.diffAndDraw(function() {
+                  //success
+                  $('#codeboxTitle').html(dv.generateTitle(1));
+              }, function (msg) {
+                  //error
+                  $('#codeboxTitle').html(dv.generateTitle(-1));
+                  Utility.showError(msg);
+                  NProgress.done();
+              });
+          }
+      }));
+
+    //stop propagation by returning
+    return false;
+}
+
 function diffListSetup() {
   //register clickhandler for all diffItems
     $('body').on('click', '#diffItem', _.debounce(function() {
@@ -211,105 +316,8 @@ function diffListSetup() {
         var srcUrl = $(this).data('rawsrcurl');
         var dstUrl = $(this).data('rawdsturl');
 
-        viewer.setSrcUrl(srcUrl);
-        viewer.setDstUrl(dstUrl);
+        loadIntoViewer(srcUrl, dstUrl, viewer);
 
-        viewer.setAsCurrentJob();
-
-        var configSrc = {
-            onDownloadProgress: progressEvent => {
-                let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-                NProgress.set(percentCompleted / 100);
-            }
-        };
-        var configDst = {
-            onDownloadProgress: progressEvent => {
-                let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
-                NProgress.set(0.33 + percentCompleted / 100);
-            }
-        };
-
-        NProgress.configure({
-            parent: '#codeView'
-        });
-        NProgress.start();
-        $('.minimap').hide();
-        $('#codeboxTitle').html(viewer.generateTitle(0));
-        sc.hideAll();
-
-        function getSrcFile() {
-            return axios.get(srcUrl, configSrc);
-        }
-
-        function getDstFile() {
-            return axios.get(dstUrl, configDst);
-        }
-
-        axios.all([getSrcFile(), getDstFile()])
-          .then(axios.spread(function (src, dst) {
-              // Both requests are now complete
-
-              viewer.setSource(src.data);
-              viewer.setDestination(dst.data);
-
-              viewer.setFilter(filter);
-
-              var avg = (src.data.split(/\r\n|\r|\n/).length + dst.data.split(/\r\n|\r|\n/).length) / 2;
-
-              if(avg > 32000) {
-                  bootbox.confirm({
-                      title: 'Warning',
-                      closeButton: false,
-                      message: 'You are about to load a huge file with ' + avg + ' LOC on average. This could cause the browser to hang, do you want to continue?',
-                      buttons: {
-                          confirm: {
-                              label: 'Yes',
-                              className: 'btn-success'
-                          },
-                          cancel: {
-                              label: 'No',
-                              className: 'btn-danger'
-                          }
-                      },
-                      callback: function (accepted) {
-                          if(accepted) {
-                              viewer.setEnableMinimap(false); //temporarily disable minimap for huge file
-                              dv = viewer;
-                              viewer.diffAndDraw(function() {
-                                  //success
-                                  $('#codeboxTitle').html(dv.generateTitle(1));
-                              }, function (msg) {
-                                  //error
-                                  $('#codeboxTitle').html(dv.generateTitle(-1));
-                                  Utility.showError(msg);
-                                  NProgress.done();
-                              });
-
-
-                          }
-                          else {
-                              NProgress.done();
-                              $('#codeboxTitle').html(dv.generateTitle(-2));
-                          }
-                      }
-                  });
-              }
-              else {
-                  dv = viewer;
-                  viewer.diffAndDraw(function() {
-                      //success
-                      $('#codeboxTitle').html(dv.generateTitle(1));
-                  }, function (msg) {
-                      //error
-                      $('#codeboxTitle').html(dv.generateTitle(-1));
-                      Utility.showError(msg);
-                      NProgress.done();
-                  });
-              }
-          }));
-
-        //stop propagation by returning
-        return false;
     }, 1000, {
         'leading': true,
         'trailing': false

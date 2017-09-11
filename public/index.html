@@ -253,21 +253,23 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
     </div>
 
     <div class="modal fade" id="wizard" tabindex="0" role="dialog" data-backdrop="static">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <!-- <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Change source code</h4>
         </div> -->
-                <div class="modal-body" style="padding: 0">
+                <div class="modal-body" style="padding: 0;">
                     <form id="githubForm" method="get" action="" class="form-horizontal">
                         <div id="githubwizard">
 
 
                             <ul>
-                                <li><a href="#tab1" data-toggle="tab">Step 1<br /><small>Step description</small></a></li>
-                                <li><a href="#tab2" data-toggle="tab">Step 2<br /><small>Step description</small></a></li>
-                                <li><a href="#tab3" data-toggle="tab">Step 3<br /><small>Step description</small></a></li>
+                                <li><a href="#tab1" data-toggle="tab">Step 1<br /><small>Select repo</small></a></li>
+                                <li><a href="#tab2" data-toggle="tab">Step 2<br /><small>Select Commit</small></a></li>
+                                <li><a href="#tab3" data-toggle="tab">Step 3<br /><small>Select Parent</small></a></li>
+                                <li><a href="#tab4" data-toggle="tab">Step 4<br /><small>Select Files</small></a></li>
+                                <li><a href="#tab5" data-toggle="tab">Step 5<br /><small>Review</small></a></li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane" id="tab1">
@@ -294,23 +296,42 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
                                 </div>
                                 <div class="tab-pane" id="tab2">
+                                    <ul class="pagination">
+                                      <li>
+                                        <a href="#" aria-label="Previous">
+                                          <span aria-hidden="true">&laquo; previous page</span>
+                                        </a>
+                                      </li>
+
+                                      <li>
+                                        <a href="#" aria-label="Next">
+                                          <span aria-hidden="true">next page &raquo;</span>
+                                        </a>
+                                      </li>
+                                    </ul>
                                     <div class="list-group" id="commit-list">
-                                      <a href="#" class="list-group-item">
-                                        <h4 class="list-group-item-heading">List group item heading</h4>
-                                        <p class="list-group-item-text">...</p>
-                                      </a>
-                                      <a href="#" class="list-group-item">
-                                        <h4 class="list-group-item-heading">List group item heading</h4>
-                                        <p class="list-group-item-text">...</p>
-                                      </a>
-                                      <a href="#" class="list-group-item">
-                                        <h4 class="list-group-item-heading">List group item heading</h4>
-                                        <p class="list-group-item-text">...</p>
-                                      </a>
                                     </div>
+
+
+
+                                    <button class="btn btn-default pull-right" type="button" id="commit-next">Next</button>
                                 </div>
                                 <div class="tab-pane" id="tab3">
-                                    3
+                                    <div class="list-group" id="parent-list">
+                                    </div>
+
+                                    <button class="btn btn-default pull-right" type="button" id="parent-next">Next</button>
+                                </div>
+                                <div class="tab-pane" id="tab4">
+                                    <!-- Files -->
+                                    <div class="list-group" id="files-list">
+                                    </div>
+
+                                    <button class="btn btn-default pull-right" type="button" id="files-next">Next</button>
+
+                                </div>
+                                <div class="tab-pane" id="tab5">
+
                                 </div>
                                 <ul class="pager wizard">
                                     <li class="previous first" style="display:none;"><a href="#">First</a></li>

@@ -63,14 +63,15 @@ class GUI {
           var link = document.createElement('a');
           link.download = filename + '.png';
           link.href = dataUrl;
+          document.body.appendChild(link);
           link.click();
 
           $('.minimap').show();
           $('#codeboxTitle a').show();
-      })
-      .catch(function(error) {
-          Utility.showError('Error generating Screenshot: ', error);
       });
+    //   .catch(function(error) {
+    //       Utility.showError('Error generating Screenshot: ', error);
+    //   });
     }
 
     setupMetadataPanel() {

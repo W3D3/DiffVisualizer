@@ -61,45 +61,78 @@ app.get('/github/*', cors(), function(req, res) {
 
 app.post('/validate-githuburl', function(req, res) {
     console.info(req.body.projecturl);
-    // console.info(req);
     var githubregex = /(https?:\/\/)?(www\.)?github.com\//g;
-    var project = req.body.projecturl.replace(githubregex, '').split('/');
-    if(project.length != 2) {
-        res.status(400).send({
-            message: 'Invalid format. Try user/repo or the whole github url.'
+    try {
+        var project = req.body.projecturl.replace(githubregex, '').split('/');
+        if(project.length != 2) {
+            res.status(400).send({
+                message: 'Invalid format. Try user/repo or the whole github url.'
+            });
+            return;
+        }
+
+        var url = 'https://api.github.com/repos/' + project[0] + '/' + project[1] + '/commits';
+        console.log(url);
+        res.setHeader('Content-Type', 'text/plain');
+        request.get({
+            url: url,
+            json: false,
+            auth: config.get('auth'),
+            headers: {
+                'User-Agent': 'DiffViz'
+            }
+        }, function(err, resp, body) {
+            // console.log(resp.headers);
+            // console.log(resp.statusCode);
+            var commits = JSON.parse(body);
+            //console.log(commits);
+            if(resp.statusCode != 200)
+            {
+                res.status(resp.statusCode).send(commits);
+            } else {
+                console.log('valid url ' + url);
+                commits[0].fullname = project[0] + '/' + project[1];
+                res.status(resp.statusCode).send(commits);
+            }
+
         });
-        return;
+    } catch (e) {
+        res.status(500).send({
+            message: 'Fatal Server Error'
+        });
     }
 
-    var url = 'https://api.github.com/repos/' + project[0] + '/' + project[1] + '/commits';
+});
+
+app.get('/githubapi', function(req, res) {
+    console.info(req.query.url);
+    var githubregex = /(https?:\/\/)?(api\.)?github.com\//g;
+    var string = req.query.url.replace(githubregex, '');
+
+    var url = 'https://api.github.com/' + string;
     console.log(url);
     res.setHeader('Content-Type', 'text/plain');
     request.get({
         url: url,
         json: false,
-        auth: {
-            'user': 'W3D3',
-            'pass': '7ae3db5ce123626d37b6213dfd5ce66bc8ded95f'
-        },
+        auth: config.get('auth'),
         headers: {
             'User-Agent': 'DiffViz'
         }
     }, function(err, resp, body) {
-        console.log(resp.headers);
-        console.log(resp.statusCode);
-        console.log(body);
+        // console.log(resp.headers);
+        // console.log(resp.statusCode);
+        var commits = JSON.parse(body);
         if(resp.statusCode != 200)
         {
             res.status(resp.statusCode).send(body);
         } else {
             console.log('valid url ' + url);
-            res.status(resp.statusCode).send(body);
+            res.status(resp.statusCode).send(commits);
         }
-
     });
-    //res.send(false);
-
 });
+
 
 //serve application
 app.use(express.static('public'));
