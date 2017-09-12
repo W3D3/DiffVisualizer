@@ -457,6 +457,7 @@ class DiffDrawer {
         if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-github"></i> SRC</span></a>`;
         if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-github"></i> DST</span>`;
 
+        if(this.commit) titlestring += '<a href="#"><span class="badge"><i class="fa fa-info"></i> Commit</span>';
         return titlestring;
     }
 }
