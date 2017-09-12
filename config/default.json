@@ -3,7 +3,8 @@
         "port": 9999
     },
     "client": {
-        "apibase": "http://swdyn.aau.at:8080/v1/"
+        "apibase": "http://swdyn.aau.at:8080/v1/",
+        "screenshotIncludeTitle": false
     },
     "auth": {
         "user": "INSERT USERNAME HERE",

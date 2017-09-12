@@ -31,8 +31,7 @@ class GUI {
 
         $('#baseurl').text('(' + client.apibase + ')');
 
-    //code to print the code View, ignores scroll position
-    // TODO fix to include scroll position
+        //code to print the code View
         $('#printCodebox').click(function () {
             var filename = $('#codeboxTitle b').text().substring(1);
             if(!filename) {
@@ -51,27 +50,31 @@ class GUI {
         $('.minimap').hide();
         $('.dst').css('overflow-x', 'visible !important');
         $('#codeboxTitle a').hide();
-        var node = document.getElementById('codeView');
+        var id;
+        if(client.screenshotIncludeTitle) {
+            id = 'codeView';
+        } else {
+            id = 'codeContent';
+        }
+        var node = document.getElementById(id);
 
         domtoimage.toPng(node, {
             style: {
                 overflow: 'visible !important'
             },
             scrollFix: true
-        })
-      .then(function(dataUrl) {
-          var link = document.createElement('a');
-          link.download = filename + '.png';
-          link.href = dataUrl;
-          document.body.appendChild(link);
-          link.click();
+        }).then(function(dataUrl) {
+            var link = document.createElement('a');
+            link.download = filename + '.png';
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
 
-          $('.minimap').show();
-          $('#codeboxTitle a').show();
-      });
-    //   .catch(function(error) {
-    //       Utility.showError('Error generating Screenshot: ', error);
-    //   });
+            $('.minimap').show();
+            $('#codeboxTitle a').show();
+        }).catch(function(error) {
+            Utility.showError('Error generating Screenshot: ', error);
+        });
     }
 
     setupMetadataPanel() {
