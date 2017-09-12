@@ -181,7 +181,7 @@ function styleChangerSetup() {
 
     // matcher on change
     gui.setStyleChangeHandler(function() {
-        Utility.changeCodeStyle(this.value, $(this).find(':selected').data('dark'));
+        Utility.changeCodeStyle(this.value, $(this).find(':selected').data('dark'), $(this).find(':selected').data('custom'));
         Settings.saveSettingPersistent('codestyle', this.value);
     });
 

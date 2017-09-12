@@ -146,6 +146,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                         <select class="form-control" id="themePicker">
                                             <option value="default" data-dark="false">Default</option>
                                             <option value="github" data-dark="false">GitHub</option>
+                                            <option value="paper" data-dark="false" data-custom="true">Paper</option>
                                             <option value="vs" data-dark="false">Visual Studio</option>
                                             <option value="mono-blue" data-dark="false">Mono Blue</option>
                                             <option value="atom-one-light" data-dark="false">Atom One Light</option>
@@ -228,13 +229,11 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                             <h3>Source code</h3>
                             <hr />
                             <div id="editorSrc" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-                            <!-- <textarea name="srcInput" rows="25" style="width:100%"></textarea> -->
                         </div>
                         <div class="col-xs-6" style="height: 700px">
                             <h3>Destination code</h3>
                             <hr />
                             <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-                            <!-- <textarea name="dstInput" rows="25" style="width:100%"></textarea> -->
                         </div>
                     </div>
                 </div>
@@ -292,18 +291,22 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                 <div class="tab-pane" id="tab2">
                                     <ul class="pagination">
                                         <li>
-                                            <a href="#" aria-label="Previous">
+                                            <a href="#" aria-label="Previous" id="commits-prev-page" class="disabled">
                                           <span aria-hidden="true">&laquo; previous page</span>
                                         </a>
                                         </li>
-
                                         <li>
-                                            <a href="#" aria-label="Next">
+                                            <a href="#">
+                                          <span id="currentCommitsPage">1</span>
+                                        </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" aria-label="Next" id="commits-next-page">
                                           <span aria-hidden="true">next page &raquo;</span>
                                         </a>
                                         </li>
                                     </ul>
-                                    <div class="list-group" id="commit-list">
+                                    <div class="list-group" id="commit-list" style="overflow: scroll; max-height: 700px">
                                     </div>
 
 
