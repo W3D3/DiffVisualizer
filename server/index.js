@@ -71,7 +71,7 @@ app.post('/validate-githuburl', function(req, res) {
             return;
         }
 
-        var url = 'https://api.github.com/repos/' + project[0] + '/' + project[1] + '/commits';
+        var url = 'https://api.github.com/repos/' + project[0] + '/' + project[1] ;
         console.log(url);
         res.setHeader('Content-Type', 'text/plain');
         request.get({
@@ -82,16 +82,12 @@ app.post('/validate-githuburl', function(req, res) {
                 'User-Agent': 'DiffViz'
             }
         }, function(err, resp, body) {
-            // console.log(resp.headers);
-            // console.log(resp.statusCode);
             var commits = JSON.parse(body);
-            //console.log(commits);
             if(resp.statusCode != 200)
             {
                 res.status(resp.statusCode).send(commits);
             } else {
                 console.log('valid url ' + url);
-                commits[0].fullname = project[0] + '/' + project[1];
                 res.status(resp.statusCode).send(commits);
             }
 

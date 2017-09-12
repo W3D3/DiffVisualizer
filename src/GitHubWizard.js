@@ -12,6 +12,7 @@ import _ from 'lodash';
 import axios from 'axios';
 import hash from 'object-hash';
 import Utility from './Utility';
+import NProgress from 'NProgress';
 
 class GitHubWizard {
 
@@ -19,9 +20,9 @@ class GitHubWizard {
         var me = this;
 
         this.currentStep = 0;
-        this.selectedCommitSha = '';
-        this.selectedRepoString = '';
-        this.selectedParentSha = '';
+        this.selectedCommitSha = undefined;
+        this.selectedRepoString = undefined;
+        this.selectedParentSha = undefined;
         this.currentCommitsPage = 1;
 
         this.selected = {};
@@ -37,34 +38,14 @@ class GitHubWizard {
         };
         this.options = this.setDefaults(options, defaults);
 
+        NProgress.configure({ parent: '#' + this.options.wizardElement.attr('id') });
+
         $('#projecturl-next').on('click', function() {
             var input = $('#projecturl').val();
-            var formgroup = $('#projecturl').parent().parent();
-            var errorspan = $('#projecturl-error');
 
-            axios.post('/validate-githuburl', {
-                projecturl: input
-            }).then(function(response) {
-                formgroup.addClass('has-success');
-                me.selectedRepoString = response.data[0].fullname;
-                errorspan.text(me.selectedRepoString + ' exists and will be loaded');
-                me.options.wizardElement.bootstrapWizard('show', 1);
-                me.currentCommitsPage = 1;
-                $('#currentCommitsPage').text(1);
-                $('#commit-list').html('');
-                response.data.forEach(commit => {
-                    $('#commit-list').append(`<a href="#" class="list-group-item commit-item" data-sha="${commit.sha}">` +
-                        `<b class="list-group-item-heading">${commit.commit.message}</b><br/>` +
-                        `<small class="list-group-item-text">${commit.commit.author.name} ${commit.commit.author.email} ${commit.commit.author.date}</small>` +
-                        '</a>');
-
-                });
-
-            }).catch(function(error) {
-                console.log(error.response);
-                errorspan.text(error.response.data.message);
-                formgroup.removeClass('has-success');
-                formgroup.addClass('has-error');
+            me.validateRepo(input, function(){
+                NProgress.start();
+                me.loadCommits(me.selectedRepoString, me.currentCommitsPage);
             });
         });
 
@@ -80,66 +61,38 @@ class GitHubWizard {
 
         $('#commits-next-page').click(function() {
             me.currentCommitsPage++;
-            me.refreshCommits(me.currentCommitsPage);
+            me.loadCommits(me.selectedRepoString, me.currentCommitsPage, function (success) {
+                //response was empty or error happened
+                if(!success) {
+                    me.currentCommitsPage--;
+                    $(this).parent().addClass('disabled');
+                    Utility.showWarning('Reached end of commit pages.');
+                }
+                else {
+                    if(me.currentCommitsPage > 1)
+                    {
+                        $('#commits-prev-page').parent().removeClass('disabled');
+                    }
+                }
+
+            });
         });
 
         $('#commits-prev-page').click(function() {
-            if(me.currentCommitsPage < 2)
-            {
-                $(this).addClass('disabled');
-            }
-            else {
-                $(this).removeClass('disabled');
-                me.currentCommitsPage--;
-                me.refreshCommits(me.currentCommitsPage);
-            }
 
+            me.currentCommitsPage--;
+            if(me.currentCommitsPage < 2) {
+                $(this).parent().addClass('disabled');
+            }
+            me.loadCommits(me.selectedRepoString, me.currentCommitsPage);
         });
 
         $('#commit-next').on('click', function() {
-            axios.get('/githubapi', {
-                params: {
-                    url: `repos/${me.selectedRepoString}/commits/${me.selectedCommitSha}`
-                }
-            }).then(function(response) {
-                if(response.data.parents.length == 0)
-                {
-                    Utility.showWarning('Selected Commit has 0 Parents and therefore cannot be used as the base commit.');
-                    return;
-                }
-                me.selected.commit = response.data;
-                if(response.data.parents.length > 1)
-                {
-                    me.options.wizardElement.bootstrapWizard('show', 2);
-                }
-                else {
-                    me.selectedParentSha = response.data.parents[0].sha;
-                    me.options.wizardElement.bootstrapWizard('show', 3);
-                }
-
-                $('#files-list').html('');
-                response.data.files.forEach(file => {
-                    $('#files-list').append(`<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-sha="${file.sha}">` +
-                        `<b class="list-group-item-heading">${file.filename}</b> <span class="label label-success">+${file.additions}</span> <span class="label label-danger">-${file.deletions}</span><br/>` +
-                        // `<pre class="hidden">${file.patch}</pre>` +
-                        '</a>');
-
-                });
-
-                $('#parent-list').html('<h4>Select the parent commit to be used for the diff:</h4>');
-                response.data.parents.forEach(parent => {
-                    $('#parent-list').append(`<span class="list-group-item parent-item" data-sha="${parent.sha}">` +
-                        `<b class="list-group-item-heading">${parent.sha}</b><br/>` +
-                        `<small class="list-group-item-text"><a href="${parent.html_url}" target="_blank">GitHub Commit</a></small>` +
-                        '</span>');
-
-                });
-
-
-
-            }).catch(function(error) {
-                console.error(error);
-            });
+            if(me.selectedCommitSha) {
+                me.loadCommit(me.selectedRepoString, me.selectedCommitSha);
+            } else {
+                Utility.showMessage('Please select a commit.');
+            }
         });
 
         $('#parent-list').on('click', '.parent-item', function() {
@@ -205,14 +158,20 @@ class GitHubWizard {
         return _.defaults({}, _.clone(options), defaults);
     }
 
-    refreshCommits(page)
+    loadCommits(repo, page, callback)
     {
+        if(!callback) callback = function () { };
         var me = this;
         axios.get('/githubapi', {
             params: {
-                url: `repos/${me.selectedRepoString}/commits?page=${page}`
+                url: `repos/${repo}/commits?page=${page}`
             }
         }).then(function(response) {
+            if(response.data.length == 0) {
+                callback(false);
+                NProgress.done();
+                return;
+            }
             me.options.wizardElement.bootstrapWizard('show', 1);
             $('#commit-list').html('');
             response.data.forEach(commit => {
@@ -222,7 +181,88 @@ class GitHubWizard {
                     '</a>');
 
             });
-            $('#currentCommitsPage').text(page);
+            NProgress.done();
+            callback(true);
+            $('#currentCommitsPage').text(me.currentCommitsPage);
+        });
+    }
+
+    validateRepo(repo, success)
+    {
+        var me = this;
+        var formgroup = $('#projecturl').parent().parent();
+        var errorspan = $('#projecturl-error');
+
+        axios.post('/validate-githuburl', {
+            projecturl: repo
+        }).then(function(response) {
+            formgroup.addClass('has-success');
+            me.selectedRepoString = response.data.full_name;
+            me.currentCommitsPage = 1;
+
+            errorspan.text(me.selectedRepoString + ' exists and will be loaded');
+            me.options.wizardElement.bootstrapWizard('show', 1);
+
+            NProgress.done();
+            success();
+
+        }).catch(function(error) {
+            console.log(error.response);
+            NProgress.done();
+            errorspan.text(error.response.data.message);
+            formgroup.removeClass('has-success');
+            formgroup.addClass('has-error');
+        });
+    }
+
+    loadCommit(repo, commit)
+    {
+        var me = this;
+        axios.get('/githubapi', {
+            params: {
+                url: `repos/${repo}/commits/${commit}`
+            }
+        }).then(function(response) {
+            if(response.data.parents.length == 0)
+            {
+                Utility.showWarning('Selected Commit has 0 Parents and therefore cannot be used as the base commit.');
+                NProgress.done();
+                return;
+            }
+            me.selected.commit = response.data;
+            if(response.data.parents.length > 1)
+            {
+                me.options.wizardElement.bootstrapWizard('show', 2);
+            }
+            else {
+                me.selectedParentSha = response.data.parents[0].sha;
+                me.options.wizardElement.bootstrapWizard('show', 3);
+            }
+
+            $('#files-list').html('');
+            response.data.files.forEach(file => {
+                $('#files-list').append(`<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-sha="${file.sha}">` +
+                    `<b class="list-group-item-heading">${file.filename}</b> <span class="label label-success">+${file.additions}</span> <span class="label label-danger">-${file.deletions}</span><br/>` +
+                    // `<pre class="hidden">${file.patch}</pre>` +
+                    '</a>');
+
+            });
+
+            $('#parent-list').html('<h4>Select the parent commit to be used for the diff:</h4>');
+            response.data.parents.forEach(parent => {
+                $('#parent-list').append(`<span class="list-group-item parent-item" data-sha="${parent.sha}">` +
+                    `<b class="list-group-item-heading">${parent.sha}</b><br/>` +
+                    `<small class="list-group-item-text"><a href="${parent.html_url}" target="_blank">GitHub Commit</a></small>` +
+                    '</span>');
+
+            });
+            NProgress.done();
+
+
+        }).catch(function(error) {
+            console.error(error);
+            Utility.showError(error);
+            NProgress.done();
         });
     }
 
