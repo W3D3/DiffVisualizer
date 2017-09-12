@@ -44,8 +44,8 @@
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-filter"></i> Filter <span class="caret"></span>
-                </a>
+                                  <i class="fa fa-filter"></i> Filter <span class="caret"></span>
+                                </a>
                                 <!-- Filter dropdown-menu -->
                                 <ul class="dropdown-menu">
                                     <li><a href="#" class="small INSERT" data-value="INSERT" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;INSERT</a></li>
@@ -67,9 +67,6 @@
                                 <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
                                 <a class="btn btn-primary" id="jump"><i class="fa fa-play-circle"></i> GOTO</a>
                             </div>
-                            <!-- <a class="btn btn-primary" id="jumpSrc">SRC</a>
-              <a class="btn btn-primary" id="jumpDst">DST</a> -->
-                            <!-- <input type="checkbox" name="my-checkbox" checked> -->
                             <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="warning" data-on="SRC" data-off="DST" data-height="43px" data-width="70px" />
                         </form>
                         <ul class="nav navbar-nav navbar-right">
@@ -95,9 +92,9 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" data-toggle="collapse" href="#import">
                             <h4 class="panel-title">
-                  <a ><span class="glyphicon glyphicon-upload">
-                  </span>Import</a>
-                </h4>
+                              <a><span class="glyphicon glyphicon-upload">
+                              </span>Import</a>
+                            </h4>
                         </div>
                         <div id="import" class="panel-collapse collapse in">
 
@@ -114,9 +111,9 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                             <div class="panel panel-info">
                                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                                     <h4 class="panel-title">
-                      <a ><span class="glyphicon glyphicon-cloud-upload">
-                      </span>Cached sets</a>
-                    </h4>
+                                      <a ><span class="glyphicon glyphicon-cloud-upload">
+                                      </span>Cached sets</a>
+                                    </h4>
                                 </div>
                                 <div>
                                     <div id="uploadedFiles"></div>
@@ -129,9 +126,9 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                     <div class="panel panel-default">
                         <div class="panel-heading" data-toggle="collapse" href="#settingsPanel">
                             <h4 class="panel-title">
-                  <a><span class="glyphicon glyphicon-cog">
-                  </span>Settings</a>
-                </h4>
+                              <a><span class="glyphicon glyphicon-cog">
+                              </span>Settings</a>
+                            </h4>
                         </div>
                         <div id="settingsPanel" class="panel-collapse collapse">
                             <ul class="list-group">
@@ -147,17 +144,16 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                         <h4>Appearance</h4>
                                         <label for="matcherID">Select Theme</label>
                                         <select class="form-control" id="themePicker">
-                        <option value="default" data-dark="false">Default</option>
-                        <option value="github" data-dark="false">GitHub</option>
-                        <option value="vs" data-dark="false">Visual Studio</option>
-                        <option value="mono-blue" data-dark="false">Mono Blue</option>
-                        <option value="atom-one-light" data-dark="false">Atom One Light</option>
-                        <option value="atom-one-dark" data-dark="true">Atom One Dark</option>
-                        <option value="color-brewer" data-dark="false">Color Brewer</option>
-                        <option value="railscasts" data-dark="true">Railscasts</option>
-                        <option value="monokai-sublime" data-dark="true">Monokai</option>
-                      </select>
-
+                                            <option value="default" data-dark="false">Default</option>
+                                            <option value="github" data-dark="false">GitHub</option>
+                                            <option value="vs" data-dark="false">Visual Studio</option>
+                                            <option value="mono-blue" data-dark="false">Mono Blue</option>
+                                            <option value="atom-one-light" data-dark="false">Atom One Light</option>
+                                            <option value="atom-one-dark" data-dark="true">Atom One Dark</option>
+                                            <option value="color-brewer" data-dark="false">Color Brewer</option>
+                                            <option value="railscasts" data-dark="true">Railscasts</option>
+                                            <option value="monokai-sublime" data-dark="true">Monokai</option>
+                                        </select>
                                     </div>
 
                                 </li>
@@ -168,8 +164,8 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                         <!-- <div class="panel-heading" data-toggle="collapse" href="#diffsViewer"> -->
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                  <a><i class="glyphicon glyphicon-file"></i>Diffs</a>
-                </h4>
+                              <a><i class="glyphicon glyphicon-file"></i>Diffs</a>
+                            </h4>
                         </div>
 
                         <div id="diffsViewer" class="panel-collapse box">
@@ -180,8 +176,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                 <a class="btn btn-default" id="filterListClear"><i class="fa fa-times"></i></span></a>
                                 </span>
                             </div>
-                            <div class="list-group" id="diffsList">
-                            </div>
+                            <div class="list-group" id="diffsList"></div>
 
                         </div>
                     </div>
