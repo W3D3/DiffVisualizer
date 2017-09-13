@@ -28,6 +28,7 @@ class GitHubWizard {
         this.currentCommitsPage = 1;
 
         this.selected = {};
+        this.html = {};
         this.githubAPI = axios.create({
             baseURL: 'https://api.github.com'
         });
@@ -58,6 +59,7 @@ class GitHubWizard {
             $('.commit-item.active').removeClass('active');
             $this.toggleClass('active');
             me.selectedCommitSha = $this.data('sha');
+            me.html.commit =  $this.html();
         });
 
         $('#loadCommitSha').on('click', function() {
@@ -125,21 +127,19 @@ class GitHubWizard {
             $('.file-item.active').removeClass('active');
             $this.addClass('active');
             me.selectedFileName = $this.data('name');
+            if(!me.selectedFileName.endsWith('.java'))
+            {
+                Utility.showWarning('The selected file doesn\'t seem to be a Java file. Proceed with caution as this application currently only supports Java diffing.');
+            }
             me.oldFileName = $this.data('oldname');
         });
 
         $('#files-next').on('click', function() {
-            $('#wizard').modal('hide');
-            me.diffObject =
-            {
-                'Id': hash(me.selectedCommitSha + me.selectedParentSha + me.selectedFileName),
-                'BaseUrl': 'https://github.com/'+me.selectedRepoString,
-                'ParentCommit': me.selectedParentSha,
-                'Commit': me.selectedCommitSha,
-                'SrcFileName': me.oldFileName,
-                'DstFileName': me.selectedFileName,
-            };
-            me.options.finish(me.diffObject);
+            // finish();
+            var html = `<h1>${me.selectedRepoString}</h1>`+
+                        me.html.commit;
+            $('#tab5').html(html);
+            me.options.wizardElement.bootstrapWizard('show', 4);
         });
 
 
@@ -157,12 +157,6 @@ class GitHubWizard {
                 return false;
             }
         });
-        //
-        // $('input#address').elementValidAndInvalid(function(element) {
-        //     console.log(['validations just ran for this element and it was valid!', element]);
-        // }, function(element){
-        //     console.log(['validations just ran for this element and it was INVALID!', element]);
-        // });
         me.options.wizardElement.bootstrapWizard();
     }
 
@@ -187,10 +181,12 @@ class GitHubWizard {
             me.options.wizardElement.bootstrapWizard('show', 1);
             $('#commit-list').html('');
             response.data.forEach(commit => {
+                console.log(commit);
                 $('#commit-list').append(`<a href="#" class="list-group-item commit-item" data-sha="${commit.sha}">` +
-                    `<b class="list-group-item-heading">${commit.commit.message}</b><br/>` +
-                    `<small class="list-group-item-text">${commit.commit.author.name} ${commit.commit.author.email} ${commit.commit.author.date}</small>` +
-                    '</a>');
+                    '<img src="' + (commit.author ? `${commit.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
+                    `<p><b class="list-group-item-heading">${_.escape(commit.commit.message)}</b><br/>` +
+                    `<small class="list-group-item-text">${commit.commit.author.name} <code>&lt;${commit.commit.author.email}&gt;</code> ${commit.commit.author.date}</small>` +
+                    '</p></a>');
 
             });
             NProgress.done();
@@ -255,16 +251,16 @@ class GitHubWizard {
             response.data.files.forEach(file => {
                 var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
                 var oldname = (file.previous_filename  ? file.previous_filename : file.filename);
-                $('#files-list').append(
-                    `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${oldname}" data-sha="${file.sha}">` +
-                    statuslabel +
-                    '<b class="list-group-item-heading">' +
-                    (file.previous_filename  ? ` ${file.previous_filename} >> ` : '') +
-                    ` ${file.filename}</b>` +
-                    (file.additions > 0 ? ` <span class="label label-success">+${file.additions}</span>` : '') +
-                    (file.deletions > 0 ? ` <span class="label label-danger">-${file.deletions}</span><br/>` : '') +
-                    // `<pre>${_.escape(file.patch)}</pre>` +
-                    '</a>');
+                var fileshtml = `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${oldname}" data-sha="${file.sha}">` +
+                statuslabel +
+                '<b class="list-group-item-heading">' +
+                (file.previous_filename  ? ` ${file.previous_filename} >> ` : '') +
+                ` ${file.filename}</b>` +
+                (file.additions > 0 ? ` <span class="label label-success">+${file.additions}</span>` : '') +
+                (file.deletions > 0 ? ` <span class="label label-danger">-${file.deletions}</span><br/>` : '') +
+                // `<pre>${_.escape(file.patch)}</pre>` +
+                '</a>';
+                $('#files-list').append(fileshtml);
 
             });
 
@@ -284,6 +280,22 @@ class GitHubWizard {
             Utility.showError(error);
             NProgress.done();
         });
+    }
+
+    finish()
+    {
+        var me = this;
+        $('#wizard').modal('hide');
+        me.diffObject =
+        {
+            'Id': hash(me.selectedCommitSha + me.selectedParentSha + me.selectedFileName),
+            'BaseUrl': 'https://github.com/'+me.selectedRepoString,
+            'ParentCommit': me.selectedParentSha,
+            'Commit': me.selectedCommitSha,
+            'SrcFileName': me.oldFileName,
+            'DstFileName': me.selectedFileName,
+        };
+        me.options.finish(me.diffObject);
     }
 
 }

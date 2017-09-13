@@ -144,3 +144,16 @@ mark.current {
   flex-wrap: wrap;
   padding: 0
 }
+
+.centerline {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  color: $gray-base
+}
+.centerline:before, .centerline:after{
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid $gray-base;
+  margin: auto;
+}

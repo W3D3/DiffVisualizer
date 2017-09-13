@@ -289,15 +289,18 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
                                 </div>
                                 <div class="tab-pane" id="tab2">
-                                    <p>Manually enter sha of commit:</p>
+                                    <h4>Manually enter sha of commit:</h4>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="commitShaInput" placeholder="Commit SHA" style="width: 100%">
                                         <span class="input-group-btn">
                               <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
-                                        <a class="btn btn-default" id="loadCommitSha"><i class="fa fa-load"></i> Select</span></a>
+                                        <a class="btn btn-default" id="loadCommitSha">Next</span></a>
                                         </span>
                                     </div>
 
+                                    <!-- centerline -->
+                                    <!-- <span class="centerline"> or </span> -->
+                                    <h4>Select commit from list:</h4>
                                     <ul class="pagination">
                                         <li class="disabled">
                                             <a href="#" aria-label="Previous" id="commits-prev-page">
@@ -315,7 +318,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                         </a>
                                         </li>
                                     </ul>
-                                    <div class="list-group" id="commit-list" style="overflow: scroll; max-height: 700px">
+                                    <div class="list-group" id="commit-list" style="overflow: scroll; max-height: 600px">
                                     </div>
 
 
@@ -337,7 +340,6 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
                                 </div>
                                 <div class="tab-pane" id="tab5">
-
                                 </div>
                                 <ul class="pager wizard">
                                     <li class="previous first" style="display:none;"><a href="#">First</a></li>

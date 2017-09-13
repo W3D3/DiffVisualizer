@@ -1,4 +1,6 @@
-
+#wizard {
+    height: 850px
+}
 .step-content {
     padding: 10px
 }
@@ -38,4 +40,17 @@
     	// font-weight: 400;
     	line-height: 20px;
     }
+}
+
+.commit-item {
+    p {
+        overflow: hidden;
+    }
+}
+
+.avatar {
+    border-radius: 5px 5px 5px 5px;
+    width: 50px;
+    margin: 0;
+    margin-right: 10px;
 }
