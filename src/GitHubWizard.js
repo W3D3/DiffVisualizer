@@ -125,11 +125,7 @@ class GitHubWizard {
             $('.file-item.active').removeClass('active');
             $this.addClass('active');
             me.selectedFileName = $this.data('name');
-            if($this.data('oldname')) {
-                me.oldFileName = $this.data('oldname');
-            } else {
-                me.oldFileName = me.selectedFileName;
-            }
+            me.oldFileName = $this.data('oldname');
         });
 
         $('#files-next').on('click', function() {
@@ -258,15 +254,9 @@ class GitHubWizard {
             if(!append) $('#files-list').html('');
             response.data.files.forEach(file => {
                 var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
-                // switch (file.status) {
-                // case 'renamed':
-                //     statuslabel = `<span class="label label-default ${file.status}">${file.status}</span> ${file.previous_filename} >> `;
-                //     break;
-                // default:
-                //     statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
-                // }
+                var oldname = (file.previous_filename  ? file.previous_filename : file.filename);
                 $('#files-list').append(
-                    `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${file.previous_filename}" data-sha="${file.sha}">` +
+                    `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${oldname}" data-sha="${file.sha}">` +
                     statuslabel +
                     '<b class="list-group-item-heading">' +
                     (file.previous_filename  ? ` ${file.previous_filename} >> ` : '') +
