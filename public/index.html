@@ -289,6 +289,15 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
                                 </div>
                                 <div class="tab-pane" id="tab2">
+                                    <p>Manually enter sha of commit:</p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="commitShaInput" placeholder="Commit SHA" style="width: 100%">
+                                        <span class="input-group-btn">
+                              <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
+                                        <a class="btn btn-default" id="loadCommitSha"><i class="fa fa-load"></i> Select</span></a>
+                                        </span>
+                                    </div>
+
                                     <ul class="pagination">
                                         <li class="disabled">
                                             <a href="#" aria-label="Previous" id="commits-prev-page">

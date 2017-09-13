@@ -23,6 +23,8 @@ class GitHubWizard {
         this.selectedCommitSha = undefined;
         this.selectedRepoString = undefined;
         this.selectedParentSha = undefined;
+        this.selectedFileName = undefined;
+        this.oldFileName = undefined;
         this.currentCommitsPage = 1;
 
         this.selected = {};
@@ -58,6 +60,14 @@ class GitHubWizard {
             me.selectedCommitSha = $this.data('sha');
         });
 
+        $('#loadCommitSha').on('click', function() {
+            var $this = $(this);
+
+            $('.commit-item.active').removeClass('active');
+            $this.toggleClass('active');
+            me.selectedCommitSha = $('#commitShaInput').val();
+        });
+
 
         $('#commits-next-page').click(function() {
             me.currentCommitsPage++;
@@ -89,6 +99,7 @@ class GitHubWizard {
 
         $('#commit-next').on('click', function() {
             if(me.selectedCommitSha) {
+                NProgress.start();
                 me.loadCommit(me.selectedRepoString, me.selectedCommitSha);
             } else {
                 Utility.showMessage('Please select a commit.');
@@ -114,6 +125,11 @@ class GitHubWizard {
             $('.file-item.active').removeClass('active');
             $this.addClass('active');
             me.selectedFileName = $this.data('name');
+            if($this.data('oldname')) {
+                me.oldFileName = $this.data('oldname');
+            } else {
+                me.oldFileName = me.selectedFileName;
+            }
         });
 
         $('#files-next').on('click', function() {
@@ -124,7 +140,7 @@ class GitHubWizard {
                 'BaseUrl': 'https://github.com/'+me.selectedRepoString,
                 'ParentCommit': me.selectedParentSha,
                 'Commit': me.selectedCommitSha,
-                'SrcFileName': me.selectedFileName,
+                'SrcFileName': me.oldFileName,
                 'DstFileName': me.selectedFileName,
             };
             me.options.finish(me.diffObject);
@@ -207,7 +223,7 @@ class GitHubWizard {
             success();
 
         }).catch(function(error) {
-            console.log(error.response);
+            // console.log(error.response);
             NProgress.done();
             errorspan.text(error.response.data.message);
             formgroup.removeClass('has-success');
@@ -215,7 +231,7 @@ class GitHubWizard {
         });
     }
 
-    loadCommit(repo, commit)
+    loadCommit(repo, commit, append)
     {
         var me = this;
         axios.get('/githubapi', {
@@ -230,6 +246,7 @@ class GitHubWizard {
                 return;
             }
             me.selected.commit = response.data;
+            me.selectedCommitSha = response.data.sha; // in case we sent an abbrivated version of the sha string, we fix it here to always work with the full once
             if(response.data.parents.length > 1)
             {
                 me.options.wizardElement.bootstrapWizard('show', 2);
@@ -238,12 +255,25 @@ class GitHubWizard {
                 me.selectedParentSha = response.data.parents[0].sha;
                 me.options.wizardElement.bootstrapWizard('show', 3);
             }
-
-            $('#files-list').html('');
+            if(!append) $('#files-list').html('');
             response.data.files.forEach(file => {
-                $('#files-list').append(`<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-sha="${file.sha}">` +
-                    `<b class="list-group-item-heading">${file.filename}</b> <span class="label label-success">+${file.additions}</span> <span class="label label-danger">-${file.deletions}</span><br/>` +
-                    // `<pre class="hidden">${file.patch}</pre>` +
+                var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
+                // switch (file.status) {
+                // case 'renamed':
+                //     statuslabel = `<span class="label label-default ${file.status}">${file.status}</span> ${file.previous_filename} >> `;
+                //     break;
+                // default:
+                //     statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
+                // }
+                $('#files-list').append(
+                    `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${file.previous_filename}" data-sha="${file.sha}">` +
+                    statuslabel +
+                    '<b class="list-group-item-heading">' +
+                    (file.previous_filename  ? ` ${file.previous_filename} >> ` : '') +
+                    ` ${file.filename}</b>` +
+                    (file.additions > 0 ? ` <span class="label label-success">+${file.additions}</span>` : '') +
+                    (file.deletions > 0 ? ` <span class="label label-danger">-${file.deletions}</span><br/>` : '') +
+                    // `<pre>${_.escape(file.patch)}</pre>` +
                     '</a>');
 
             });
@@ -260,7 +290,7 @@ class GitHubWizard {
 
 
         }).catch(function(error) {
-            console.error(error);
+            // console.error(error);
             Utility.showError(error);
             NProgress.done();
         });

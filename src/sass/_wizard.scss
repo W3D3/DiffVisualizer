@@ -16,3 +16,26 @@
 {
     color: white;
 }
+
+.file-item {
+    .removed {
+        @extend .DELETE;
+        color: black;
+    }
+    .added {
+        @extend .INSERT;
+        color: black;
+    }
+    .renamed {
+        @extend .UPDATE;
+        color: black;
+    }
+    b {
+        font-family: Consolas, monaco, monospace;
+    	font-size: 14px;
+    	font-style: normal;
+    	font-variant: normal;
+    	// font-weight: 400;
+    	line-height: 20px;
+    }
+}
