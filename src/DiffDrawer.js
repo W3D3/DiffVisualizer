@@ -365,39 +365,97 @@ class DiffDrawer {
             var dstMarkers = new Array();
             var srcMarkers = new Array();
 
+            var srcStartLines = _.groupBy(changes, 'srcStartLine');
+            var changesStartLine = _.groupBy(changes, 'srcEndLine');
+
             changes.forEach(function(entry) {
+                var startPosition;
+                var endPosition;
+                var startMarker;
+                var closingMarker;
 
                 if (entry.actionType == 'INSERT') {
-                    dstMarkers.push(new Marker(entry.dstId, entry.dstPos, 'INSERT', false, 'dst'));
-                    dstMarkers.push(new Marker(entry.dstId, entry.dstPos + entry.dstLength, 'INSERT', true, 'dst'));
+
+                    startPosition = {
+                        line: entry.dstStartLine,
+                        offset: entry.dstStartLineOffset
+                    };
+                    startMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
+                    endPosition = {
+                        line: entry.dstEndLine,
+                        offset: entry.dstEndLineOffset
+                    };
+                    closingMarker = startMarker.createEndMarker(endPosition);
+
+                    dstMarkers.push(startMarker);
+                    dstMarkers.push(closingMarker);
                 }
 
                 if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
-                    var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
-                    srcMarker.bindToId(entry.dstId); //bind to destination
-                    srcMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
-                    srcMarkers.push(srcMarker);
-                    //add closing tag
-                    var srcClosing = srcMarker.createEndMarker(entry.srcLength);
-                    srcMarkers.push(srcClosing);
+                    //SRCMARKER
+                    startPosition = {
+                        line: entry.srcStartLine,
+                        offset: entry.srcStartLineOffset
+                    };
+                    startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
+                    startMarker.bindToId(entry.dstId);
+                    //startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
 
-                    var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
-                    dstMarker.bindToId(entry.srcId);
+                    endPosition = {
+                        line: entry.srcEndLine,
+                        offset: entry.srcEndLineOffset
+                    };
+                    closingMarker = startMarker.createEndMarker(endPosition);
+
+                    srcMarkers.push(startMarker);
+                    srcMarkers.push(closingMarker);
+
+                    //DSTMARKER
+                    startPosition = {
+                        line: entry.dstStartLine,
+                        offset: entry.dstStartLineOffset
+                    };
+                    var dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
+                    dstStartMarker.bindToId(entry.srcId);
                     //dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
-                    dstMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
-                    dstMarkers.push(dstMarker);
+                    //startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
+                    endPosition = {
+                        line: entry.dstEndLine,
+                        offset: entry.dstEndLineOffset
+                    };
+                    var dstClosingMarker = dstStartMarker.createEndMarker(endPosition);
 
-                    var dstClosing = dstMarker.createEndMarker(entry.dstLength);
-                    dstMarkers.push(dstClosing);
+                    dstMarkers.push(dstStartMarker);
+                    dstMarkers.push(dstClosingMarker);
                 }
 
                 if (entry.actionType == 'DELETE') {
-                    var deleteMarker = new Marker(entry.srcId, entry.srcPos, 'DELETE', false, 'src');
-                    srcMarkers.push(deleteMarker);
-                    srcMarkers.push(deleteMarker.createEndMarker(entry.srcLength));
+                    //SRCMARKER
+                    startPosition = {
+                        line: entry.srcStartLine,
+                        offset: entry.srcStartLineOffset
+                    };
+                    startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
+                    startMarker.bindToId(entry.dstId);
+                    //startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
+
+                    endPosition = {
+                        line: entry.srcEndLine,
+                        offset: entry.srcEndLineOffset
+                    };
+                    closingMarker = startMarker.createEndMarker(endPosition);
+
+                    srcMarkers.push(startMarker);
+                    srcMarkers.push(closingMarker);
                 }
 
             });
+
+            //console.log(srcMarkers);
+            console.log(_.groupBy(srcMarkers, function (item) {
+                return item.position.line;
+            })
+            );
 
         //markers are now full, sort them
             diffdrawer.dstMarkersSorted = _(dstMarkers).chain()

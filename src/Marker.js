@@ -28,9 +28,9 @@ class Marker {
         this.isEndMarker = isEndMarker;
     }
 
-    createEndMarker(length) {
+    createEndMarker(newpos) {
         var endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
-        endmarker.position = endmarker.position + length;
+        endmarker.position = newpos;
         endmarker.bind = this.bind;
         endmarker.metaDataMarkup = this.metaDataMarkup;
         return endmarker;
