@@ -138,10 +138,13 @@ class GitHubWizard {
             // finish();
             var html = `<h1>${me.selectedRepoString}</h1>`+
                         me.html.commit;
-            $('#tab5').html(html);
+            $('#review_content').html(html);
             me.options.wizardElement.bootstrapWizard('show', 4);
         });
 
+        $('#finish').on('click', function() {
+            me.finish();
+        });
 
         me.options.wizardElement.bootstrapWizard({
             'tabClass': 'nav nav-pills',

@@ -350,11 +350,13 @@ class DiffDrawer {
             NProgress.done();
             return;
         }
-        this.DIFF_API.post('/changes', {
+        var payload = {
             'src': base64.encode(srcString),
             'dst': base64.encode(dstString),
             'matcher': this.getMatcherID()
-        })
+        };
+        //console.log(JSON.stringify(payload));
+        this.DIFF_API.post('/changes', payload)
         .then(function(response) {
 
             $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify using matcher ' + diffdrawer.matcherName);
@@ -373,7 +375,7 @@ class DiffDrawer {
                 if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
                     var srcMarker = new Marker(entry.srcId, entry.srcPos, entry.actionType, false, 'src');
                     srcMarker.bindToId(entry.dstId); //bind to destination
-                    srcMarker.addMetaData('src' + entry.srcId, 'This is a ' + entry.actionType);
+                    srcMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
                     srcMarkers.push(srcMarker);
                     //add closing tag
                     var srcClosing = srcMarker.createEndMarker(entry.srcLength);
@@ -381,7 +383,8 @@ class DiffDrawer {
 
                     var dstMarker = new Marker(entry.dstId, entry.dstPos, entry.actionType, false, 'dst');
                     dstMarker.bindToId(entry.srcId);
-                    dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
+                    //dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
+                    dstMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
                     dstMarkers.push(dstMarker);
 
                     var dstClosing = dstMarker.createEndMarker(entry.dstLength);

@@ -1,5 +1,6 @@
 #wizard {
-    height: 850px
+    // height: 850px
+    height: 100%;
 }
 .step-content {
     padding: 10px
@@ -40,6 +41,12 @@
     	// font-weight: 400;
     	line-height: 20px;
     }
+}
+
+#commit-list {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 500px
 }
 
 .commit-item {

@@ -53,7 +53,13 @@ app.get('/github/*', cors(), function(req, res) {
         url: url,
         json: false
     }, function(err, resp, body) {
-        res.send(body);
+        if(resp.statusCode == 404) {
+            res.send('');
+        } else {
+            //res.status(resp.statusCode).send(body);
+            res.send(body);
+        }
+
     });
 });
 

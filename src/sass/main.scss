@@ -22,7 +22,7 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import 'scrollbar';
 @import 'wizard';
 
-::-webkit-scrollbar {
+.codebox::-webkit-scrollbar {
     /* disable scrollbar for webkit browser because we can use perfect scrollbar instead which autohides */
     display: none;
 }
