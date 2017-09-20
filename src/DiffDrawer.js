@@ -304,7 +304,7 @@ class DiffDrawer {
           .sortBy('position.absolute')
           .reverse()
           .value();
-        console.log(markersSorted);
+
         var lastClosed = [];
         var markersFixed = [];
 
@@ -381,7 +381,6 @@ class DiffDrawer {
             'dst': base64.encode(dstString),
             'matcher': this.getMatcherID()
         };
-        console.log(JSON.stringify(payload));
         this.DIFF_API.post('/changes', payload)
         .then(function(response) {
 
@@ -529,7 +528,7 @@ class DiffDrawer {
                   return;
               }
               err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
-              console.error(error);
+              //console.error(error);
           }
       });
     }
