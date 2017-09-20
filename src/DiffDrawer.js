@@ -36,8 +36,8 @@ class DiffDrawer {
         this.src = src;
         this.dst = dst;
 
-        this.srcMarkersSorted = [];
-        this.dstMarkersSorted = [];
+        this.srcMarkersSorted = {};
+        this.dstMarkersSorted = {};
 
         this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
@@ -179,38 +179,47 @@ class DiffDrawer {
    * takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen
    */
     showChanges() {
-        if (this.srcMarkersSorted == null || this.dstMarkersSorted == null) {
+        if (this.srcMarkersSorted == null || this.srcMarkersSorted == null) {
             Utility.showError('There are no changes to show');
             return false;
         }
 
-        var filteredSrcMarkers;
-        var filteredDstMarkers;
-        var filterArray = this.filterArray;
+        // var filteredSrcMarkers;
+        // var filteredDstMarkers;
+        // var filterArray = this.filterArray;
+        //
+        // if (filterArray.length < 4) {
+        //     filteredSrcMarkers = _.filter(this.srcMarkersSorted, function(o) {
+        //         return filterArray.includes(o.type);
+        //     });
+        //     filteredDstMarkers = _.filter(this.dstMarkersSorted, function(o) {
+        //         return filterArray.includes(o.type);
+        //     });
+        // } else {
+        //     filteredSrcMarkers = this.srcMarkersSorted;
+        //     filteredDstMarkers = this.dstMarkersSorted;
+        // }
+        var linesSrc = this.getSource().split('\r\n');
+        console.log(this.srcMarkersSorted);
 
-        if (filterArray.length < 4) {
-            filteredSrcMarkers = _.filter(this.srcMarkersSorted, function(o) {
-                return filterArray.includes(o.type);
-            });
-            filteredDstMarkers = _.filter(this.dstMarkersSorted, function(o) {
-                return filterArray.includes(o.type);
-            });
-        } else {
-            filteredSrcMarkers = this.srcMarkersSorted;
-            filteredDstMarkers = this.dstMarkersSorted;
+        for (var i = 0; i < linesSrc.length; i++) {
+            if(this.srcMarkersSorted[i+1]) {
+                linesSrc[i] = DiffDrawer.insertMarkers(this.srcMarkersSorted[i+1], linesSrc[i]);
+            }
         }
-
+        console.log(linesSrc);
+        // var linesDst = this.getDestination();
         //redraw
-        let srcString = DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
-        let dstString = DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
+
+        // let srcString = // DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
+        // let dstString =// DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
 
         if (this.checkIfCurrentJob()) { //only show if this is the current Job!
-            $('#dst').html(dstString);
-            $('#src').html(srcString);
+            $('#dst').html();
+            $('#src').html(linesSrc.join('\n'));
             this.enableSyntaxHighlighting();
 
-            if(this.enableMinimap)
-      {
+            if(this.enableMinimap) {
                 DiffDrawer.refreshMinimap();
                 $('.minimap').show();
 
@@ -269,32 +278,48 @@ class DiffDrawer {
    * @return {string} - code string with all the markers added as span tags
    */
     static insertMarkers(markersSorted, codeString) {
-        var lastClosed = [];
         var escapeUntilPos = codeString.length;
 
         markersSorted.forEach(function(marker) {
             //Before inserting marker, escape everything up to this point
-            codeString = Utility.escapeSubpart(codeString, marker.position, escapeUntilPos);
-            escapeUntilPos = marker.position;
+            codeString = Utility.escapeSubpart(codeString, marker.position.offset, escapeUntilPos);
+            escapeUntilPos = marker.position.offset;
 
+            var range = Utility.splitValue(codeString, marker.position.offset);
+            codeString = range[0] + marker.generateTag() + range[1];
+        });
+        //after all markers, escape the rest of the string
+        codeString = Utility.escapeSubpart(codeString, 0, escapeUntilPos);
+
+        //formatted string
+        return codeString;
+    }
+
+    static fixSequencing(markers) {
+        var markersSorted = _(markers).chain()
+          .sortBy('id')
+          .sortBy('position.absolute')
+          .reverse()
+          .value();
+        console.log(markersSorted);
+        var lastClosed = [];
+        var markersFixed = [];
+
+        markersSorted.forEach(function(marker) {
             if (marker.isEndMarker) {
-                var range = Utility.splitValue(codeString, marker.position);
-                codeString = range[0] + marker.generateTag() + range[1];
-                //fill the opening Marker into the last closed array for faster opening
-                //TODO copy the old marker and not generate a new one!!!
-                var closingMarker = new Marker(marker.id, marker.position, marker.type, false, marker.sourceType);
-                closingMarker.metaDataMarkup = marker.metaDataMarkup;
-                if (marker.bind)
-                    {closingMarker.bindToId(marker.bind);}
+                  //is endmarker and always fits there
+                markersFixed.push(marker);
+
+                  //fill the opening Marker into the last closed array for faster opening
+                var closingMarker = marker.createEndMarker(marker.position);
+                closingMarker.isEndMarker = false;
                 lastClosed.push(closingMarker);
             } else {
-                //startmarker
+                  //startmarker
                 if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
-                    //can be inserted
+                      //can be inserted
                     lastClosed.pop();
-                    range = Utility.splitValue(codeString, marker.position);
-                    codeString = range[0] + marker.generateTag() + range[1];
-
+                    markersFixed.push(marker);
                 } else {
                     var markerNotYetOpened = false;
                     lastClosed.forEach(function(startmarker) {
@@ -305,8 +330,9 @@ class DiffDrawer {
                     if (markerNotYetOpened) {
                         var openingMarker = lastClosed.pop();
                         while (openingMarker.id <= marker.id) {
-                            range = Utility.splitValue(codeString, marker.position);
-                            codeString = range[0] + openingMarker.generateTag() + range[1];
+                            openingMarker.position = marker.position;
+                            markersFixed.push(openingMarker);
+
                             if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
                                 openingMarker = lastClosed.pop();
                             } else {
@@ -317,10 +343,7 @@ class DiffDrawer {
                 }
             }
         });
-        //after all markers, escape the rest of the string
-        codeString = Utility.escapeSubpart(codeString, 0, escapeUntilPos);
-        //formatted string
-        return codeString;
+        return markersFixed;
     }
 
   /**
@@ -355,7 +378,7 @@ class DiffDrawer {
             'dst': base64.encode(dstString),
             'matcher': this.getMatcherID()
         };
-        //console.log(JSON.stringify(payload));
+        console.log(JSON.stringify(payload));
         this.DIFF_API.post('/changes', payload)
         .then(function(response) {
 
@@ -364,9 +387,6 @@ class DiffDrawer {
             var changes = response.data.results;
             var dstMarkers = new Array();
             var srcMarkers = new Array();
-
-            var srcStartLines = _.groupBy(changes, 'srcStartLine');
-            var changesStartLine = _.groupBy(changes, 'srcEndLine');
 
             changes.forEach(function(entry) {
                 var startPosition;
@@ -378,12 +398,14 @@ class DiffDrawer {
 
                     startPosition = {
                         line: entry.dstStartLine,
-                        offset: entry.dstStartLineOffset
+                        offset: entry.dstStartLineOffset,
+                        absolute: entry.dstPos
                     };
                     startMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
                     endPosition = {
                         line: entry.dstEndLine,
-                        offset: entry.dstEndLineOffset
+                        offset: entry.dstEndLineOffset,
+                        absolute: entry.dstPos + entry.dstLength
                     };
                     closingMarker = startMarker.createEndMarker(endPosition);
 
@@ -395,7 +417,8 @@ class DiffDrawer {
                     //SRCMARKER
                     startPosition = {
                         line: entry.srcStartLine,
-                        offset: entry.srcStartLineOffset
+                        offset: entry.srcStartLineOffset,
+                        absolute: entry.srcPos
                     };
                     startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
                     startMarker.bindToId(entry.dstId);
@@ -403,7 +426,8 @@ class DiffDrawer {
 
                     endPosition = {
                         line: entry.srcEndLine,
-                        offset: entry.srcEndLineOffset
+                        offset: entry.srcEndLineOffset,
+                        absolute: entry.srcPos + entry.srcLength
                     };
                     closingMarker = startMarker.createEndMarker(endPosition);
 
@@ -413,7 +437,8 @@ class DiffDrawer {
                     //DSTMARKER
                     startPosition = {
                         line: entry.dstStartLine,
-                        offset: entry.dstStartLineOffset
+                        offset: entry.dstStartLineOffset,
+                        absolute: entry.dstPos
                     };
                     var dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
                     dstStartMarker.bindToId(entry.srcId);
@@ -421,7 +446,8 @@ class DiffDrawer {
                     //startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
                     endPosition = {
                         line: entry.dstEndLine,
-                        offset: entry.dstEndLineOffset
+                        offset: entry.dstEndLineOffset,
+                        absolute: entry.dstPos + entry.dstLength
                     };
                     var dstClosingMarker = dstStartMarker.createEndMarker(endPosition);
 
@@ -433,7 +459,8 @@ class DiffDrawer {
                     //SRCMARKER
                     startPosition = {
                         line: entry.srcStartLine,
-                        offset: entry.srcStartLineOffset
+                        offset: entry.srcStartLineOffset,
+                        absolute: entry.srcPos
                     };
                     startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
                     startMarker.bindToId(entry.dstId);
@@ -441,7 +468,8 @@ class DiffDrawer {
 
                     endPosition = {
                         line: entry.srcEndLine,
-                        offset: entry.srcEndLineOffset
+                        offset: entry.srcEndLineOffset,
+                        absolute: entry.srcPos + entry.srcLength
                     };
                     closingMarker = startMarker.createEndMarker(endPosition);
 
@@ -452,23 +480,32 @@ class DiffDrawer {
             });
 
             //console.log(srcMarkers);
-            console.log(_.groupBy(srcMarkers, function (item) {
+            // var srcMarkersGrouped = _.groupBy(srcMarkers, function (item) {
+            //     return item.position.line;
+            // });
+            //
+            // Object.keys(srcMarkersGrouped).forEach(key => {
+            //     console.log(key);          // the name of the current key.
+            //     console.log(srcMarkersGrouped[key]);   // the value of the current key.
+            //     diffdrawer.srcMarkersSorted[key] = _(srcMarkersGrouped[key]).chain()
+            //       .sortBy('id')
+            //       .sortBy('position.offset')
+            //       .reverse()
+            //       .value();
+            // });
+            //
+            // console.log(diffdrawer.srcMarkersSorted);
+
+            //markers are now full, sort and fix them
+            var fixedMarkers = DiffDrawer.fixSequencing(srcMarkers);
+            console.log(fixedMarkers);
+            diffdrawer.srcMarkersSorted = _.groupBy(fixedMarkers, function (item) {
                 return item.position.line;
-            })
-            );
+            });
+            //TODO SAME FOR DST
+            // diffdrawer.dstMarkersSorted = DiffDrawer.fixSequencing(dstMarkers);
 
-        //markers are now full, sort them
-            diffdrawer.dstMarkersSorted = _(dstMarkers).chain()
-              .sortBy('id')
-              .sortBy('position')
-              .reverse()
-              .value();
-
-            diffdrawer.srcMarkersSorted = _(srcMarkers).chain()
-              .sortBy('id')
-              .sortBy('position')
-              .reverse()
-              .value();
+            // console.log(diffdrawer.srcMarkersSorted);
 
             if (!diffdrawer.checkIfCurrentJob()) {
                 return false;
@@ -488,6 +525,7 @@ class DiffDrawer {
                   return;
               }
               err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
+              console.error(error);
           }
       });
     }
