@@ -41,11 +41,13 @@ class GitHubWizard {
         };
         this.options = this.setDefaults(options, defaults);
 
+
+
         NProgress.configure({ parent: '#' + this.options.wizardElement.attr('id') });
 
         $('#projecturl-next').on('click', function() {
             var input = $('#projecturl').val();
-
+            
             me.validateRepo(input, function(){
                 NProgress.start();
                 me.loadCommits(me.selectedRepoString, me.currentCommitsPage);
@@ -156,9 +158,26 @@ class GitHubWizard {
             //         return false;
             //     }
             // },
-            'onTabClick': function() {
-                return false;
-            }
+            'onTabClick': function(tab, navigation, currentIndex, clickedIndex) {
+                if(clickedIndex < currentIndex)
+                {
+                    return true;
+
+                }
+                else {
+                    return false;
+                }
+
+            },
+            // 'onTabChange': function (tab, navigation, currentIndex, clickedIndex) {
+            //     console.log('shown!'+ currentIndex);
+            //     for (var i = 0; i <= currentIndex; i++) {
+            //         me.options.wizardElement.bootstrapWizard('enable', i);
+            //     }
+            //     for (i = currentIndex + 1; i <= me.options.wizardElement.bootstrapWizard('navigationLength'); i++) {
+            //         me.options.wizardElement.bootstrapWizard('disable', i);
+            //     }
+            // }
         });
         me.options.wizardElement.bootstrapWizard();
     }
