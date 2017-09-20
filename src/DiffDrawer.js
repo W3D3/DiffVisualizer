@@ -200,22 +200,27 @@ class DiffDrawer {
         //     filteredDstMarkers = this.dstMarkersSorted;
         // }
         var linesSrc = this.getSource().split('\r\n');
-        console.log(this.srcMarkersSorted);
+        var linesDst = this.getDestination().split('\r\n');
 
         for (var i = 0; i < linesSrc.length; i++) {
+            //line numbers are indexed starting at 1 (human readable), so add 1 here
             if(this.srcMarkersSorted[i+1]) {
                 linesSrc[i] = DiffDrawer.insertMarkers(this.srcMarkersSorted[i+1], linesSrc[i]);
+            } else {
+                linesSrc[i] = _.escape(linesSrc[i]);
             }
         }
-        console.log(linesSrc);
-        // var linesDst = this.getDestination();
-        //redraw
 
-        // let srcString = // DiffDrawer.insertMarkers(filteredSrcMarkers, this.src);
-        // let dstString =// DiffDrawer.insertMarkers(filteredDstMarkers, this.dst);
+        for (i = 0; i < linesDst.length; i++) {
+            if(this.dstMarkersSorted[i+1]) {
+                linesDst[i] = DiffDrawer.insertMarkers(this.dstMarkersSorted[i+1], linesDst[i]);
+            } else {
+                linesDst[i] = _.escape(linesDst[i]);
+            }
+        }
 
         if (this.checkIfCurrentJob()) { //only show if this is the current Job!
-            $('#dst').html();
+            $('#dst').html(linesDst.join('\n'));
             $('#src').html(linesSrc.join('\n'));
             this.enableSyntaxHighlighting();
 
@@ -279,7 +284,6 @@ class DiffDrawer {
    */
     static insertMarkers(markersSorted, codeString) {
         var escapeUntilPos = codeString.length;
-
         markersSorted.forEach(function(marker) {
             //Before inserting marker, escape everything up to this point
             codeString = Utility.escapeSubpart(codeString, marker.position.offset, escapeUntilPos);
@@ -290,7 +294,6 @@ class DiffDrawer {
         });
         //after all markers, escape the rest of the string
         codeString = Utility.escapeSubpart(codeString, 0, escapeUntilPos);
-
         //formatted string
         return codeString;
     }
@@ -497,15 +500,16 @@ class DiffDrawer {
             // console.log(diffdrawer.srcMarkersSorted);
 
             //markers are now full, sort and fix them
-            var fixedMarkers = DiffDrawer.fixSequencing(srcMarkers);
-            console.log(fixedMarkers);
-            diffdrawer.srcMarkersSorted = _.groupBy(fixedMarkers, function (item) {
+            var fixedSrcMarkers = DiffDrawer.fixSequencing(srcMarkers);
+            diffdrawer.srcMarkersSorted = _.groupBy(fixedSrcMarkers, function (item) {
                 return item.position.line;
             });
-            //TODO SAME FOR DST
-            // diffdrawer.dstMarkersSorted = DiffDrawer.fixSequencing(dstMarkers);
 
-            // console.log(diffdrawer.srcMarkersSorted);
+            var fixedDstMarkers = DiffDrawer.fixSequencing(dstMarkers);
+            diffdrawer.dstMarkersSorted = _.groupBy(fixedDstMarkers, function (item) {
+                return item.position.line;
+            });
+
 
             if (!diffdrawer.checkIfCurrentJob()) {
                 return false;
