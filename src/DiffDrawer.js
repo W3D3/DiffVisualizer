@@ -42,7 +42,7 @@ class DiffDrawer {
         this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
         this.matcherID = 1; //default to first matcher (ClassicGumtree)
-        this.matcherName = 'ClassicGumtree';
+        this.matcherName = 'ClassicGumtree'; //TODO fetch
 
         //set default base URL
         this.DIFF_API = axios.create();
@@ -184,21 +184,6 @@ class DiffDrawer {
             return false;
         }
 
-        // var filteredSrcMarkers;
-        // var filteredDstMarkers;
-        // var filterArray = this.filterArray;
-        //
-        // if (filterArray.length < 4) {
-        //     filteredSrcMarkers = _.filter(this.srcMarkersSorted, function(o) {
-        //         return filterArray.includes(o.type);
-        //     });
-        //     filteredDstMarkers = _.filter(this.dstMarkersSorted, function(o) {
-        //         return filterArray.includes(o.type);
-        //     });
-        // } else {
-        //     filteredSrcMarkers = this.srcMarkersSorted;
-        //     filteredDstMarkers = this.dstMarkersSorted;
-        // }
         var linesSrc = this.getSource().split('\r\n');
         var linesDst = this.getDestination().split('\r\n');
 
@@ -223,6 +208,7 @@ class DiffDrawer {
             $('#dst').html(linesDst.join('\n'));
             $('#src').html(linesSrc.join('\n'));
             this.enableSyntaxHighlighting();
+            this.filter();
 
             if(this.enableMinimap) {
                 DiffDrawer.refreshMinimap();
@@ -481,23 +467,6 @@ class DiffDrawer {
 
             });
 
-            //console.log(srcMarkers);
-            // var srcMarkersGrouped = _.groupBy(srcMarkers, function (item) {
-            //     return item.position.line;
-            // });
-            //
-            // Object.keys(srcMarkersGrouped).forEach(key => {
-            //     console.log(key);          // the name of the current key.
-            //     console.log(srcMarkersGrouped[key]);   // the value of the current key.
-            //     diffdrawer.srcMarkersSorted[key] = _(srcMarkersGrouped[key]).chain()
-            //       .sortBy('id')
-            //       .sortBy('position.offset')
-            //       .reverse()
-            //       .value();
-            // });
-            //
-            // console.log(diffdrawer.srcMarkersSorted);
-
             //markers are now full, sort and fix them
             var fixedSrcMarkers = DiffDrawer.fixSequencing(srcMarkers);
             diffdrawer.srcMarkersSorted = _.groupBy(fixedSrcMarkers, function (item) {
@@ -561,6 +530,28 @@ class DiffDrawer {
 
         if(this.commit) titlestring += '<a href="#"><span class="badge"><i class="fa fa-info"></i> Commit</span>';
         return titlestring;
+    }
+
+    filter()
+    {
+        var allTypes = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+        allTypes.forEach(type => {
+            if(!this.filterArray.includes(type))
+            {
+                var typedMarkers = $('#codeContent').find('.'+type);
+                typedMarkers.removeClass(type);
+                typedMarkers.removeClass('scriptmarker');
+                typedMarkers.addClass(type+'-hidden');
+            }else {
+
+                var hiddenMarkers = $('#codeContent').find('.'+type+'-hidden');
+                hiddenMarkers.removeClass(type+'-hidden');
+                hiddenMarkers.addClass('scriptmarker');
+                hiddenMarkers.addClass(type);
+
+            }
+        });
+
     }
 }
 export default DiffDrawer;
