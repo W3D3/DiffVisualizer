@@ -295,7 +295,7 @@ class GitHubWizard {
                 var fileshtml = `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${oldname}" data-sha="${file.sha}">` +
                 statuslabel +
                 '<b class="list-group-item-heading">' +
-                (file.previous_filename  ? ` ${file.previous_filename} >> ` : '') +
+                (file.previous_filename  ? ` ${file.previous_filename} &#8658; ` : '') +
                 ` ${file.filename}</b>` +
                 (file.additions > 0 ? ` <span class="label label-success">+${file.additions}</span>` : '') +
                 (file.deletions > 0 ? ` <span class="label label-danger">-${file.deletions}</span><br/>` : '') +

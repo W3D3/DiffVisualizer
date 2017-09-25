@@ -99,7 +99,7 @@ class Loader {
             var diffTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '');
             var diffDstTitle = diff.DstFileName.replace(/^.*[\\\/]/, '');
             if (diff.SrcFileName != diff.DstFileName) {
-                diffTitle += '</br> >> ' + diffDstTitle;
+                diffTitle += '</br> &#8658; ' + diffDstTitle;
             }
 
             me.loadedDiffObjects.push(diff);
