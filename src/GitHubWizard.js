@@ -12,7 +12,7 @@ import _ from 'lodash';
 import axios from 'axios';
 import hash from 'object-hash';
 import Utility from './Utility';
-import NProgress from 'NProgress';
+import NProgress from 'nprogress';
 
 class GitHubWizard {
 
