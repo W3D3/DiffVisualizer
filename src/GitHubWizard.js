@@ -47,7 +47,7 @@ class GitHubWizard {
 
         $('#projecturl-next').on('click', function() {
             var input = $('#projecturl').val();
-            
+
             me.validateRepo(input, function(){
                 NProgress.start();
                 me.loadCommits(me.selectedRepoString, me.currentCommitsPage);
@@ -61,7 +61,7 @@ class GitHubWizard {
             $('.commit-item.active').removeClass('active');
             $this.toggleClass('active');
             me.selectedCommitSha = $this.data('sha');
-            me.html.commit =  $this.html();
+            me.html.commit = $this.html();
         });
 
         $('#loadCommitSha').on('click', function() {
@@ -70,6 +70,11 @@ class GitHubWizard {
             $('.commit-item.active').removeClass('active');
             $this.toggleClass('active');
             me.selectedCommitSha = $('#commitShaInput').val();
+
+            me.generateCommitHTML(me.selectedRepoString, me.selectedCommitSha, function (genhtml) {
+                me.html.commit = genhtml;
+                $('#commit-next').trigger('click');
+            });
         });
 
 
@@ -83,6 +88,7 @@ class GitHubWizard {
                     Utility.showWarning('Reached end of commit pages.');
                 }
                 else {
+                    $('#commit-list').scrollTo(0);
                     if(me.currentCommitsPage > 1)
                     {
                         $('#commits-prev-page').parent().removeClass('disabled');
@@ -98,12 +104,16 @@ class GitHubWizard {
             if(me.currentCommitsPage < 2) {
                 $(this).parent().addClass('disabled');
             }
-            me.loadCommits(me.selectedRepoString, me.currentCommitsPage);
+
+            me.loadCommits(me.selectedRepoString, me.currentCommitsPage, function (success) {
+                if(success) $('#commit-list').scrollTo(0);
+            });
         });
 
         $('#commit-next').on('click', function() {
             if(me.selectedCommitSha) {
                 NProgress.start();
+                $('#selected-commit').html(me.html.commit);
                 me.loadCommit(me.selectedRepoString, me.selectedCommitSha);
             } else {
                 Utility.showMessage('Please select a commit.');
@@ -129,6 +139,7 @@ class GitHubWizard {
             $('.file-item.active').removeClass('active');
             $this.addClass('active');
             me.selectedFileName = $this.data('name');
+            me.html.file = $(this).html();
             if(!me.selectedFileName.endsWith('.java'))
             {
                 Utility.showWarning('The selected file doesn\'t seem to be a Java file. Proceed with caution as this application currently only supports Java diffing.');
@@ -138,9 +149,12 @@ class GitHubWizard {
 
         $('#files-next').on('click', function() {
             // finish();
-            var html = `<h1>${me.selectedRepoString}</h1>`+
-                        me.html.commit;
+            var html = `<h1>${me.selectedRepoString}</h1><h3>Commit</h3>`+
+                        me.html.commit +
+                        '<h3>Files</h3>' +
+                        me.html.file;
             $('#review_content').html(html);
+            $('#review_content').css('margin', '5px');
             me.options.wizardElement.bootstrapWizard('show', 4);
         });
 
@@ -162,7 +176,6 @@ class GitHubWizard {
                 if(clickedIndex < currentIndex)
                 {
                     return true;
-
                 }
                 else {
                     return false;
@@ -200,10 +213,10 @@ class GitHubWizard {
                 NProgress.done();
                 return;
             }
-            me.options.wizardElement.bootstrapWizard('show', 1);
+            if(me.options.wizardElement.bootstrapWizard('currentIndex') != 1) me.options.wizardElement.bootstrapWizard('show', 1);
             $('#commit-list').html('');
             response.data.forEach(commit => {
-                console.log(commit);
+                // console.log(commit);
                 $('#commit-list').append(`<a href="#" class="list-group-item commit-item" data-sha="${commit.sha}">` +
                     '<img src="' + (commit.author ? `${commit.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
                     `<p><b class="list-group-item-heading">${_.escape(commit.commit.message)}</b><br/>` +
@@ -259,6 +272,11 @@ class GitHubWizard {
                 NProgress.done();
                 return;
             }
+            if(response.data.stats.total == 0) {
+                Utility.showWarning('This commit contains no changes. Select another one.');
+                NProgress.done();
+                return;
+            }
             me.selected.commit = response.data;
             me.selectedCommitSha = response.data.sha; // in case we sent an abbrivated version of the sha string, we fix it here to always work with the full once
             if(response.data.parents.length > 1)
@@ -269,6 +287,7 @@ class GitHubWizard {
                 me.selectedParentSha = response.data.parents[0].sha;
                 me.options.wizardElement.bootstrapWizard('show', 3);
             }
+
             if(!append) $('#files-list').html('');
             response.data.files.forEach(file => {
                 var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
@@ -318,6 +337,26 @@ class GitHubWizard {
             'DstFileName': me.selectedFileName,
         };
         me.options.finish(me.diffObject);
+    }
+
+    generateCommitHTML(repo, commitsha, callback)
+    {
+        // var me = this;
+        axios.get('/githubapi', {
+            params: {
+                url: `repos/${repo}/commits/${commitsha}`
+            }
+        }).then(function(response) {
+            // console.log(response);
+            var commit = response.data.commit;
+            var html = '<img src="' + (commit.author ? `${commit.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
+            `<p><b class="list-group-item-heading">${_.escape(commit.message)}</b><br/>` +
+            `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code> ${commit.author.date}</small>` +
+            '</p>';
+            callback(html);
+        }).catch(function (err) {
+            Utility.showError(err);
+        });
     }
 
 }
