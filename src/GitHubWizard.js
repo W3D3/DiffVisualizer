@@ -139,7 +139,7 @@ class GitHubWizard {
             $('.file-item.active').removeClass('active');
             $this.addClass('active');
             me.selectedFileName = $this.data('name');
-            me.html.file = $(this).html();
+            me.html.file = '<div class="file-item">'+$(this).html()+'</div>';
             if(!me.selectedFileName.endsWith('.java'))
             {
                 Utility.showWarning('The selected file doesn\'t seem to be a Java file. Proceed with caution as this application currently only supports Java diffing.');
@@ -149,10 +149,16 @@ class GitHubWizard {
 
         $('#files-next').on('click', function() {
             // finish();
+            me.selected.commit.files.forEach(file => {
+                if (file.filename === me.selectedFileName) {
+                    me.html.patch = `<pre class="patch">${_.escape(file.patch)}</pre>`;
+                }
+            });
             var html = `<h1>${me.selectedRepoString}</h1><h3>Commit</h3>`+
                         me.html.commit +
                         '<h3>Files</h3>' +
-                        me.html.file;
+                        me.html.file + '</br>' +
+                        me.html.patch;
             $('#review_content').html(html);
             $('#review_content').css('margin', '5px');
             me.options.wizardElement.bootstrapWizard('show', 4);
@@ -326,6 +332,7 @@ class GitHubWizard {
     finish()
     {
         var me = this;
+        console.log(me.selected.commit);
         $('#wizard').modal('hide');
         me.diffObject =
         {
