@@ -168,7 +168,7 @@ class SearchController {
         $elem.append($searchbar);
         $searchbar.find('#globalToggle').bootstrapToggle();
 
-
+        var finalResults = [];
         // the input field
         var $clearBtn = $searchbar.find('button[data-search=\'clear\']'),
             // prev button
@@ -210,39 +210,74 @@ class SearchController {
     /**
      * Jumps to the element matching the currentIndex
      */
+        // function jumpTo() {
+        //     if ($results.length) {
+        //         var $current = $results.eq(currentIndex);
+        //         $results.removeClass(currentClass);
+        //         if ($current.length) {
+        //             $current.addClass(currentClass);
+        //             var localOffset = $content.offset().top;
+        //             $searchbar.find('.overInput').text(parseInt(currentIndex + 1) + ' of ' + $results.length);
+        //             if ($searchbar.find('#globalToggle').prop('checked')) {
+        //                 for (var i = 0; i < me.containerList.length; i++) {
+        //
+        //                     if (me.containerList[i].has('.' + currentClass).length > 0) {
+        //                         $(me.containerList[i]).scrollTo($current, 50, {
+        //                             offset: 0 - localOffset - 100
+        //                         });
+        //                     }
+        //                 }
+        //             } else {
+        //                 $($content).scrollTo($current, 50, {
+        //                     offset: 0 - localOffset - 100
+        //                 });
+        //             }
+        //
+        //         }
+        //     }
+        // }
+
         function jumpTo() {
-            if ($results.length) {
-                var $current = $results.eq(currentIndex);
+            if (finalResults.length) {
+                var currentElements = finalResults[currentIndex];
+
                 $results.removeClass(currentClass);
-                if ($current.length) {
-                    $current.addClass(currentClass);
-                    var localOffset = $content.offset().top;
-                    $searchbar.find('.overInput').text(parseInt(currentIndex + 1) + ' of ' + $results.length);
-                    if ($searchbar.find('#globalToggle').prop('checked')) {
-                        for (var i = 0; i < me.containerList.length; i++) {
+                currentElements.forEach(subelem => {
+                    $(subelem).addClass(currentClass);
 
-                            if (me.containerList[i].has('.' + currentClass).length > 0) {
-                                $(me.containerList[i]).scrollTo($current, 50, {
-                                    offset: 0 - localOffset - 100
-                                });
-                            }
+
+                });
+                var firsElem = currentElements[0];
+                var localOffset = $content.offset().top;
+                $searchbar.find('.overInput').text(parseInt(currentIndex + 1) + ' of ' + finalResults.length);
+                if ($searchbar.find('#globalToggle').prop('checked')) {
+                    for (var i = 0; i < me.containerList.length; i++) {
+                        if (me.containerList[i].has('.' + currentClass).length > 0) {
+                            $(me.containerList[i]).scrollTo(firsElem, 50, {
+                                offset: 0 - localOffset - 100
+                            });
+                            i =  me.containerList.length;
                         }
-                    } else {
-                        $($content).scrollTo($current, 50, {
-                            offset: 0 - localOffset - 100
-                        });
                     }
-
+                } else {
+                    $($content).scrollTo(firsElem, 50, {
+                        offset: 0 - localOffset - 100
+                    });
                 }
             }
         }
 
-    /**
-     * Searches for the entered keyword in the
-     * specified context on input
-     */
+        /**
+         * Searches for the entered keyword in the
+         * specified context on input
+         */
         $input.on('input', _.debounce(function() {
             var searchVal = this.value;
+            var searchValLength = searchVal.length;
+            var charCounter = 0;
+            var i = 0;
+            finalResults = [];
+
             // disable search when length is 3 or less characters
             if(searchVal.length > 0 && searchVal.length < 4) {
                 $searchbar.find('.overInput').addClass('danger');
@@ -258,36 +293,29 @@ class SearchController {
                         acrossElements: true,
                         wildcards: 'enabled',
                         exclude: ['.searchbar *'],
-                        // each: function(marked, index) {
-                        //     console.log(index);
-                        //     var markedText = $(marked).text();
-                        //     var splitVal = searchVal.split(' ');
-                        //     var ending = splitVal[splitVal.length - 1];
-                        //     if(searchVal.endsWith(' '))
-                        //     {
-                        //         if(markedText.endsWith(' '))
-                        //         {
-                        //             console.log('space ending, node found');
-                        //             numOfMatches++;
-                        //         }
-                        //     }
-                        //     else if(markedText.endsWith(ending))
-                        //     {
-                        //         console.log('same ending, node found ' + ending);
-                        //         numOfMatches++;
-                        //     }
-                        //     else {
-                        //         console.log('not ending node');
-                        //         console.log(markedText);
-                        //     }
-                        //     console.log(markedText);
-                        // },
+                        each: function(marked) {
+                            // group into finalResults
+                            if(charCounter == 0)
+                            {
+                                finalResults[i] = [];
+                            }
+                            charCounter += $(marked).text().length;
+                            if(charCounter === searchValLength) {
+                                finalResults[i].push(marked);
+                                charCounter = 0;
+                                i++;
+                            } else {
+                                // console.log(charCounter+'/'+searchValLength);
+                                finalResults[i].push(marked);
+                            }
+                        },
                         done: function(counter) {
-                            // console.log($results);
+                            //console.log(counter);
                             if (counter > 0) {
                                 $searchbar.find('.overInput').removeClass('danger');
                                 $results = $content.find('mark');
                                 currentIndex = 0;
+                                i=0;
                                 jumpTo();
                             } else {
                                 $searchbar.find('.overInput').text('0 of 0');
@@ -324,12 +352,12 @@ class SearchController {
      * Next and previous search jump to
      */
         $nextBtn.add($prevBtn).on('click', function() {
-            if ($results.length) {
+            if (finalResults.length) {
                 currentIndex += $(this).is($prevBtn) ? -1 : 1;
                 if (currentIndex < 0) {
-                    currentIndex = $results.length - 1;
+                    currentIndex = finalResults.length - 1;
                 }
-                if (currentIndex > $results.length - 1) {
+                if (currentIndex > finalResults.length - 1) {
                     currentIndex = 0;
                 }
                 jumpTo();
