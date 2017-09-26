@@ -78,7 +78,7 @@ $(document).ready(function() {
         }
     });
 
-    var loader = new Loader();
+    new Loader();
 
     //setup ace editor and all clickhandlers
     editorSetup();
@@ -107,10 +107,7 @@ $(document).ready(function() {
     new GitHubWizard({
         wizardElement: $('#githubwizard'),
         finish: function(diffObject) {
-            //var srcUrl =
-            loader.createDiffList([diffObject], true);
-            // loadIntoViewer(diffObject.srcUrl, diffObject.dstUrl, )
-            console.log(loader.loadedDiffObjects);
+            Loader.createDiffList([diffObject], true);
         }
     });
     $('#githubImportButton').click(function() {
