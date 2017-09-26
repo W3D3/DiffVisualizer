@@ -24,7 +24,11 @@ class Settings {
 
     initDefaults() {
         //if (sessionStorage.length == 0) {
-        if(Settings.loadSettingPersistent('version') == null || Settings.loadSettingPersistent('version').split('.').join('') < 190)
+        if (Settings.loadSettingPersistent('version') == null) {
+            //first start
+            Settings.clearPersistentStorage();
+        }
+        else if(Settings.loadSettingPersistent('version').split('.').join('') < 190)
         {
             //not compatible with version 1.8.1 and below
             Utility.showWarning('Not compatible with version 1.8.1 and below, settings will be reset.');
@@ -105,16 +109,6 @@ class Settings {
         }
 
     }
-
-    // parseSetting(val) {
-    //     if(val == 'true'){
-    //         return true;
-    //     } else if(val == 'false'){
-    //         return false;
-    //     } else {
-    //         return JSON.parse(val);
-    //     }
-    // }
 
 }
 export default Settings;
