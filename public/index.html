@@ -67,7 +67,7 @@
                                 <input type="number" class="form-control" id="lineNumberInput" placeholder="Jump to Line">
                                 <a class="btn btn-primary" id="jump"><i class="fa fa-play-circle"></i> GOTO</a>
                             </div>
-                            <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="warning" data-on="SRC" data-off="DST" data-height="43px" data-width="70px" />
+                            <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="dst" data-on="SRC" data-off="DST" data-height="43px" data-width="70px" />
                         </form>
                         <ul class="nav navbar-nav navbar-right">
 
@@ -112,11 +112,13 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                                     <h4 class="panel-title">
                                       <a ><span class="glyphicon glyphicon-cloud-upload">
-                                      </span>Cached sets</a>
+                                      </span>Saved sets</a>
                                     </h4>
                                 </div>
                                 <div>
-                                    <div id="uploadedFiles"></div>
+                                    <div id="uploadedFiles">
+                                        No files here.
+                                    </div>
                                 </div>
                             </div>
 
@@ -134,14 +136,14 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                             <ul class="list-group">
                                 <li class="list-group-item">
                                     <div class="form-group">
-                                        <h4>Webservice</h4>
+                                        <!-- <h4>Webservice</h4> -->
                                         <label for="matcherID">Select Matcher</label>
                                         <select class="form-control" id="matcherID"></select>
 
                                     </div>
                                     <hr>
                                     <div class="form-group">
-                                        <h4>Appearance</h4>
+                                        <!-- <h4>Appearance</h4> -->
                                         <label for="matcherID">Select Theme</label>
                                         <select class="form-control" id="themePicker">
                                             <option value="default" data-dark="false">Default</option>

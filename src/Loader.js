@@ -13,7 +13,8 @@ import NProgress from 'nprogress';
 
 class Loader {
     constructor() {
-        this.loadedDiffObjects = [];
+        //var me = this;
+        Loader.loadedDiffObjects = [];
         //Configure dropzone
         Dropzone.options.jsonUploader = {
             paramName: 'file', // The name that will be used to transfer the file
@@ -29,7 +30,7 @@ class Loader {
             },
             acceptedFiles: '.json',
             maxFiles: 1,
-            success: this.loadDiffsFromFile,
+            success: Loader.loadDiffsFromFile,
             error: function(file, err, xhr) {
                 if (xhr) {
                     NProgress.done();
@@ -45,11 +46,11 @@ class Loader {
         };
 
         //show all the already uploaded elements
-        this.showUploadedElements();
+        Loader.showUploadedElements();
     }
 
-    showUploadedElements() {
-        var me = this;
+    static showUploadedElements() {
+        //var me = this;
         var alreadyUploaded = Settings.getAllFiles();
         $('#uploadedFiles').html('');
         alreadyUploaded.forEach(filename => {
@@ -64,18 +65,17 @@ class Loader {
             NProgress.start();
             $(this).parent().find('.fileButton').removeClass('active');
             $(this).addClass('active');
-            me.createDiffList(Settings.loadFile($(this).data('key')));
+            Loader.createDiffList(Settings.loadFile($(this).data('key')));
             Utility.showSuccess('Finished loading <i>' + $(this).data('key') + '</i>');
         });
     }
 
-    loadDiffsFromFile(file, filename) {
-        var me = this;
+    static loadDiffsFromFile(file, filename) {
         axios.get('/uploads/' + filename)
             .then(response => {
                 Settings.saveFile(file.name, response.data);
-                me.showUploadedElements();
-                me.createDiffList(response.data);
+                Loader.showUploadedElements();
+                Loader.createDiffList(response.data);
 
                 Utility.showSuccess('Finished importing <i>' + file.name + '</i>');
             })
@@ -85,8 +85,8 @@ class Loader {
             });
     }
 
-    createDiffList(data, append) {
-        var me = this;
+    static createDiffList(data, append) {
+        //ar me = this;
         if(!append) $('#diffsList').html('');
         data.forEach(function(diff) {
 
@@ -102,7 +102,7 @@ class Loader {
                 diffTitle += '</br> &#8658; ' + diffDstTitle;
             }
 
-            me.loadedDiffObjects.push(diff);
+            Loader.loadedDiffObjects.push(diff);
             $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}"><span class="label label-default">${String(diff.Id).substring(0,8)}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
 
         });
