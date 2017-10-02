@@ -231,7 +231,7 @@ class DiffDrawer {
         var minimapHeight = $('.codebox').css('height');
         var minimapTop = $('#codeboxTitle').css('height');
         $('.minimap').css('height', minimapHeight);
-        $('.minimap').css('top', minimapTop);
+        $('.minimap').css('top', minimapTop+20);
 
         var right = parseInt($('.dst').innerWidth() + 3 + 'px');
         $('.srcminimap').css('right', right);
