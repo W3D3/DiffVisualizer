@@ -161,3 +161,12 @@ mark.current {
 .btn-dst {
     background-color: #62DA97;
 }
+
+.delete-set {
+    color: $btn-default-bg;
+    padding: 2px;
+}
+
+.delete-set:hover {
+    color: $brand-danger;
+}

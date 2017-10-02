@@ -62,6 +62,10 @@ class Settings {
         return arr;
     }
 
+    static deleteSettingPersistent(key) {
+        localStorage.removeItem(key);
+    }
+
     static getAllSettingsKeysPersistent() {
         var arr = [];
         for (var i = 0; i < localStorage.length; i++){
@@ -76,6 +80,10 @@ class Settings {
 
     static loadFile(filename) {
         return Settings.loadSettingPersistent(Settings.filePrefix() + filename);
+    }
+
+    static deleteFile(filename) {
+        return Settings.deleteSettingPersistent(Settings.filePrefix() + filename);
     }
 
     static getAllFiles() {

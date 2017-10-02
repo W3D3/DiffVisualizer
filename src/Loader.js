@@ -33,7 +33,7 @@ class Loader {
             maxFiles: 1,
             success: Loader.loadDiffsFromFile,
             error: function(file, err, xhr) {
-                //console.log(file);
+                // console.log(file);
                 NProgress.done();
                 this.removeAllFiles();
 
@@ -41,14 +41,19 @@ class Loader {
                     Utility.showError('Error parsing file - ' + err.error);
                     return;
                 }
-
-                Utility.showWarning('Invalid filetype. Only .json is allowed.');
-
-
+                if (!file.accepted) {
+                    Utility.showWarning('Invalid filetype. Only .json is allowed.');
+                    return;
+                }
             },
-            maxfilesexceeded: function(file) {
-                this.removeAllFiles();
-                this.addFile(file);
+            init: function() {
+
+                this.on('addedfile', function(file) {
+                    if (this.files.length > 1) {
+                        this.removeFile(this.files[0]);
+                    }
+                });
+
             }
         };
 
@@ -61,7 +66,7 @@ class Loader {
         var alreadyUploaded = Settings.getAllFiles();
         $('#uploadedFiles').html('');
         alreadyUploaded.forEach(filename => {
-            $('#uploadedFiles').append(`<a href="#" class="list-group-item fileButton" data-key="${filename}"> ${filename}</a>`);
+            $('#uploadedFiles').append(`<a href="#" class="list-group-item fileButton" data-key="${filename}"> ${filename} <i class="fa fa-times pull-right delete-set"></i></a> `);
             //<i class="fa fa-times pull-right" style="color: red"></i></a>
         });
 
@@ -74,6 +79,14 @@ class Loader {
             $(this).addClass('active');
             Loader.createDiffList(Settings.loadFile($(this).data('key')));
             Utility.showSuccess('Finished loading <i>' + $(this).data('key') + '</i>');
+        });
+
+        $('.delete-set').on('click', function() {
+            var keyToBeDeleted = $(this).parent().data('key');
+            Settings.deleteFile(keyToBeDeleted);
+            $(this).parent().remove();
+            Utility.showSuccess('Deleted <i>' + keyToBeDeleted + '</i> from saved sets.');
+            return;
         });
     }
 
@@ -94,7 +107,7 @@ class Loader {
 
     static createDiffList(data, append) {
         //ar me = this;
-        if(!append) $('#diffsList').html('');
+        if (!append) $('#diffsList').html('');
         data.forEach(function(diff) {
 
             var userRepo = diff.BaseUrl.replace(/\/$/, '').replace(/^(https?:\/\/)?(github\.com\/)/, '');
