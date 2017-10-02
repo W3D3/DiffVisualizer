@@ -10,6 +10,7 @@ import Settings from './Settings';
 import Dropzone from 'dropzone';
 import axios from 'axios';
 import NProgress from 'nprogress';
+import BootstrapMenu from 'bootstrap-menu';
 
 class Loader {
     constructor() {
@@ -48,7 +49,7 @@ class Loader {
             },
             init: function() {
 
-                this.on('addedfile', function(file) {
+                this.on('addedfile', function() {
                     if (this.files.length > 1) {
                         this.removeFile(this.files[0]);
                     }
@@ -122,12 +123,41 @@ class Loader {
                 diffTitle += '</br> &#8658; ' + diffDstTitle;
             }
 
+
+
             Loader.loadedDiffObjects.push(diff);
-            $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}"><span class="label label-default">${String(diff.Id).substring(0,8)}</span><b> ${diffTitle}</b><br /><small>${userRepo}</small></a>`);
+            $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}" data-commit="${diff.Commit}" data-filename="${diff.DstFileName}"><span class="label label-default">${String(diff.Id).substring(0,8)}</span><b> ${diffTitle}</b><br /><small class="userRepo">${userRepo}</small></a>`);
 
         });
         GUI.recalcDiffListHeight();
         NProgress.done();
+
+        new BootstrapMenu('#diffItem', {
+            fetchElementData: function($elem) {
+                return $elem;
+            },
+            actions: [{
+                name: 'Show raw SRC',
+                iconClass: 'fa-file-text-o',
+                onClick: function(item) {
+                    window.open($(item).data('rawsrcurl'),'_src');
+                }
+            }, {
+                name: 'Show raw DST',
+                iconClass: 'fa-file-text',
+                onClick: function(item) {
+                    window.open($(item).data('rawdsturl'),'_dst');
+                }
+            }, {
+                name: 'Inspect Commit',
+                iconClass: 'fa-github',
+                onClick: function(item) {
+                    var commitUrl = 'https://github.com/' + $(item).find('.userRepo').text() + '/commit/' + $(item).data('commit') + '/' + $(item).data('filename');
+
+                    window.open(commitUrl ,'_inspect');
+                }
+            }]
+        });
     }
 
 }
