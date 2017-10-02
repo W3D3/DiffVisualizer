@@ -19,7 +19,6 @@
     "chalk": "^2.0.1",
     "console-stamp": "^0.2.5",
     "cors": "^2.8.3",
-    "docker-build-run-push": "^3.0.0",
     "dropzone": "^4.3.0",
     "express": "^4.15.2",
     "file-loader": "^0.11.2",

@@ -215,11 +215,17 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
     sc.hideAll();
 
     function getSrcFile() {
-        return axios.get(srcUrl, configSrc);
+        return axios.get(srcUrl, configSrc).catch(function (error) {
+            Utility.showError(srcUrl + ' - ' + error);
+            NProgress.done();
+        });
     }
 
     function getDstFile() {
-        return axios.get(dstUrl, configDst);
+        return axios.get(dstUrl, configDst).catch(function (error) {
+            Utility.showError(dstUrl + ' - ' + error);
+            NProgress.done();
+        });
     }
 
     axios.all([getSrcFile(), getDstFile()])
