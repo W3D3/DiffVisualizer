@@ -2,7 +2,6 @@ node_modules
 .idea
 .vscode
 public/uploads
-public/js
 public/dist
 /.gtm/
 npm-debug.log
