@@ -22,6 +22,7 @@ class Loader {
             maxFilesize: 2, // MB
             accept: function(file, done) {
                 //accept all files for now
+                //console.log(file);
                 NProgress.configure({
                     parent: '#jsonUploader'
                 });
@@ -32,11 +33,17 @@ class Loader {
             maxFiles: 1,
             success: Loader.loadDiffsFromFile,
             error: function(file, err, xhr) {
+                //console.log(file);
+                NProgress.done();
+                this.removeAllFiles();
+
                 if (xhr) {
-                    NProgress.done();
                     Utility.showError('Error parsing file - ' + err.error);
-                    this.removeAllFiles();
+                    return;
                 }
+
+                Utility.showWarning('Invalid filetype. Only .json is allowed.');
+
 
             },
             maxfilesexceeded: function(file) {
