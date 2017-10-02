@@ -321,7 +321,7 @@ function diffListSetup() {
         'trailing': false
     }));
 
-    //filter diff list on keyup
+    // filter diff list on keyup
     $('#listFilterText').keyup(_.debounce(function() {
         var filterText = $('#listFilterText').val().toLowerCase();
         $('#listFilterText').css('border', '');
@@ -329,7 +329,7 @@ function diffListSetup() {
 
         var $list = $('#diffsList #diffItem');
         if (filterText.length < 4 && filterText.length > 0 && !$.isNumeric(filterText)) {
-            //won't filter when text is this short, alert user
+            // won't filter when text is this short, alert user
             $('#listFilterText').css('border', 'red 1px solid');
             $('#listFilterText').tooltip({
                 'title': 'Filter input is too short'
@@ -360,7 +360,7 @@ function diffListSetup() {
 }
 
 function jumptToLineSetup() {
-  //initialize from settings
+    //initialize from settings
     if (settings.loadSetting('jumpToSource') != false) {
         $('#jumpToLineSelector').bootstrapToggle('on');
     } else {

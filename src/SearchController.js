@@ -40,15 +40,13 @@ class SearchController {
         return _.defaults({}, _.clone(options), defaults);
     }
 
-    hideAll()
-    {
+    hideAll() {
         for (var i = 0; i < this.searchPanelList.length; i++) {
             this.hideSearchbar(i);
         }
     }
 
-    hideSearchbar(id)
-    {
+    hideSearchbar(id) {
         var searchPanel = this.searchPanelList[id];
         var container = this.containerList[id];
         var input = searchPanel.find('#sb-input-' + id);
@@ -132,24 +130,27 @@ class SearchController {
 
     }
 
+    /**
+     * generates and attaches the Searchbar to a Dom elemen
+     * @param  {[jQuery Element]} $elem [the element to attach the searchbar to]
+     */
     generateSearchBar($elem) {
-    //var $elem = this.containerList[index];
         var me = this;
         var index = this.containerList.indexOf($elem);
         var searchbarhtml = '<div class="input-group searchbar">';
         if (me.options.enableGlobalSearch) {
             searchbarhtml += '<div class="input-group-btn search-panel">' +
-        '<input id="globalToggle" data-on="GLOBAL" data-off="LOCAL" type="checkbox" data-toggle="toggle" data-onstyle="info" data-height="43" data-width="80" data-style="globalToggle" />' +
-        '</div>';
+                '<input id="globalToggle" data-on="GLOBAL" data-off="LOCAL" type="checkbox" data-toggle="toggle" data-onstyle="info" data-height="43" data-width="80" data-style="globalToggle" />' +
+                '</div>';
         }
         searchbarhtml += ` <input type="text" class="form-control" id="sb-input-${index}" placeholder="">` +
-      ' <span class="input-group-btn">' +
-      // `  <button class="btn btn-default" id="sb-submit-${index}" type="button"><span class="glyphicon glyphicon-search"></span></button> ` +
-      // ' <button class="btn btn-sm btn-default" data-search="clear" type="button"><span class="glyphicon glyphicon-remove"></span></button> ' +
-      ' <button class="btn btn-sm bg-default overInput" type="button" disabled="disabled">0 of 0</button> ' +
-      ' <button class="btn btn-sm btn-primary" data-search="next" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button> ' +
-      ' <button class="btn btn-sm btn-primary" data-search="prev" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button> ' +
-      '</span></div>';
+            ' <span class="input-group-btn">' +
+            // `  <button class="btn btn-default" id="sb-submit-${index}" type="button"><span class="glyphicon glyphicon-search"></span></button> ` +
+            // ' <button class="btn btn-sm btn-default" data-search="clear" type="button"><span class="glyphicon glyphicon-remove"></span></button> ' +
+            ' <button class="btn btn-sm bg-default overInput" type="button" disabled="disabled">0 of 0</button> ' +
+            ' <button class="btn btn-sm btn-primary" data-search="next" type="button"><span class="glyphicon glyphicon-chevron-down"></span></button> ' +
+            ' <button class="btn btn-sm btn-primary" data-search="prev" type="button"><span class="glyphicon glyphicon-chevron-up"></span></button> ' +
+            '</span></div>';
 
         var $searchbar = $(searchbarhtml);
 
@@ -185,8 +186,6 @@ class SearchController {
             // the current index of the focused element
             currentIndex = 0;
 
-            //numOfMatches = 0;
-
         $searchbar.find('#globalToggle').on('change', function() {
             if (me.options.enableGlobalSearch) {
                 if ($(this).prop('checked')) {
@@ -207,36 +206,9 @@ class SearchController {
             }
         });
 
-    /**
-     * Jumps to the element matching the currentIndex
-     */
-        // function jumpTo() {
-        //     if ($results.length) {
-        //         var $current = $results.eq(currentIndex);
-        //         $results.removeClass(currentClass);
-        //         if ($current.length) {
-        //             $current.addClass(currentClass);
-        //             var localOffset = $content.offset().top;
-        //             $searchbar.find('.overInput').text(parseInt(currentIndex + 1) + ' of ' + $results.length);
-        //             if ($searchbar.find('#globalToggle').prop('checked')) {
-        //                 for (var i = 0; i < me.containerList.length; i++) {
-        //
-        //                     if (me.containerList[i].has('.' + currentClass).length > 0) {
-        //                         $(me.containerList[i]).scrollTo($current, 50, {
-        //                             offset: 0 - localOffset - 100
-        //                         });
-        //                     }
-        //                 }
-        //             } else {
-        //                 $($content).scrollTo($current, 50, {
-        //                     offset: 0 - localOffset - 100
-        //                 });
-        //             }
-        //
-        //         }
-        //     }
-        // }
-
+        /**
+         * Jumps to the element matching the currentIndex
+         */
         function jumpTo() {
             if (finalResults.length) {
                 var currentElements = finalResults[currentIndex];
@@ -256,7 +228,7 @@ class SearchController {
                             $(me.containerList[i]).scrollTo(firsElem, 50, {
                                 offset: 0 - localOffset - 100
                             });
-                            i =  me.containerList.length;
+                            i = me.containerList.length;
                         }
                     }
                 } else {
@@ -279,7 +251,7 @@ class SearchController {
             finalResults = [];
 
             // disable search when length is 3 or less characters
-            if(searchVal.length > 0 && searchVal.length < 4) {
+            if (searchVal.length > 0 && searchVal.length < 4) {
                 $searchbar.find('.overInput').addClass('danger');
                 $searchbar.find('.overInput').text('input too short');
                 return;
@@ -295,12 +267,11 @@ class SearchController {
                         exclude: ['.searchbar *'],
                         each: function(marked) {
                             // group into finalResults
-                            if(charCounter == 0)
-                            {
+                            if (charCounter == 0) {
                                 finalResults[i] = [];
                             }
                             charCounter += $(marked).text().length;
-                            if(charCounter === searchValLength) {
+                            if (charCounter === searchValLength) {
                                 finalResults[i].push(marked);
                                 charCounter = 0;
                                 i++;
@@ -315,15 +286,12 @@ class SearchController {
                                 $searchbar.find('.overInput').removeClass('danger');
                                 $results = $content.find('mark');
                                 currentIndex = 0;
-                                i=0;
+                                i = 0;
                                 jumpTo();
                             } else {
                                 $searchbar.find('.overInput').text('0 of 0');
                                 $searchbar.find('.overInput').addClass('danger');
                             }
-
-                            // numOfMatches = 0;
-
                         }
                     });
                 }
@@ -333,24 +301,24 @@ class SearchController {
         $input.on('keydown', function(event) {
             if (event.which === 13) {
                 $nextBtn.click();
-        // Disable sending the related form
+                // Disable sending the related form
                 event.preventDefault();
                 return false;
             }
         });
 
-    /**
-     * Clears the search
-     */
+        /**
+         * Clears the search
+         */
         $clearBtn.on('click', function() {
             $content.unmark();
             $searchbar.find('.overInput').text('0 of 0');
             $input.val('').focus();
         });
 
-    /**
-     * Next and previous search jump to
-     */
+        /**
+         * Next and previous search jump to
+         */
         $nextBtn.add($prevBtn).on('click', function() {
             if (finalResults.length) {
                 currentIndex += $(this).is($prevBtn) ? -1 : 1;
