@@ -7,10 +7,12 @@
 import Utility from './Utility';
 import GUI from './GUI';
 import Settings from './Settings';
+import Diff from './Diff';
 import Dropzone from 'dropzone';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import BootstrapMenu from 'bootstrap-menu';
+// import _ from 'lodash';
 
 class Loader {
     constructor() {
@@ -107,28 +109,34 @@ class Loader {
     }
 
     static createDiffList(data, append) {
-        //ar me = this;
-        if (!append) $('#diffsList').html('');
+        if (!append) {
+            Loader.loadedDiffObjects = [];
+            $('#diffsList').html('');
+        }
         data.forEach(function(diff) {
 
-            var userRepo = diff.BaseUrl.replace(/\/$/, '').replace(/^(https?:\/\/)?(github\.com\/)/, '');
-            var localBaseURl = `http://${window.location.host}/github/${userRepo}`;
-
-            var rawSrcUrl = localBaseURl + '/' + diff.ParentCommit + '/' + diff.SrcFileName;
-            var rawDstUrl = localBaseURl + '/' + diff.Commit + '/' + diff.DstFileName;
-
-            var diffTitle = diff.SrcFileName.replace(/^.*[\\\/]/, '');
-            var diffDstTitle = diff.DstFileName.replace(/^.*[\\\/]/, '');
-            if (diff.SrcFileName != diff.DstFileName) {
-                diffTitle += '</br> &#8658; ' + diffDstTitle;
-            }
-
-
-
-            Loader.loadedDiffObjects.push(diff);
-            $('#diffsList').append(`<a href="#" class="list-group-item" id="diffItem" data-rawsrcurl="${rawSrcUrl}" data-rawdsturl="${rawDstUrl}" data-id="${diff.Id}" data-commit="${diff.Commit}" data-filename="${diff.DstFileName}"><span class="label label-default">${String(diff.Id).substring(0,8)}</span><b> ${diffTitle}</b><br /><small class="userRepo">${userRepo}</small></a>`);
+            var d = new Diff(diff.BaseUrl, diff.Commit, diff.ParentCommit, diff.SrcFileName, diff.DstFileName);
+            d.id = diff.Id;
+            Loader.loadedDiffObjects.push(d);
+            $('#diffsList').append(d.generateTag());
+            // console.log(d);
 
         });
+        console.log(JSON.stringify(Loader.loadedDiffObjects));
+
+        // var strg = JSON.stringify((Loader.loadedDiffObjects[0], function (key, value) {
+        //     if (value && typeof value === 'object') {
+        //         var replacement = {};
+        //         for (var k in value) {
+        //             if (Object.hasOwnProperty.call(value, k)) {
+        //                 replacement[k && k.charAt(0).toLowerCase() + k.substring(1)] = value[k];
+        //             }
+        //         }
+        //         return replacement;
+        //     }
+        //     return value;
+        // }));
+        // console.log(strg);
         GUI.recalcDiffListHeight();
         NProgress.done();
 
