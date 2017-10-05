@@ -85,7 +85,7 @@ class Diff {
         return  this.localBaseUrl + '/' + this.commit + '/' + this._dstFileName;
     }
 
-    get commmitUrl() {
+    get commitUrl() {
         return this.baseUrl + '/commit/' + this.commit + '/' + this.dstFileName;
     }
 

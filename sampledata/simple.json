@@ -1,33 +1,33 @@
 [{
-        "Id": 1,
-        "BaseUrl": "https://github.com/W3D3/difftest/",
-        "ParentCommit": "ae44ba99958d60edff49b8f8f30db20bf40a499b",
-        "Commit": "71d35fa444443683714eac9d87136a7810076255",
-        "SrcFileName": "Test.java",
-        "DstFileName": "Test.java"
+        "id": 1,
+        "baseUrl": "https://github.com/W3D3/difftest/",
+        "parentCommit": "ae44ba99958d60edff49b8f8f30db20bf40a499b",
+        "commit": "71d35fa444443683714eac9d87136a7810076255",
+        "srcFileName": "Test.java",
+        "dstFileName": "Test.java"
     },
     {
-        "Id": 2,
-        "BaseUrl": "https://github.com/apache/commons-lang/",
-        "ParentCommit": "f059e5f7fa1ac4a906b5d2e18d72d410bf28fa2d",
-        "Commit": "dfecbe970917754511a081f8b86efac211e624f6",
-        "SrcFileName": "src/main/java/org/apache/commons/lang3/LocaleUtils.java",
-        "DstFileName": "src/main/java/org/apache/commons/lang3/LocaleUtils.java"
+        "id": 2,
+        "baseUrl": "https://github.com/apache/commons-lang/",
+        "parentCommit": "f059e5f7fa1ac4a906b5d2e18d72d410bf28fa2d",
+        "commit": "dfecbe970917754511a081f8b86efac211e624f6",
+        "srcFileName": "src/main/java/org/apache/commons/lang3/LocaleUtils.java",
+        "dstFileName": "src/main/java/org/apache/commons/lang3/LocaleUtils.java"
     },
     {
-        "Id": 3,
-        "BaseUrl": "https://github.com/apache/commons-lang/",
-        "ParentCommit": "f059e5f7fa1ac4a906b5d2e18d72d410bf28fa2d",
-        "Commit": "dfecbe970917754511a081f8b86efac211e624f6",
-        "SrcFileName": "src/main/java/org/apache/commons/lang3/LocaleUtils.java",
-        "DstFileName": "src/main/java/org/apache/commons/lang3/NotTheSame.java"
+        "id": 3,
+        "baseUrl": "https://github.com/apache/commons-lang/",
+        "parentCommit": "f059e5f7fa1ac4a906b5d2e18d72d410bf28fa2d",
+        "commit": "dfecbe970917754511a081f8b86efac211e624f6",
+        "srcFileName": "src/main/java/org/apache/commons/lang3/LocaleUtils.java",
+        "dstFileName": "src/main/java/org/apache/commons/lang3/NotTheSame.java"
     },
     {
-        "Id": 230,
-        "Commit": "281d600ae2f9ba6c6bc7bee0e8025698b9a76563",
-        "ParentCommit": "8f960ea356f68dad475658ff43af342d753a57a6",
-        "SrcFileName": "activemq-kahadb-store/src/main/java/org/apache/activemq/store/kahadb/MessageDatabase.java",
-        "DstFileName": "activemq-kahadb-store/src/main/java/org/apache/activemq/store/kahadb/MessageDatabase.java",
-        "BaseUrl": "https://github.com/apache/activemq"
+        "id": 230,
+        "commit": "281d600ae2f9ba6c6bc7bee0e8025698b9a76563",
+        "parentCommit": "8f960ea356f68dad475658ff43af342d753a57a6",
+        "srcFileName": "activemq-kahadb-store/src/main/java/org/apache/activemq/store/kahadb/MessageDatabase.java",
+        "dstFileName": "activemq-kahadb-store/src/main/java/org/apache/activemq/store/kahadb/MessageDatabase.java",
+        "baseUrl": "https://github.com/apache/activemq"
     }
 ]
