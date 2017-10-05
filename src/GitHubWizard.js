@@ -332,16 +332,15 @@ class GitHubWizard {
     finish()
     {
         var me = this;
-        console.log(me.selected.commit);
         $('#wizard').modal('hide');
         me.diffObject =
         {
-            'Id': hash(me.selectedCommitSha + me.selectedParentSha + me.selectedFileName),
-            'BaseUrl': 'https://github.com/'+me.selectedRepoString,
-            'ParentCommit': me.selectedParentSha,
-            'Commit': me.selectedCommitSha,
-            'SrcFileName': me.oldFileName,
-            'DstFileName': me.selectedFileName,
+            // 'id': hash(me.selectedCommitSha + me.selectedParentSha + me.selectedFileName),
+            'baseUrl': 'https://github.com/'+me.selectedRepoString,
+            'parentCommit': me.selectedParentSha,
+            'commit': me.selectedCommitSha,
+            'srcFileName': me.oldFileName,
+            'dstFileName': me.selectedFileName,
         };
         me.options.finish(me.diffObject);
     }

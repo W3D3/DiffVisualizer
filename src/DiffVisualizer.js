@@ -298,8 +298,12 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
 function diffListSetup() {
   //register clickhandler for all diffItems
     $('body').on('click', '#diffItem', _.debounce(function() {
-        var diffId = $(this).data('id');
-        var fileName = $(this).find('b').text();
+
+        var selectedDiff = Loader.loadedDiffObjects[$(this).data('index')];
+        console.log(selectedDiff);
+
+        var diffId = selectedDiff.id;
+        var fileName = selectedDiff.title;
 
         var viewer = new DiffDrawer();
         viewer.setIdAndFilname(diffId, fileName);
@@ -317,9 +321,9 @@ function diffListSetup() {
         $('.codebox').scrollTo(0);
         $(this).parents().children().removeClass('active');
         $(this).addClass('active');
-        var srcUrl = $(this).data('rawsrcurl');
-        var dstUrl = $(this).data('rawdsturl');
 
+        var srcUrl = selectedDiff.rawSrcUrl;
+        var dstUrl = selectedDiff.rawDstUrl;
         loadIntoViewer(srcUrl, dstUrl, viewer);
 
     }, 1000, {

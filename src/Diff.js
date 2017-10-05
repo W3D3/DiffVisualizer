@@ -16,6 +16,15 @@ class Diff {
         this._dstFileName = dstFileName;
     }
 
+    createFromObject(obj) {
+        this._id = obj.id;
+        this._baseUrl = obj.baseUrl;
+        this._commit = obj.commit;
+        this._parentCommit = obj.parentCommit;
+        this._srcFileName = obj.srcFileName;
+        this._dstFileName = obj.dstFileName;
+    }
+
     get baseUrl() {
         return this._baseUrl.replace(/\/$/, '');
     }
@@ -63,39 +72,43 @@ class Diff {
     get title() {
         var diffTitle = this._srcFileName.replace(/^.*[\\\/]/, '');
         if (this._srcFileName != this._dstFileName) {
-            diffTitle += '</br> &#8658; ' + this._dstFileName.replace(/^.*[\\\/]/, '');
+            diffTitle += ' &#8658; ' + this._dstFileName.replace(/^.*[\\\/]/, '');
         }
         return diffTitle;
     }
 
     get rawSrcUrl() {
-        return  this.localBaseUrl + '/' + this._commit + '/' + this._srcFileName;
+        return  this.localBaseUrl + '/' + this.parentCommit + '/' + this._srcFileName;
     }
 
     get rawDstUrl() {
-        return  this.localBaseUrl + '/' + this._commit + '/' + this._dstFileName;
+        return  this.localBaseUrl + '/' + this.commit + '/' + this._dstFileName;
+    }
+
+    get commmitUrl() {
+        return this.baseUrl + '/commit/' + this.commit + '/' + this.dstFileName;
     }
 
     /**
      * generates a list-group-item tag with the information of the diff object attached
-     * @param  {[integer]} index [if an index is provided, all data attributes are omitted except data-index with the specified index
-     *                           this is useful if storing the data itself somewhere else.]
-     * @return {[string]}        [returns list-group-item html string with all the attributes of this object as data attributes]
+     * @param  {[integer]} index if an index is provided, all data attributes are omitted except data-index with the specified index
+     *                           this is useful if storing the data itself somewhere else.
+     * @return {[string]}        returns list-group-item html string with all the attributes of this object as data attributes
      */
     generateTag(index) {
         // if(!this.id) {
         //     this.id = hash(this._commit + this._parentCommit + this._dstFileName);
         // }
-        if(!index)
+        if(index < 0)
         {
             return `<a href="#" class="list-group-item" id="diffItem"\
-                data-rawsrcurl="${this.rawSrcUrl}" data-rawdsturl="${this.rawDstUrl}" data-id="${this.id}" data-commit="${this._commit}"\
-                data-filename="${this._dstFileName}">\
+                data-rawsrcurl="${this.rawSrcUrl}" data-rawdsturl="${this.rawDstUrl}" data-id="${this.id}" data-commit="${this.commit}"\
+                data-filename="${this.dstFileName}">\
                 <span class="label label-default">\
                 ${String(this.id).substring(0,8)}</span><b> ${this.title}</b><br /><small class="userRepo">${this.userRepo}</small></a>`;
         } else {
             return `<a href="#" class="list-group-item" id="diffItem"\
-                data-index="${index}" data-id="${this.id}"\
+                data-index="${index}" data-id="${this.id}">\
                 <span class="label label-default">\
                 ${String(this.id).substring(0,8)}</span><b> ${this.title}</b><br /><small class="userRepo">${this.userRepo}</small></a>`;
 

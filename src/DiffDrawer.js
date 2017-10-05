@@ -512,7 +512,7 @@ class DiffDrawer {
         {
             return '';
         }
-        var titlestring = `<span class="label label-default">${this.id}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
+        var titlestring = `<span class="label label-default id-expand" data-id="${this.id}">${this.id}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
 
         if(status === 0) {
             titlestring += '<span class="label label-primary">IN PROGRESS</span>';

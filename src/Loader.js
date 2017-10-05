@@ -114,29 +114,18 @@ class Loader {
             $('#diffsList').html('');
         }
         data.forEach(function(diff) {
-
-            var d = new Diff(diff.BaseUrl, diff.Commit, diff.ParentCommit, diff.SrcFileName, diff.DstFileName);
-            d.id = diff.Id;
-            Loader.loadedDiffObjects.push(d);
-            $('#diffsList').append(d.generateTag());
+            console.log(diff);
+            var d = new Diff();
+            // d.id = diff.id;
+            d.createFromObject(diff);
+            var index = Loader.loadedDiffObjects.push(d) - 1;
+            console.log(index);
+            $('#diffsList').append(d.generateTag(index));
             // console.log(d);
 
         });
-        console.log(JSON.stringify(Loader.loadedDiffObjects));
+        console.log(Loader.loadedDiffObjects);
 
-        // var strg = JSON.stringify((Loader.loadedDiffObjects[0], function (key, value) {
-        //     if (value && typeof value === 'object') {
-        //         var replacement = {};
-        //         for (var k in value) {
-        //             if (Object.hasOwnProperty.call(value, k)) {
-        //                 replacement[k && k.charAt(0).toLowerCase() + k.substring(1)] = value[k];
-        //             }
-        //         }
-        //         return replacement;
-        //     }
-        //     return value;
-        // }));
-        // console.log(strg);
         GUI.recalcDiffListHeight();
         NProgress.done();
 
@@ -148,21 +137,19 @@ class Loader {
                 name: 'Show raw SRC',
                 iconClass: 'fa-file-text-o',
                 onClick: function(item) {
-                    window.open($(item).data('rawsrcurl'),'_src');
+                    window.open(Loader.loadedDiffObjects[$(item).data('index')].rawSrcUrl,'_src');
                 }
             }, {
                 name: 'Show raw DST',
                 iconClass: 'fa-file-text',
                 onClick: function(item) {
-                    window.open($(item).data('rawdsturl'),'_dst');
+                    window.open(Loader.loadedDiffObjects[$(item).data('index')].rawDstUrl,'_dst');
                 }
             }, {
                 name: 'Inspect Commit',
                 iconClass: 'fa-github',
                 onClick: function(item) {
-                    var commitUrl = 'https://github.com/' + $(item).find('.userRepo').text() + '/commit/' + $(item).data('commit') + '/' + $(item).data('filename');
-
-                    window.open(commitUrl ,'_inspect');
+                    window.open(Loader.loadedDiffObjects[$(item).data('index')].commitUrl ,'_inspect');
                 }
             }]
         });
