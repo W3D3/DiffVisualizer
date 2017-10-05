@@ -113,6 +113,8 @@ $(document).ready(function() {
     $('#githubImportButton').click(function() {
         $('#wizard').modal('show');
     });
+
+
 });
 
 function editorSetup() {
@@ -366,6 +368,19 @@ function diffListSetup() {
         $('#listFilterText').val('');
         $('#listFilterText').keyup(); //listPanel
         $('#diffsList').scrollTo(0); //listPanel
+    });
+
+    $('#downloadDiffs').click(function() {
+        var a = window.document.createElement('a');
+        a.href = window.URL.createObjectURL(new Blob([JSON.stringify(Loader.loadedDiffObjects)], {type: 'text/json'}));
+        a.download = 'diffs-'+Date.now()+'.json';
+
+        // Append anchor to body.
+        document.body.appendChild(a);
+        a.click();
+
+        // Remove anchor from body
+        document.body.removeChild(a);
     });
 }
 
