@@ -114,17 +114,11 @@ class Loader {
             $('#diffsList').html('');
         }
         data.forEach(function(diff) {
-            console.log(diff);
             var d = new Diff();
-            // d.id = diff.id;
             d.createFromObject(diff);
             var index = Loader.loadedDiffObjects.push(d) - 1;
-            console.log(index);
             $('#diffsList').append(d.generateTag(index));
-            // console.log(d);
-
         });
-        console.log(Loader.loadedDiffObjects);
 
         GUI.recalcDiffListHeight();
         NProgress.done();
