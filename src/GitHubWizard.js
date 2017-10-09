@@ -41,7 +41,9 @@ class GitHubWizard {
         };
         this.options = this.setDefaults(options, defaults);
 
-
+        $('.abort').on('click', function() {
+            me.resetWizard();
+        });
 
         NProgress.configure({ parent: '#' + this.options.wizardElement.attr('id') });
 
@@ -223,11 +225,15 @@ class GitHubWizard {
             $('#commit-list').html('');
             response.data.forEach(commit => {
                 // console.log(commit);
+                // $('#commit-list').append(`<a href="#" class="list-group-item commit-item" data-sha="${commit.sha}">` +
+                //     '<img src="' + (commit.author ? `${commit.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
+                //     `<p><b class="list-group-item-heading">${_.escape(commit.commit.message)}</b><br/>` +
+                //     `<small class="list-group-item-text">${commit.commit.author.name} <code>&lt;${commit.commit.author.email}&gt;</code> ${commit.commit.author.date}</small>` +
+                //     '</p></a>');
+
                 $('#commit-list').append(`<a href="#" class="list-group-item commit-item" data-sha="${commit.sha}">` +
-                    '<img src="' + (commit.author ? `${commit.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
-                    `<p><b class="list-group-item-heading">${_.escape(commit.commit.message)}</b><br/>` +
-                    `<small class="list-group-item-text">${commit.commit.author.name} <code>&lt;${commit.commit.author.email}&gt;</code> ${commit.commit.author.date}</small>` +
-                    '</p></a>');
+                        GitHubWizard.dataToCommitHTML(commit) +
+                        '</a>');
 
             });
             NProgress.done();
@@ -258,9 +264,22 @@ class GitHubWizard {
         }).catch(function(error) {
             // console.log(error.response);
             NProgress.done();
-            errorspan.text(error.response.data.message);
-            formgroup.removeClass('has-success');
-            formgroup.addClass('has-error');
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+                errorspan.text(error.response.data.message);
+                formgroup.removeClass('has-success');
+                formgroup.addClass('has-error');
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+                Utility.showError('Server response not received.');
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                Utility.showError(error.message);
+            }
+
         });
     }
 
@@ -343,6 +362,7 @@ class GitHubWizard {
             'dstFileName': me.selectedFileName,
         };
         me.options.finish(me.diffObject);
+        me.resetWizard();
     }
 
     generateCommitHTML(repo, commitsha, callback)
@@ -354,15 +374,58 @@ class GitHubWizard {
             }
         }).then(function(response) {
             // console.log(response);
-            var commit = response.data.commit;
-            var html = '<img src="' + (commit.author ? `${commit.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
-            `<p><b class="list-group-item-heading">${_.escape(commit.message)}</b><br/>` +
-            `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code> ${commit.author.date}</small>` +
-            '</p>';
+            // var commit = response.data.commit;
+            var html = GitHubWizard.dataToCommitHTML(response.data);
             callback(html);
-        }).catch(function (err) {
-            Utility.showError(err);
+        }).catch(function (error) {
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+                Utility.showError('Invalid request - check SHA?');
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+                Utility.showError('Server response not received.');
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                Utility.showError(error.message);
+            }
         });
+    }
+
+    static dataToCommitHTML(data) {
+        var commit = data.commit;
+        var html = '<img src="' + (data.author.avatar_url ? `${data.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
+        `<p><b class="list-group-item-heading">${_.escape(commit.message)}</b><br/>` +
+        `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code> ${commit.author.date}</small>` +
+        '</p>';
+        return html;
+    }
+
+    resetWizard() {
+        $('#wizard').modal('hide');
+
+        this.currentStep = 0;
+        this.selectedCommitSha = undefined;
+        this.selectedRepoString = undefined;
+        this.selectedParentSha = undefined;
+        this.selectedFileName = undefined;
+        this.oldFileName = undefined;
+        this.currentCommitsPage = 1;
+
+        $('#projecturl').val('');
+
+        var formgroup = $('#projecturl').parent().parent();
+        var errorspan = $('#projecturl-error');
+
+        formgroup.removeClass('has-success');
+        formgroup.removeClass('has-error');
+
+        errorspan.text('');
+        this.options.wizardElement.bootstrapWizard('show', 0);
+
+
     }
 
 }
