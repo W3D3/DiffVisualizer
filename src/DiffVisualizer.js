@@ -302,7 +302,6 @@ function diffListSetup() {
     $('body').on('click', '#diffItem', _.debounce(function() {
 
         var selectedDiff = Loader.loadedDiffObjects[$(this).data('index')];
-        console.log(selectedDiff);
 
         var diffId = selectedDiff.id;
         var fileName = selectedDiff.title;
@@ -336,32 +335,35 @@ function diffListSetup() {
     // filter diff list on keyup
     $('#listFilterText').keyup(_.debounce(function() {
         var filterText = $('#listFilterText').val().toLowerCase();
-        $('#listFilterText').css('border', '');
+        var $list = $('#diffsList #diffItem');
+
         $('#listFilterText').tooltip('destroy');
 
-        var $list = $('#diffsList #diffItem');
-        if (filterText.length < 4 && filterText.length > 0 && !$.isNumeric(filterText)) {
-            // won't filter when text is this short, alert user
-            $('#listFilterText').css('border', 'red 1px solid');
-            $('#listFilterText').tooltip({
-                'title': 'Filter input is too short'
-            }).tooltip('show');
-            return;
-        }
         $list.hide();
         $list.filter(function() {
             var currentObject;
+
             if (filterText == '') return true;
 
-            if ($.isNumeric(filterText)) {
-                currentObject = $(this).data('id') + ''; //adding empty string so it can be substring searched
+            if (filterText.length < 4 && filterText.length > 0) {
+                // won't filter whole text , just look into ids
+                $('#listFilterText').tooltip({
+                    'title': 'Filter input is too short, just searching IDs'
+                }).tooltip('show');
+                currentObject = $(this).data('id') + '';
             } else {
-                currentObject = $(this).find('b').text().toLowerCase() + $(this).find('small').text().toLowerCase();
+                currentObject = $(this).data('id') + $(this).find('b').text().toLowerCase() + $(this).find('small').text().toLowerCase();
             }
 
             return _.includes(currentObject, filterText);
         }).show();
         $('#diffsList').scrollTo(0);
+
+        // $('#listFilterText').css('border', 'red 1px solid');
+        // $('#listFilterText').tooltip({
+        //     'title': 'Filter input is too short'
+        // }).tooltip('show');
+        // return;
     }, 300));
 
     $('#filterListClear').click(function() {
