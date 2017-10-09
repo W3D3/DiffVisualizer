@@ -41,6 +41,10 @@ class Diff {
         }
     }
 
+    get shortId() {
+        return String(this.id).substring(0,8);
+    }
+
     set id(id) {
         this._id = id;
     }
@@ -69,6 +73,10 @@ class Diff {
         return `http://${window.location.host}/github/${this.userRepo}`;
     }
 
+    /**
+     * [returns title for diff]
+     * @return {[string]} [human readable title containing the filename and possible renaming]
+     */
     get title() {
         var diffTitle = this._srcFileName.replace(/^.*[\\\/]/, '');
         if (this._srcFileName != this._dstFileName) {

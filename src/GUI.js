@@ -23,6 +23,7 @@ class GUI {
         this.enableEasterEgg();
         this.setupToggleSidebar();
         this.setupDiffList();
+        this.enableIdExpanding();
 
         this.matcherSelector = $('#matcherID');
         this.styleSelector = $('#themePicker');
@@ -192,6 +193,23 @@ class GUI {
             $('body').toggleClass('rainbowwrapper');
             $('.badge').toggleClass('rainbowwrapper');
             $('.btn-primary').toggleClass('rainbowwrapper');
+        });
+    }
+
+    enableIdExpanding() {
+        $('#codeView').on('click', '.id-expand', function(e) {
+
+            var current = $(this).text();
+            var fullId = $(this).data('id');
+
+            if(current.length < fullId.length) {
+                $(this).text(fullId);
+            } else {
+                $(this).text(String(fullId).substring(0,8));
+                $(this).slideDown(2000);
+            }
+
+            e.stopPropagation();
         });
     }
 

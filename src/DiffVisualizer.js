@@ -114,7 +114,6 @@ $(document).ready(function() {
         $('#wizard').modal('show');
     });
 
-
 });
 
 function editorSetup() {
@@ -304,11 +303,13 @@ function diffListSetup() {
         var selectedDiff = Loader.loadedDiffObjects[$(this).data('index')];
 
         var diffId = selectedDiff.id;
-        var fileName = selectedDiff.title;
+        // var fileName = selectedDiff.title;
 
         var viewer = new DiffDrawer();
-        viewer.setIdAndFilname(diffId, fileName);
+        // viewer.setIdAndFilname(diffId, fileName);
         viewer.setJobId(diffId);
+        viewer.setDiff(selectedDiff);
+
         if (settings.loadSetting('matcher')) {
             viewer.setMatcher(settings.loadSetting('matcher'));
         }
@@ -473,7 +474,7 @@ function filterSetup() {
 
 function clickBoundMarkersSetup() {
   //register clickhandler for all the UPDATEs and MOVEs
-    $('#codeView').on('click', 'span[data-boundto]', function() {
+    $('#codeContent').on('click', 'span[data-boundto]', function() {
     //reset old selected nodes
         $('.codebox').find('.scriptmarker').removeClass('selected');
 

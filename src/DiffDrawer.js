@@ -5,7 +5,7 @@
  */
 import Marker from './Marker';
 import Utility from './Utility';
-
+import Diff from './Diff';
 
 import axios from 'axios';
 import Base64 from 'js-base64/base64';
@@ -51,6 +51,7 @@ class DiffDrawer {
         this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
 
         this.enableMinimap = true;
+        this.diff = new Diff();
     }
 
     checkAPIState()
@@ -75,8 +76,16 @@ class DiffDrawer {
         this.filename = filename;
     }
 
-    getFilename() {
-        return this.filename;
+    /**
+     * [setDiff description]
+     * @param {[Diff]} diff [description]
+     */
+    setDiff(diff) {
+        this.diff = diff;
+    }
+
+    getDiff() {
+        return this.diff;
     }
 
     generateHash() {
@@ -84,11 +93,11 @@ class DiffDrawer {
     }
 
     generateHashWithoutData() {
-        return hash(this.id + this.filename + this.matcherID);
+        return hash(this.diff);
     }
 
     getDiffId() {
-        return this.id;
+        return this.diff.id;
     }
 
     setAsCurrentJob() {
@@ -508,11 +517,11 @@ class DiffDrawer {
       // 0 = in progress
       // 1 = done
     generateTitle(status) {
-        if(this.id == null)
+        if(this.diff == null)
         {
             return '';
         }
-        var titlestring = `<span class="label label-default id-expand" data-id="${this.id}">${this.id}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
+        var titlestring = `<span class="label label-default id-expand" data-id="${this.diff.id}">${this.diff.shortId}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
 
         if(status === 0) {
             titlestring += '<span class="label label-primary">IN PROGRESS</span>';
@@ -523,12 +532,12 @@ class DiffDrawer {
         else if(status === -2) {
             titlestring += '<span class="label label-danger">ABORTED</span>';
         }
-        titlestring += ` <b>${this.filename}</b> `;
+        titlestring += ` <b>${this.diff.title}</b> `;
 
-        if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-github"></i> SRC</span></a>`;
-        if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-github"></i> DST</span>`;
+        if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a>`;
+        if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a>`;
 
-        if(this.commit) titlestring += '<a href="#"><span class="badge"><i class="fa fa-info"></i> Commit</span>';
+        if(this.diff.commitUrl) titlestring += `<a href="${this.diff.commitUrl}" target="${this.diff.id}"><span class="badge"><i class="fa fa-github"></i> Commit</span></a>`;
         return titlestring;
     }
 
