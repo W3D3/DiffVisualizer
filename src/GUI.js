@@ -115,11 +115,11 @@ class GUI {
     }
 
     static showMetaData(title, content) {
-        var elem = $('#' + title).clone().css('border', '');
+        // var elem = $('#' + title).clone().css('border', '');
         $('#metadataTitle').text(title);
         $('#metadataContent').html(content);
-        $('#metadataContent').append('<br />');
-        $('#metadataContent').append(elem);
+        // $('#metadataContent').append('<br />');
+        // $('#metadataContent').append(elem);
 
         $('#metaDataPanel').show(function() {
             DiffDrawer.refreshMinimap();

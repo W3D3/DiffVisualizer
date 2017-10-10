@@ -52,6 +52,8 @@ class DiffDrawer {
 
         this.enableMinimap = true;
         this.diff = new Diff();
+
+        this.metadata = [];
     }
 
     checkAPIState()
@@ -392,19 +394,24 @@ class DiffDrawer {
                 var closingMarker;
 
                 if (entry.actionType == 'INSERT') {
-
+                    console.log(entry);
                     startPosition = {
                         line: entry.dstStartLine,
                         offset: entry.dstStartLineOffset,
                         absolute: entry.dstPos
                     };
                     startMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
+
+                    diffdrawer.metadata.push(entry.metadata);
+                    startMarker.addMetaData('INSERT ' + entry.dstId, diffdrawer.metadata.length - 1);
+
                     endPosition = {
                         line: entry.dstEndLine,
                         offset: entry.dstEndLineOffset,
                         absolute: entry.dstPos + entry.dstLength
                     };
                     closingMarker = startMarker.createEndMarker(endPosition);
+
 
                     dstMarkers.push(startMarker);
                     dstMarkers.push(closingMarker);
@@ -419,7 +426,9 @@ class DiffDrawer {
                     };
                     startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
                     startMarker.bindToId(entry.dstId);
-                    //startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
+
+                    diffdrawer.metadata.push(entry.metadata);
+                    startMarker.addMetaData(entry.actionType + ' (Source) ' + entry.srcId, diffdrawer.metadata.length - 1);
 
                     endPosition = {
                         line: entry.srcEndLine,
@@ -439,6 +448,8 @@ class DiffDrawer {
                     };
                     var dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
                     dstStartMarker.bindToId(entry.srcId);
+
+                    dstStartMarker.addMetaData(entry.actionType + ' (Destination) ' + entry.dstId, diffdrawer.metadata.length - 1);
                     //dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
                     //startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
                     endPosition = {
@@ -461,6 +472,9 @@ class DiffDrawer {
                     };
                     startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
                     startMarker.bindToId(entry.dstId);
+
+                    diffdrawer.metadata.push(entry.metadata);
+                    startMarker.addMetaData('DELETE ' + entry.srcId, diffdrawer.metadata.length - 1);
                     //startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
 
                     endPosition = {

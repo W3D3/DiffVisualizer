@@ -500,8 +500,25 @@ function clickBoundMarkersSetup() {
     $('#codeView').on('dblclick', 'span[data-metadata]', function() {
 
         var title = $(this).data('title');
-        var content = $(this).data('metadata');
-        GUI.showMetaData(title, content);
+        var content = dv.metadata[$(this).data('metadata')];
+
+        var stringContent = '<pre><code class="metadatacode">'+$(this).html() + '</code></pre><br/> \
+        <table class="table table-striped"><thead><tr><th>Property</th><th>Value</th></tr></thead> \
+        <tbody>';
+
+        Object.entries(content).forEach(([key, value]) => {
+            if(value == null) return;
+
+            if (key == 'nodeType') {
+                stringContent += `<tr><td>${key}</td><td>${value.name} (${value.id})</td></tr>`;
+                return;
+            }
+
+            stringContent += `<tr><td>${key}</td><td><code>${value}</code></td></tr>`;
+        });
+        stringContent += '</tbody>';
+
+        GUI.showMetaData(title, stringContent);
 
     //stop propagation by returning
         return false;
