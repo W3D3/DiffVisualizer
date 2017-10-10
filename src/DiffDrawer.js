@@ -394,7 +394,6 @@ class DiffDrawer {
                 var closingMarker;
 
                 if (entry.actionType == 'INSERT') {
-                    console.log(entry);
                     startPosition = {
                         line: entry.dstStartLine,
                         offset: entry.dstStartLineOffset,
