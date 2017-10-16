@@ -403,7 +403,7 @@ class GitHubWizard {
         var commit = data.commit;
         var html = '<img src="' + (data.author ? `${data.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
         `<p><b class="list-group-item-heading">${_.escape(commit.message)}</b><br/>` +
-        `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code> ${commit.author.date}</small>` +
+        `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code> <span title="${commit.author.date}">${Utility.timeAgoString(commit.author.date)}</span></small>` +
         '</p>';
         return html;
     }

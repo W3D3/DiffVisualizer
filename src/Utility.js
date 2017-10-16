@@ -3,6 +3,7 @@
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
 import _ from 'lodash';
+import moment from 'moment';
 
 /**
  * Utility class for various tasks
@@ -164,6 +165,20 @@ class Utility {
         }
         document.getElementsByTagName('head').item(0).replaceChild(newmarker, oldmarker);
         document.getElementsByTagName('head').item(0).replaceChild(newlink, oldlink);
+    }
+
+    static timeAgoString(date) {
+        var d = moment(date);
+        console.log(d);
+        moment.locale('en');
+        return d.calendar(null, {
+                    // sameDay: '[Today]',
+                    // nextDay: '[Tomorrow]',
+                    // nextWeek: 'dddd',
+                    // lastDay: '[Yesterday]',
+                    // lastWeek: '[Last] dddd',
+            sameElse: 'DD.MM.YYYY'
+        });
     }
 
 }
