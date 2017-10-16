@@ -213,5 +213,17 @@ class GUI {
         });
     }
 
+    static makeHumanReadable(input) {
+        switch (input) {
+
+        case 1:
+            return 1;
+        default:
+            return _.startCase(input);
+
+        }
+
+    }
+
 }
 export default GUI;

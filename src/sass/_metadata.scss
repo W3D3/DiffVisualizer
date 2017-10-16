@@ -1,0 +1,23 @@
+#metaDataPanel {
+    // position: absolute;
+    // right: 25px;
+    // left: 25px;
+    // bottom: 25px;
+    z-index: 1500;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.metadatacode * {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.metadatacode .subnode {
+    cursor: default;
+    margin: 0;
+    padding: 0;
+}
+
+.label-inverted {
+    background-color: $label-inverted-bg;
+    color: $label-inverted-color;
+}

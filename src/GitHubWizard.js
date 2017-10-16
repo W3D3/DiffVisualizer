@@ -314,7 +314,10 @@ class GitHubWizard {
             }
 
             if(!append) $('#files-list').html('');
-            response.data.files.forEach(file => {
+
+            var filesSorted = _.filter(response.data.files, function(o) { return o.filename.endsWith('.java'); });
+            console.log(filesSorted);
+            filesSorted.forEach(file => {
                 var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
                 var oldname = (file.previous_filename  ? file.previous_filename : file.filename);
                 var fileshtml = `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${oldname}" data-sha="${file.sha}">` +
@@ -329,6 +332,8 @@ class GitHubWizard {
                 $('#files-list').append(fileshtml);
 
             });
+            var omitted = response.data.files.length - filesSorted.length;
+            if(omitted > 0) $('#files-list').append('<br /><p>' + omitted + ' non java file(s) omitted.</p>');
 
             $('#parent-list').html('<h4>Select the parent commit to be used for the diff:</h4>');
             response.data.parents.forEach(parent => {
@@ -396,7 +401,7 @@ class GitHubWizard {
 
     static dataToCommitHTML(data) {
         var commit = data.commit;
-        var html = '<img src="' + (data.author.avatar_url ? `${data.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
+        var html = '<img src="' + (data.author ? `${data.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
         `<p><b class="list-group-item-heading">${_.escape(commit.message)}</b><br/>` +
         `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code> ${commit.author.date}</small>` +
         '</p>';

@@ -510,11 +510,11 @@ function clickBoundMarkersSetup() {
             if(value == null) return;
 
             if (key == 'nodeType') {
-                stringContent += `<tr><td>${key}</td><td>${value.name} (${value.id})</td></tr>`;
+                stringContent += `<tr><td>${GUI.makeHumanReadable(key)}</td><td><span class="label label-inverted">${value.id}</span> ${GUI.makeHumanReadable(value.name)} </td></tr>`;
                 return;
             }
 
-            stringContent += `<tr><td>${key}</td><td><code>${value}</code></td></tr>`;
+            stringContent += `<tr><td>${GUI.makeHumanReadable(key)}</td><td><code>${value}</code></td></tr>`;
         });
         stringContent += '</tbody>';
 
