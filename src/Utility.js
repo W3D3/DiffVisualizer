@@ -169,7 +169,6 @@ class Utility {
 
     static timeAgoString(date) {
         var d = moment(date);
-        console.log(d);
         moment.locale('en');
         return d.calendar(null, {
                     // sameDay: '[Today]',

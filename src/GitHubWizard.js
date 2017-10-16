@@ -316,7 +316,6 @@ class GitHubWizard {
             if(!append) $('#files-list').html('');
 
             var filesSorted = _.filter(response.data.files, function(o) { return o.filename.endsWith('.java'); });
-            console.log(filesSorted);
             filesSorted.forEach(file => {
                 var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
                 var oldname = (file.previous_filename  ? file.previous_filename : file.filename);
