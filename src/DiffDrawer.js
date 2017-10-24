@@ -530,11 +530,13 @@ class DiffDrawer {
       // 0 = in progress
       // 1 = done
     generateTitle(status) {
+        var titlestring = '';
         if(this.diff == null)
         {
-            return '';
+            titlestring = `<span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
+        } else {
+            titlestring = `<span class="label label-default id-expand" data-id="${this.diff.id}">${this.diff.shortId}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
         }
-        var titlestring = `<span class="label label-default id-expand" data-id="${this.diff.id}">${this.diff.shortId}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
 
         if(status === 0) {
             titlestring += '<span class="label label-primary">IN PROGRESS</span>';
@@ -545,12 +547,17 @@ class DiffDrawer {
         else if(status === -2) {
             titlestring += '<span class="label label-danger">ABORTED</span>';
         }
-        titlestring += ` <b>${this.diff.title}</b> `;
+        if(this.diff != null) {
+            titlestring += ` <b>${this.diff.title}</b> `;
 
-        if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a>`;
-        if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a>`;
+            if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a>`;
+            if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a>`;
 
-        if(this.diff.commitUrl) titlestring += `<a href="${this.diff.commitUrl}" target="${this.diff.id}"><span class="badge"><i class="fa fa-github"></i> Commit</span></a>`;
+            if(this.diff.commitUrl) titlestring += `<a href="${this.diff.commitUrl}" target="${this.diff.id}"><span class="badge"><i class="fa fa-github"></i> Commit</span></a>`;
+
+        } else {
+            titlestring += ' <b>Editor Input</b> ';
+        }
         return titlestring;
     }
 

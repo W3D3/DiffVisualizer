@@ -127,7 +127,14 @@ function editorSetup() {
         dv.setFilter(filter);
         dv.setJobId(null);
         dv.setAsCurrentJob();
-        dv.diffAndDraw();
+        dv.setDiff(null);
+        dv.diffAndDraw(function() {
+            $('#codeboxTitle').html(dv.generateTitle(1));
+        }, function(msg) {
+            $('#codeboxTitle').html(dv.generateTitle(-1));
+            Utility.showError(msg);
+            NProgress.done();
+        });
     });
 
     $('#changeSource').click(function() {
