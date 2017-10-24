@@ -37,7 +37,7 @@ class GUI {
             var filename = $('#codeboxTitle b').text().substring(1);
             if(!filename) {
                 filename = 'DiffVisualizer-Screenshot';
-                Utility.showWarning('No file loaded to generate Image from.');
+                GUI.screenshotCodeView(filename);
             }
             else{
                 filename = filename + '-Screenshot';
@@ -82,6 +82,7 @@ class GUI {
         $('#metaDataPanel').hide();
         $('#metaDataPanel .panel-heading').click(function() {
             GUI.hideMetaData();
+            DiffDrawer.refreshMinimap();
         });
     }
 
@@ -127,8 +128,10 @@ class GUI {
     }
 
     static hideMetaData() {
-        $('#metaDataPanel').hide(600);
-        DiffDrawer.refreshMinimap();
+        $('#metaDataPanel').hide(600, function(){
+            DiffDrawer.refreshMinimap();
+        });
+
     }
 
     static initializeEditor(id, theme, language) {
