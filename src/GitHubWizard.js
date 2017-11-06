@@ -50,6 +50,9 @@ class GitHubWizard {
 
         $('#projecturl-next').on('click', function() {
             var input = $('#projecturl').val();
+            //clean next page before potential visit
+            $('#commit-list').html('');
+            $('#paginationdiv').html('');
 
             me.validateRepo(input, function(){
                 NProgress.start();
@@ -76,9 +79,24 @@ class GitHubWizard {
 
             me.generateCommitHTML(me.selectedRepoString, me.selectedCommitSha, function (genhtml) {
                 me.html.commit = genhtml;
-                $('#commit-next').trigger('click');
+                $('#commitpreview').html(genhtml);
+                $('#commitpreview').data('sha', me.selectedCommitSha);
+                $('.commit-item.active').removeClass('active');
+                $('#commitpreview').toggleClass('active');
+                //$('#commit-next').trigger('click');
             });
         });
+
+        $('#commitpreview').on('click', function() {
+            var $this = $(this);
+
+            $('.commit-item.active').removeClass('active');
+            $this.toggleClass('active');
+            me.selectedCommitSha = $this.data('sha');
+            me.html.commit = $this.html();
+        });
+
+        //
 
         $('#paginationdiv').on('click', 'a[data-page]', function() {
             me.currentCommitsPage = $(this).data('page');
@@ -197,7 +215,7 @@ class GitHubWizard {
                 NProgress.done();
                 return;
             }
-            if(me.options.wizardElement.bootstrapWizard('currentIndex') != 1) me.options.wizardElement.bootstrapWizard('show', 1);
+
             $('#commit-list').html('');
             response.data.forEach(commit => {
                 // console.log(commit);
@@ -218,6 +236,7 @@ class GitHubWizard {
             }
 
             NProgress.done();
+            if(me.options.wizardElement.bootstrapWizard('currentIndex') != 1) me.options.wizardElement.bootstrapWizard('show', 1);
             callback(true);
         });
     }
@@ -316,14 +335,6 @@ class GitHubWizard {
             });
 
 
-            if(response.data.parents.length > 1)
-            {
-                me.options.wizardElement.bootstrapWizard('show', 2);
-            }
-            else {
-                me.selectedParentSha = response.data.parents[0].sha;
-                me.options.wizardElement.bootstrapWizard('show', 3);
-            }
 
             $('#parent-list').html('<h4>Select the parent commit to be used for the diff:</h4>');
             response.data.parents.forEach(parent => {
@@ -333,6 +344,17 @@ class GitHubWizard {
                     '</span>');
 
             });
+
+            if(response.data.parents.length > 1)
+            {
+                me.options.wizardElement.bootstrapWizard('show', 2);
+            }
+            else {
+                me.selectedParentSha = response.data.parents[0].sha;
+                $('.parent-item').addClass('active');
+                me.options.wizardElement.bootstrapWizard('show', 3);
+            }
+
             NProgress.done();
 
 
