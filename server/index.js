@@ -88,6 +88,7 @@ app.post('/validate-githuburl', function(req, res) {
                 'User-Agent': 'DiffViz'
             }
         }, function(err, resp, body) {
+
             var commits = JSON.parse(body);
             if(resp.statusCode != 200)
             {
@@ -112,7 +113,6 @@ app.get('/githubapi', function(req, res) {
     var string = req.query.url.replace(githubregex, '');
 
     var url = 'https://api.github.com/' + string;
-    console.log(url);
     res.setHeader('Content-Type', 'text/plain');
     request.get({
         url: url,
@@ -122,8 +122,11 @@ app.get('/githubapi', function(req, res) {
             'User-Agent': 'DiffViz'
         }
     }, function(err, resp, body) {
-        // console.log(resp.headers);
-        // console.log(resp.statusCode);
+        for (var key in resp.headers) {
+            if (resp.headers.hasOwnProperty(key)) {
+                res.setHeader(key, resp.headers[key]);
+            }
+        }
         var commits = JSON.parse(body);
         if(resp.statusCode != 200)
         {

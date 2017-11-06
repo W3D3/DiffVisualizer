@@ -456,8 +456,8 @@ $pagination-hover-color:               $link-hover-color !default;
 $pagination-hover-bg:                  $gray-lighter !default;
 $pagination-hover-border:              #ddd !default;
 
-$pagination-active-color:              $gray-light !default;
-$pagination-active-bg:                 #f5f5f5 !default;
+$pagination-active-color:              #fff !default;
+$pagination-active-bg:                 $component-active-bg !default;
 $pagination-active-border:             #ddd !default;
 
 $pagination-disabled-color:            $gray-light !default;

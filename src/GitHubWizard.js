@@ -1,4 +1,4 @@
-/* global $ */
+/* global $ require */
 /**
  * @file GitHubWizard to browse Github and add diffs from there
  * @author Christoph Wedenig <christoph@wedenig.org>
@@ -13,6 +13,7 @@ import axios from 'axios';
 import hash from 'object-hash';
 import Utility from './Utility';
 import NProgress from 'nprogress';
+var parse = require('parse-link-header');
 
 class GitHubWizard {
 
@@ -79,33 +80,8 @@ class GitHubWizard {
             });
         });
 
-
-        $('#commits-next-page').click(function() {
-            me.currentCommitsPage++;
-            me.loadCommits(me.selectedRepoString, me.currentCommitsPage, function (success) {
-                //response was empty or error happened
-                if(!success) {
-                    me.currentCommitsPage--;
-                    $(this).parent().addClass('disabled');
-                    Utility.showWarning('Reached end of commit pages.');
-                }
-                else {
-                    $('#commit-list').scrollTo(0);
-                    if(me.currentCommitsPage > 1)
-                    {
-                        $('#commits-prev-page').parent().removeClass('disabled');
-                    }
-                }
-
-            });
-        });
-
-        $('#commits-prev-page').click(function() {
-
-            me.currentCommitsPage--;
-            if(me.currentCommitsPage < 2) {
-                $(this).parent().addClass('disabled');
-            }
+        $('#paginationdiv').on('click', 'a[data-page]', function() {
+            me.currentCommitsPage = $(this).data('page');
 
             me.loadCommits(me.selectedRepoString, me.currentCommitsPage, function (success) {
                 if(success) $('#commit-list').scrollTo(0);
@@ -236,9 +212,13 @@ class GitHubWizard {
                         '</a>');
 
             });
+
+            if(response.headers.link) {
+                GitHubWizard.createPagination(page, response.headers.link);
+            }
+
             NProgress.done();
             callback(true);
-            $('#currentCommitsPage').text(me.currentCommitsPage);
         });
     }
 
@@ -304,18 +284,21 @@ class GitHubWizard {
             }
             me.selected.commit = response.data;
             me.selectedCommitSha = response.data.sha; // in case we sent an abbrivated version of the sha string, we fix it here to always work with the full once
-            if(response.data.parents.length > 1)
-            {
-                me.options.wizardElement.bootstrapWizard('show', 2);
-            }
-            else {
-                me.selectedParentSha = response.data.parents[0].sha;
-                me.options.wizardElement.bootstrapWizard('show', 3);
-            }
+
 
             if(!append) $('#files-list').html('');
 
             var filesSorted = _.filter(response.data.files, function(o) { return o.filename.endsWith('.java'); });
+            var omitted = response.data.files.length - filesSorted.length;
+            if(filesSorted.length == 0) {
+                //no java files found, abort
+                Utility.showWarning('No java files were found in this commit. Please select a different one.');
+                NProgress.done();
+                return;
+            }
+            if(omitted > 0) $('#files-list').append('<br /><p>' + omitted + ' non java file(s) omitted.</p>');
+
+
             filesSorted.forEach(file => {
                 var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
                 var oldname = (file.previous_filename  ? file.previous_filename : file.filename);
@@ -331,8 +314,16 @@ class GitHubWizard {
                 $('#files-list').append(fileshtml);
 
             });
-            var omitted = response.data.files.length - filesSorted.length;
-            if(omitted > 0) $('#files-list').append('<br /><p>' + omitted + ' non java file(s) omitted.</p>');
+
+
+            if(response.data.parents.length > 1)
+            {
+                me.options.wizardElement.bootstrapWizard('show', 2);
+            }
+            else {
+                me.selectedParentSha = response.data.parents[0].sha;
+                me.options.wizardElement.bootstrapWizard('show', 3);
+            }
 
             $('#parent-list').html('<h4>Select the parent commit to be used for the diff:</h4>');
             response.data.parents.forEach(parent => {
@@ -406,6 +397,84 @@ class GitHubWizard {
         '</p>';
         return html;
     }
+
+    static createPagination(currentPage, linkHeader) {
+        if(!linkHeader) {
+            $('#paginationdiv').html('');
+        }
+        //paginationdiv
+        var parsed = parse(linkHeader);
+        var maxCountLeft = 4;
+        var maxCountRight = 4;
+        //<ul class="pagination">
+        //     <li class="disabled">
+        //         <a href="#" aria-label="Previous" id="commits-prev-page">
+        //   &laquo; previous page
+        // </a>
+        //     </li>
+        //     <li>
+        //         <a href="#">
+        //   <span id="currentCommitsPage">1</span>
+        // </a>
+        //     </li>
+        //     <li>
+        //         <a href="#" aria-label="Next" id="commits-next-page">
+        //   next page &raquo;
+        // </a>
+        //     </li>
+        //</ul>
+        var paginationHTML = '<ul class="pagination">';
+        if(parsed.prev) {
+            paginationHTML += `<li><a href="#" aria-label="Previous" data-page="${parsed.prev.page}"> &laquo; </a>`;
+        } else {
+            paginationHTML += '<li class="disabled"><a href="#" aria-label="Previous"> &laquo; </a>';
+        }
+
+        if(parsed.first) {
+            paginationHTML += `<li><a href="#" aria-label="First" data-page="${parsed.first.page}"> ${parsed.first.page} </a><li>`;
+
+            var i = currentPage - maxCountLeft;
+            if(i < parseInt(parsed.first.page)) {
+                i = parseInt(parsed.first.page) + 1;
+            } else {
+                paginationHTML += '<a href="#"> ... </a>';
+            }
+
+            for(;i < currentPage; i++)
+            {
+                paginationHTML += `<li><a href="#" data-page="${i}"> ${i} </a>`;
+            }
+        }
+
+
+        paginationHTML += `<li class="active"><a href="#"> ${currentPage} </a>`;
+
+        if(parsed.last) {
+            var j = currentPage + 1;
+            var limit = currentPage + maxCountRight;
+            if(limit > parsed.last.page) limit = parseInt(parsed.last.page);
+
+            for(;j < limit; j++)
+            {
+                paginationHTML += `<li><a href="#" data-page="${j}"> ${j} </a>`;
+            }
+
+            if(!(currentPage + maxCountRight > parsed.last.page)) {
+                paginationHTML += '<a href="#"> ... </a>';
+            }
+            paginationHTML += `<li><a href="#" aria-label="Last" data-page="${parsed.last.page}"> ${parsed.last.page} </a>`;
+        }
+
+        if(parsed.next) {
+            paginationHTML += `<li><a href="#" aria-label="Next" data-page="${parsed.next.page}"> &raquo; </a>`;
+        } else {
+            paginationHTML += '<li class="disabled"><a href="#" aria-label="Next"> &raquo; </a>';
+        }
+
+        console.log(parsed);
+        $('#paginationdiv').html(paginationHTML);
+    }
+
 
     resetWizard() {
         $('#wizard').modal('hide');
