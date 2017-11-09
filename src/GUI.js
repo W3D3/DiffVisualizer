@@ -100,6 +100,10 @@ class GUI {
     static recalcDiffListHeight() {
         var $listPanel = $('#diffsViewer');
         $listPanel.css('height', $(document).height() - $listPanel.offset().top - 30);
+
+        //also resize monaco
+        window.editorSrc.layout();
+        window.editorDst.layout();
     }
 
     setupToggleSidebar() {

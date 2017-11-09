@@ -70,9 +70,11 @@
                             <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="dst" data-on="SRC" data-off="DST" data-height="43px" data-width="70px" />
                         </form>
                         <ul class="nav navbar-nav navbar-right">
-
                             <li>
-                                <a href="#" id="changeSource" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-list-alt"></span> Code editor</a>
+                                <a href="#" id="saveSource"><span class="fa fa-save"></span> Save</a>
+                            </li>
+                            <li>
+                                <a href="#" id="changeSource"><span class="fa fa-pencil-square-o"></span> Edit Source</a>
                             </li>
                             <li>
                                 <a href="#" id="printCodebox"><i class="glyphicon glyphicon-picture"></i> Screenshot</a>
@@ -191,11 +193,13 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                 <div class="row content panel-body" style="padding: 0" id="codeContent">
                     <div id="minimap" class="srcminimap minimap"></div>
                     <div class="col-xs-6 codebox src scrollbar-chrome hljs">
-                        <pre><code class="language-java" id="src"></code></pre>
+                        <div id="monacoSrc" class="monaco"></div>
+                        <pre class="precode"><code class="language-java" id="src"></code></pre>
                     </div>
                     <div id="minimap" class="dstminimap minimap"></div>
                     <div class="col-xs-6 codebox dst scrollbar-chrome hljs">
-                        <pre><code class="language-java" id="dst"></code></pre>
+                        <div id="monacoDst" class="monaco"></div>
+                        <pre class="precode"><code class="language-java" id="dst"></code></pre>
                     </div>
                 </div>
             </div>
@@ -218,7 +222,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document" style="width: 100%; height: 100%">
             <div class="modal-content">
                 <div class="modal-header">
@@ -245,7 +249,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="modal fade" id="wizard" tabindex="0" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-lg" role="document">
@@ -382,7 +386,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
     <!-- scrolling -->
     <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
     <!-- ace editor -->
-    <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script> -->
 
     <script src="js/minimap.js" charset="utf-8"></script>
     <!-- mark.js library -->
@@ -390,6 +394,29 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
     <script type="text/javascript" src="dist/jquery.validate.min.js"></script>
     <script type="text/javascript" src="dist/jquery.bootstrap.wizard.min.js"></script>
+
+    <script src="dist/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        require.config({
+            paths: {
+                'vs': 'dist/monaco-editor/min/vs'
+            }
+        });
+
+        require(['vs/editor/editor.main'], function() {
+            window.editorSrc = monaco.editor.create(document.getElementById('monacoSrc'), {
+                language: 'java',
+                folding: true,
+                contextmenu: false
+            });
+
+            window.editorDst = monaco.editor.create(document.getElementById('monacoDst'), {
+                language: 'java',
+                folding: true,
+                contextmenu: false
+            });
+        });
+    </script>
 
     <script src="dist/bundle.js"></script>
 

@@ -45,10 +45,10 @@ $(document).ready(function() {
 
     $('#accordion').collapse().height('auto');
 
-    if(navigator.userAgent.indexOf('AppleWebKit') != -1){
-        //this is webkit, use custom scrollbars because we hide the default ones
-        $('.scrollbar-chrome').perfectScrollbar();
-    }
+    // if(navigator.userAgent.indexOf('AppleWebKit') != -1){
+    //     //this is webkit, use custom scrollbars because we hide the default ones
+    //     $('.scrollbar-chrome').perfectScrollbar();
+    // }
 
     sc = new SearchController({
         focusChangeEvent: 'mouseover',
@@ -117,19 +117,24 @@ $(document).ready(function() {
 });
 
 function editorSetup() {
-    editorSrc = GUI.initializeEditor('editorSrc', 'monokai', 'java');
-    editorDst = GUI.initializeEditor('editorDst', 'monokai', 'java');
-
+    // editorSrc = GUI.initializeEditor('editorSrc', 'monokai', 'java');
+    // editorDst = GUI.initializeEditor('editorDst', 'monokai', 'java');
+    $('#saveSource').hide();
+    
   //register clickhandler
     $('#saveSource').click(function() {
-        dv.setSource(editorSrc.getValue());
-        dv.setDestination(editorDst.getValue());
+        dv.setSource(window.editorSrc.getValue());
+        dv.setDestination(window.editorDst.getValue());
         dv.setFilter(filter);
         dv.setJobId(null);
         dv.setAsCurrentJob();
         dv.setDiff(null);
         dv.diffAndDraw(function() {
             $('#codeboxTitle').html(dv.generateTitle(1));
+            $('#saveSource').hide();
+            $('.monaco').hide();
+            $('.precode').show();
+            $('.minimap').show();
         }, function(msg) {
             $('#codeboxTitle').html(dv.generateTitle(-1));
             Utility.showError(msg);
@@ -137,9 +142,21 @@ function editorSetup() {
         });
     });
 
+    // window.editorSrc.setValue(jsCode);
+
     $('#changeSource').click(function() {
-        editorSrc.setValue(dv.getSource());
-        editorDst.setValue(dv.getDestination());
+        if(dv) {
+            window.editorSrc.setValue(dv.getSource());
+            window.editorDst.setValue(dv.getDestination());
+        }
+        $('#changeSource').hide();
+        $('.monaco').show();
+        // $('.monaco').removeClass('hidden');
+        window.editorSrc.layout();
+        window.editorDst.layout();
+        $('.precode').hide();
+        $('.minimap').hide();
+        $('#saveSource').show();
     });
 }
 
@@ -219,6 +236,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
     });
     NProgress.start();
     $('.minimap').hide();
+    $('.monaco').hide();
     $('#codeboxTitle').html(viewer.generateTitle(0));
     sc.hideAll();
 
