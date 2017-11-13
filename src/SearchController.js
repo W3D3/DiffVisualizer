@@ -249,6 +249,7 @@ class SearchController {
             var charCounter = 0;
             var i = 0;
             finalResults = [];
+            me.lastSearched = searchVal;
 
             // disable search when length is 3 or less characters
             if (searchVal.length > 0 && searchVal.length < 4) {
@@ -263,7 +264,7 @@ class SearchController {
                         separateWordSearch: false,
                         ignoreJoiners: true,
                         acrossElements: true,
-                        wildcards: 'enabled',
+                        wildcards: 'disabled',
                         exclude: ['.searchbar *'],
                         each: function(marked) {
                             // group into finalResults
