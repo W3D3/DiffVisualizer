@@ -119,22 +119,25 @@ $(document).ready(function() {
 function editorSetup() {
     // editorSrc = GUI.initializeEditor('editorSrc', 'monokai', 'java');
     // editorDst = GUI.initializeEditor('editorDst', 'monokai', 'java');
-    $('#saveSource').hide();
-    
+    $('#changeSource').hide();
+    // $('.monaco').addClass('hidden');
   //register clickhandler
     $('#saveSource').click(function() {
+        NProgress.start();
+        GUI.switchToViewer();
         dv.setSource(window.editorSrc.getValue());
         dv.setDestination(window.editorDst.getValue());
         dv.setFilter(filter);
         dv.setJobId(null);
         dv.setAsCurrentJob();
-        dv.setDiff(null);
+        //TODO check if really edited
+        dv.edited = true;
+
+        // dv.setEnableMinimap(false);
         dv.diffAndDraw(function() {
             $('#codeboxTitle').html(dv.generateTitle(1));
-            $('#saveSource').hide();
-            $('.monaco').hide();
-            $('.precode').show();
-            $('.minimap').show();
+            $('#changeSource').show();
+            DiffDrawer.refreshMinimap();
         }, function(msg) {
             $('#codeboxTitle').html(dv.generateTitle(-1));
             Utility.showError(msg);
@@ -145,18 +148,13 @@ function editorSetup() {
     // window.editorSrc.setValue(jsCode);
 
     $('#changeSource').click(function() {
+        GUI.switchToEditor();
+
         if(dv) {
             window.editorSrc.setValue(dv.getSource());
             window.editorDst.setValue(dv.getDestination());
         }
-        $('#changeSource').hide();
-        $('.monaco').show();
-        // $('.monaco').removeClass('hidden');
-        window.editorSrc.layout();
-        window.editorDst.layout();
-        $('.precode').hide();
-        $('.minimap').hide();
-        $('#saveSource').show();
+
     });
 }
 
@@ -236,7 +234,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
     });
     NProgress.start();
     $('.minimap').hide();
-    $('.monaco').hide();
+    // $('.monaco').hide();
     $('#codeboxTitle').html(viewer.generateTitle(0));
     sc.hideAll();
 
@@ -305,6 +303,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
           }
           else {
               dv = viewer;
+              GUI.switchToViewer();
               viewer.diffAndDraw(function() {
                   //success
                   $('#codeboxTitle').html(dv.generateTitle(1));
@@ -338,6 +337,7 @@ function diffListSetup() {
         if (settings.loadSetting('matcher')) {
             viewer.setMatcher(settings.loadSetting('matcher'));
         }
+
         if(dv.generateHashWithoutData() == viewer.generateHashWithoutData())
         {
             Utility.showWarning('Not loading same file with same matcher again');

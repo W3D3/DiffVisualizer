@@ -54,6 +54,7 @@ class DiffDrawer {
         this.diff = new Diff();
 
         this.metadata = [];
+        this.edited = false;
     }
 
     checkAPIState()
@@ -95,7 +96,12 @@ class DiffDrawer {
     }
 
     generateHashWithoutData() {
-        return hash(this.diff);
+        if(this.diff) {
+            return hash(JSON.stringify(this.diff.toJSON()) + 'edited:' + this.edited);
+        } else {
+            return '';
+        }
+
     }
 
     getDiffId() {
@@ -108,7 +114,7 @@ class DiffDrawer {
 
     setJobId(id) {
         if (id === null) {
-            this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
+            this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited);
         } else {
             this.jobId = hash(id + 'm' + this.matcherID);
         }
@@ -549,6 +555,7 @@ class DiffDrawer {
         }
         if(this.diff != null) {
             titlestring += ` <b>${this.diff.title}</b> `;
+            if(this.edited) titlestring += ' (Edited) ';
 
             if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a>`;
             if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a>`;

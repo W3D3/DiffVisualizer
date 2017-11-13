@@ -49,6 +49,14 @@ class Diff {
         this._id = id;
     }
 
+    // set edited(state) {
+    //     this._edited = state;
+    // }
+    //
+    // get edited() {
+    //     return this._edited;
+    // }
+
     get commit() {
         return this._commit;
     }
@@ -82,6 +90,7 @@ class Diff {
         if (this._srcFileName != this._dstFileName) {
             diffTitle += ' &#8658; ' + this._dstFileName.replace(/^.*[\\\/]/, '');
         }
+
         return diffTitle;
     }
 
@@ -128,14 +137,18 @@ class Diff {
      * @return {[object]} [mapping of json representation]
      */
     toJSON() {
-        return {
-            id: this.id,
-            baseUrl: this.baseUrl,
-            commit: this.commit,
-            parentCommit: this.parentCommit,
-            srcFileName: this.srcFileName,
-            dstFileName: this.dstFileName
-        };
+        try {
+            return {
+                id: this.id,
+                baseUrl: this.baseUrl,
+                commit: this.commit,
+                parentCommit: this.parentCommit,
+                srcFileName: this.srcFileName,
+                dstFileName: this.dstFileName
+            };
+        } catch (e) {
+            return '';
+        }
     }
 }
 export default Diff;

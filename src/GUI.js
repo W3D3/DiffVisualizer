@@ -112,6 +112,9 @@ class GUI {
             $('#codeView').toggleClass('col-xs-9');
             $('#codeView').toggleClass('col-xs-12');
             DiffDrawer.refreshMinimap();
+            //also resize monaco
+            window.editorSrc.layout();
+            window.editorDst.layout();
         });
     }
 
@@ -230,6 +233,36 @@ class GUI {
 
         }
 
+    }
+
+    static switchToEditor() {
+        $('.src').removeClass('codebox');
+        $('.dst').removeClass('codebox');
+        $('.src').removeClass('hljs');
+        $('.dst').removeClass('hljs');
+
+        $('.monaco').show();
+        window.editorSrc.layout();
+        window.editorDst.layout();
+        $('.precode').hide();
+        $('.minimap').hide();
+
+        $('#changeSource').hide();
+        $('#saveSource').show();
+    }
+
+    static switchToViewer() {
+        $('.src').addClass('codebox');
+        $('.dst').addClass('codebox');
+        $('.src').addClass('hljs');
+        $('.dst').addClass('hljs');
+
+        $('.monaco').hide();
+        $('.precode').show();
+        $('.minimap').show();
+
+        $('#saveSource').hide();
+        $('#changeSource').show();
     }
 
 }
