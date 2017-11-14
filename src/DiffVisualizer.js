@@ -22,8 +22,8 @@ import _ from 'lodash';
 var gui;
 var dv;
 var sc;
-var editorSrc;
-var editorDst;
+// var editorSrc;
+// var editorDst;
 
 //start unfiltered
 var filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
