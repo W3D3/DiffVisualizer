@@ -105,7 +105,8 @@ class DiffDrawer {
     }
 
     getDiffId() {
-        return this.diff.id;
+        if(this.diff) return this.diff.id;
+        else return this.generateHash();
     }
 
     setAsCurrentJob() {

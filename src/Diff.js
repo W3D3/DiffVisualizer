@@ -86,6 +86,7 @@ class Diff {
      * @return {[string]} [human readable title containing the filename and possible renaming]
      */
     get title() {
+        if(!this._srcFileName) return '';
         var diffTitle = this._srcFileName.replace(/^.*[\\\/]/, '');
         if (this._srcFileName != this._dstFileName) {
             diffTitle += ' &#8658; ' + this._dstFileName.replace(/^.*[\\\/]/, '');

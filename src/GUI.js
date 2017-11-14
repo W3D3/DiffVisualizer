@@ -102,8 +102,7 @@ class GUI {
         $listPanel.css('height', $(document).height() - $listPanel.offset().top - 30);
 
         //also resize monaco
-        window.editorSrc.layout();
-        window.editorDst.layout();
+        GUI.recalcMonacoSize();
     }
 
     setupToggleSidebar() {
@@ -113,9 +112,21 @@ class GUI {
             $('#codeView').toggleClass('col-xs-12');
             DiffDrawer.refreshMinimap();
             //also resize monaco
-            window.editorSrc.layout();
-            window.editorDst.layout();
+            GUI.recalcMonacoSize();
         });
+    }
+
+    static recalcMonacoSize() {
+        if(!$('.monaco').is(':visible')) {
+            console.log('hidden');
+            return;
+        }
+        if(window.editorSrc) {
+            window.editorSrc.layout();
+        }
+        if(window.editorDst) {
+            window.editorDst.layout();
+        }
     }
 
     setVersion(version) {

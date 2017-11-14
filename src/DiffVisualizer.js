@@ -59,6 +59,7 @@ $(document).ready(function() {
 
     //create first DiffDrawer object to work on
     dv = new DiffDrawer();
+    dv.diff = null;
 
     dv.checkAPIState().then(function() {
         //working as expected
