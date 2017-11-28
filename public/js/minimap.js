@@ -147,7 +147,11 @@ SOFTWARE.
         function init() {
             $minimap.find( '.minimap-node' ).remove();
 			//creating mini version of the supplied children
-            $mapCodeContainer.children().each( function() {
+            iterateChildren($mapCodeContainer);
+        }
+
+        function iterateChildren($node) {
+            $node.children().each( function() {
                 var $child = $( this );
                 if($($child).hasClass('scriptmarker'))
 				{
@@ -172,6 +176,11 @@ SOFTWARE.
                         'top' : Math.round( yM ),
                         'background-color': bgC
                     } );
+                    // we can stack elements in each other if this gets called here
+                    iterateChildren($child);
+                } else {
+                    // no stacking if recursion is here only
+                    iterateChildren($child);
                 }
             } );
         }
