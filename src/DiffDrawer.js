@@ -62,6 +62,10 @@ class DiffDrawer {
         return this.DIFF_API.get('/matchers');
     }
 
+    // get jobId() {
+    //     return hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited);
+    // }
+
     setSrcUrl(value) {
         this.srcUrl = value;
     }

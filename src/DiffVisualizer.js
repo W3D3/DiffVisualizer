@@ -107,6 +107,7 @@ $(document).ready(function() {
 
     new GitHubWizard({
         wizardElement: $('#githubwizard'),
+
         finish: function(diffObject) {
             Loader.createDiffList([diffObject], true);
         }
@@ -129,7 +130,6 @@ function editorSetup() {
         dv.setSource(window.editorSrc.getValue());
         dv.setDestination(window.editorDst.getValue());
         dv.setFilter(filter);
-        dv.setJobId(null);
         dv.setAsCurrentJob();
         //TODO check if really edited
         dv.edited = true;
@@ -164,10 +164,13 @@ function matcherChangerSetup() {
     dv.getAvailableMatchers().then(response => {
         gui.setMatcherSelectionSource(response.data.matchers);
         matchers = response.data.matchers;
+        settings.saveSetting('matcher', matchers[0]);
+
         if (settings.loadSetting('matcher')) {
             gui.setSelectedMatcher(settings.loadSetting('matcher').id);
         }
 
+        dv.setMatcher(settings.loadSetting('matcher'));
     });
 
     // matcher on change
@@ -181,7 +184,7 @@ function matcherChangerSetup() {
         Object.assign(changedDv, dv);
 
         changedDv.setMatcher(settings.loadSetting('matcher'));
-        changedDv.setJobId(dv.getDiffId()); //to refresh job id
+        // changedDv.setJobId(dv.getDiffId()); //to refresh job id
         changedDv.setAsCurrentJob();
 
         Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
@@ -327,12 +330,12 @@ function diffListSetup() {
 
         var selectedDiff = Loader.loadedDiffObjects[$(this).data('index')];
 
-        var diffId = selectedDiff.id;
+        // var diffId = selectedDiff.id;
         // var fileName = selectedDiff.title;
 
         var viewer = new DiffDrawer();
         // viewer.setIdAndFilname(diffId, fileName);
-        viewer.setJobId(diffId);
+        // viewer.setJobId(diffId);
         viewer.setDiff(selectedDiff);
 
         if (settings.loadSetting('matcher')) {
@@ -550,3 +553,15 @@ function clickBoundMarkersSetup() {
         return false;
     });
 }
+
+// function changeLanguageGlobally(languageName, extention) {
+//
+//     //2 codeboxes for highlight js
+//     $('#src').removeClass(function (index, className) {
+//         return (className.match (/(^|\s)language-\S+/g) || []).join(' ');
+//     });
+//     // monaco
+//     window.editorDst;
+//
+//     //github wizard for filter
+// }
