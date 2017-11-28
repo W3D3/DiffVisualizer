@@ -36,6 +36,7 @@ class GitHubWizard {
 
         var defaults = {
             wizardElement: $('#githubwizard'),
+            allowedFileExt: '',
             finish: function () {
 
             }
@@ -136,10 +137,10 @@ class GitHubWizard {
             $this.addClass('active');
             me.selectedFileName = $this.data('name');
             me.html.file = '<div class="file-item">'+$(this).html()+'</div>';
-            if(!me.selectedFileName.endsWith('.java'))
-            {
-                Utility.showWarning('The selected file doesn\'t seem to be a Java file. Proceed with caution as this application currently only supports Java diffing.');
-            }
+            // if(!me.selectedFileName.endsWith('.java'))
+            // {
+            //     Utility.showWarning('The selected file doesn\'t seem to be a Java file. Proceed with caution as this application currently only supports Java diffing.');
+            // }
             me.oldFileName = $this.data('oldname');
         });
 
@@ -307,16 +308,16 @@ class GitHubWizard {
 
             if(!append) $('#files-list').html('');
 
-            var filesSorted = _.filter(response.data.files, function(o) { return o.filename.endsWith('.java'); });
+            var filesSorted = _.filter(response.data.files, function(o) { return o.filename.endsWith(me.options.allowedFileExt); });
             var omitted = response.data.files.length - filesSorted.length;
             if(filesSorted.length == 0) {
                 //no java files found, abort
-                Utility.showWarning('No java files were found in this commit. Please select a different one.');
+                Utility.showWarning(`No ${_.upperCase(me.options.allowedFileExt)} files were found in this commit. Please select a different one.`);
+
                 NProgress.done();
                 return;
             }
-            if(omitted > 0) $('#files-list').append('<br /><p>' + omitted + ' non java file(s) omitted.</p>');
-
+            if(omitted > 0) $('#files-list').append(`<br /><p>${omitted} non ${_.upperCase(me.options.allowedFileExt)} file(s) omitted.</p> `);
 
             filesSorted.forEach(file => {
                 var statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;

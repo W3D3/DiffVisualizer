@@ -41,8 +41,8 @@ class DiffDrawer {
 
         this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
 
-        this.matcherID = 1; //default to first matcher (ClassicGumtree)
-        this.matcherName = 'ClassicGumtree'; //TODO fetch
+        this.matcherID = 0;
+        this.matcherName = 'NONE';
 
         //set default base URL
         this.DIFF_API = axios.create();
