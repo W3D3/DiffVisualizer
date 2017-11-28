@@ -48,13 +48,13 @@ class DiffDrawer {
         this.DIFF_API = axios.create();
         this.setBaseUrl(client.apibase);
 
-        this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
-
         this.enableMinimap = true;
         this.diff = new Diff();
 
         this.metadata = [];
         this.edited = false;
+
+        this.jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
     }
 
     checkAPIState()
@@ -115,7 +115,7 @@ class DiffDrawer {
 
     setJobId(id) {
         if (id === null) {
-            this.jobId = hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited);
+            this.jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
         } else {
             this.jobId = hash(id + 'm' + this.matcherID);
         }
