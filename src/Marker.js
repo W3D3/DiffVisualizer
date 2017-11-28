@@ -49,5 +49,13 @@ class Marker {
 
         }
     }
+
+    isValid() {
+        if(this.position.line < 1 || this.position.offset < 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
 export default Marker;

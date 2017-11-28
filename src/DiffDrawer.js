@@ -418,7 +418,9 @@ class DiffDrawer {
                     };
                     closingMarker = startMarker.createEndMarker(endPosition);
 
-
+                    if(!startMarker.isValid()) {
+                        err('<pre>'+JSON.stringify(startMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
+                    }
                     dstMarkers.push(startMarker);
                     dstMarkers.push(closingMarker);
                 }
@@ -443,6 +445,9 @@ class DiffDrawer {
                     };
                     closingMarker = startMarker.createEndMarker(endPosition);
 
+                    if(!startMarker.isValid()) {
+                        err('<pre>'+JSON.stringify(startMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
+                    }
                     srcMarkers.push(startMarker);
                     srcMarkers.push(closingMarker);
 
@@ -465,6 +470,9 @@ class DiffDrawer {
                     };
                     var dstClosingMarker = dstStartMarker.createEndMarker(endPosition);
 
+                    if(!dstStartMarker.isValid()) {
+                        err('<pre>'+JSON.stringify(dstStartMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
+                    }
                     dstMarkers.push(dstStartMarker);
                     dstMarkers.push(dstClosingMarker);
                 }
@@ -490,6 +498,9 @@ class DiffDrawer {
                     };
                     closingMarker = startMarker.createEndMarker(endPosition);
 
+                    if(!startMarker.isValid()) {
+                        err('<pre>'+JSON.stringify(startMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
+                    }
                     srcMarkers.push(startMarker);
                     srcMarkers.push(closingMarker);
                 }
