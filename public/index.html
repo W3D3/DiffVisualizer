@@ -40,7 +40,7 @@
                     <div class="collapse navbar-collapse" id="navbar">
                         <ul class="nav navbar-nav">
                             <li>
-                                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i></i></i><span class="hidden-md hidden-sm"> Toggle Sidebar</span></a>
+                                <a href="#" id="toggleSidebar"><i class="fa fa-bars"></i><span class="hidden-md hidden-sm"> Toggle Sidebar</span></a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -138,14 +138,14 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                 <li class="list-group-item">
                                     <div class="form-group">
                                         <!-- <h4>Webservice</h4> -->
-                                        <label for="matcherID">Select Matcher</label>
+                                        <label for="matcherID">Select Differ</label>
                                         <select class="form-control" id="matcherID"></select>
 
                                     </div>
                                     <hr>
                                     <div class="form-group">
                                         <!-- <h4>Appearance</h4> -->
-                                        <label for="matcherID">Select Theme</label>
+                                        <label for="themePicker">Select Theme</label>
                                         <select class="form-control" id="themePicker">
                                             <option value="default" data-dark="false">Default</option>
                                             <option value="github" data-dark="false">GitHub</option>
@@ -177,7 +177,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                 <input type="text" class="form-control" id="listFilterText" placeholder="ID / filename" style="width: 100%">
                                 <span class="input-group-btn">
                       <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
-                                <a class="btn btn-default" id="filterListClear" title="Clear searchbox"><i class="fa fa-times"></i></span></a>
+                                <a class="btn btn-default" id="filterListClear" title="Clear searchbox"><i class="fa fa-times"></i></a>
                                 </span>
                             </div>
                             <div class="list-group" id="diffsList"></div>
@@ -405,13 +405,11 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
         require(['vs/editor/editor.main'], function() {
             window.editorSrc = monaco.editor.create(document.getElementById('monacoSrc'), {
-                language: 'java',
                 folding: true,
                 contextmenu: false
             });
 
             window.editorDst = monaco.editor.create(document.getElementById('monacoDst'), {
-                language: 'java',
                 folding: true,
                 contextmenu: false
             });
@@ -419,6 +417,4 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
     </script>
 
     <script src="dist/bundle.js"></script>
-
-    <!-- <script type="text/javascript" src="https://js-cdn.dynatrace.com/jstag/15a8a271790/afd87532/7e45cd256ca73de9_bs.js" crossorigin="anonymous"></script> -->
 </body>
