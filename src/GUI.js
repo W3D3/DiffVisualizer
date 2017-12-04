@@ -34,7 +34,7 @@ class GUI {
 
         //code to print the code View
         $('#printCodebox').click(function () {
-            var filename = $('#codeboxTitle b').text().substring(1);
+            var filename = $('#codeboxTitle b').text();
             if(!filename) {
                 filename = 'DiffVisualizer-Screenshot';
                 GUI.screenshotCodeView(filename);
