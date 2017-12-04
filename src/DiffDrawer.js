@@ -227,6 +227,7 @@ class DiffDrawer {
         }
 
         if (this.checkIfCurrentJob()) { //only show if this is the current Job!
+
             $('#dst').html(linesDst.join('\n'));
             $('#src').html(linesSrc.join('\n'));
             this.enableSyntaxHighlighting();
@@ -308,10 +309,12 @@ class DiffDrawer {
 
     static fixSequencing(markers) {
         var markersSorted = _(markers).chain()
-          .sortBy('id')
-          .sortBy('position.absolute')
+          // .sortBy('id')
+          .sortBy('position.offset')
+          .sortBy('position.line')
           .reverse()
           .value();
+
 
         var lastClosed = [];
         var markersFixed = [];
@@ -489,7 +492,7 @@ class DiffDrawer {
                         absolute: entry.srcPos
                     };
                     startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
-                    startMarker.bindToId(entry.dstId);
+                    // startMarker.bindToId(entry.dstId);
 
                     diffdrawer.metadata.push(entry.metadata);
                     startMarker.addMetaData('DELETE ' + entry.srcId, diffdrawer.metadata.length - 1);
