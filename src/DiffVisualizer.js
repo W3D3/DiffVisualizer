@@ -114,6 +114,10 @@ $(document).ready(function() {
     });
     $('#githubImportButton').click(function() {
         $('#wizard').modal('show');
+        GUI.setMonacoMinimapsVisibility(false);
+    });
+    $('#wizard').on('hidden.bs.modal', function () {
+        GUI.setMonacoMinimapsVisibility(true);
     });
 
 });

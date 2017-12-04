@@ -118,7 +118,7 @@ class GUI {
 
     static recalcMonacoSize() {
         if(!$('.monaco').is(':visible')) {
-            console.log('hidden');
+            // monaco is hidden
             return;
         }
         if(window.editorSrc) {
@@ -127,6 +127,19 @@ class GUI {
         if(window.editorDst) {
             window.editorDst.layout();
         }
+    }
+
+    static setMonacoMinimapsVisibility(val) {
+        window.editorDst.updateOptions({
+            minimap: {
+                enabled: val
+            }
+        });
+        window.editorSrc.updateOptions({
+            minimap: {
+                enabled: val
+            }
+        });
     }
 
     setVersion(version) {
@@ -257,6 +270,7 @@ class GUI {
         window.editorDst.layout();
         $('.precode').hide();
         $('.minimap').hide();
+        $('#printCodebox').hide();
 
         $('#changeSource').hide();
         $('#saveSource').show();
@@ -271,6 +285,7 @@ class GUI {
         $('.monaco').hide();
         $('.precode').show();
         $('.minimap').show();
+        $('#printCodebox').show();
 
         $('#saveSource').hide();
         $('#changeSource').show();
