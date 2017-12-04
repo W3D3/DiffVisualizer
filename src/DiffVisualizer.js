@@ -1,4 +1,4 @@
-/* global $ bootbox */
+/* global $ bootbox monaco */
 /**
  * @file Main file that acts as the entry point
  * @author Christoph Wedenig <christoph@wedenig.org>
@@ -11,6 +11,7 @@ import GUI from './GUI';
 import Settings from './Settings';
 import SearchController from './SearchController';
 import GitHubWizard from './GitHubWizard';
+import FileExt from './FileExt';
 import {
   version
 } from '../package.json';
@@ -22,6 +23,7 @@ import _ from 'lodash';
 var gui;
 var dv;
 var sc;
+var gw;
 // var editorSrc;
 // var editorDst;
 
@@ -105,7 +107,7 @@ $(document).ready(function() {
     //register hover handler for all the UPDATEs and MOVEs
     gui.setHoverEffect('.codebox', '.scriptmarker');
 
-    new GitHubWizard({
+    gw = new GitHubWizard({
         wizardElement: $('#githubwizard'),
 
         finish: function(diffObject) {
@@ -293,6 +295,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
                           viewer.diffAndDraw(function() {
                               //success
                               $('#codeboxTitle').html(dv.generateTitle(1));
+                              setLanguageFromFilename(dv.diff.title);
                           }, function (msg) {
                               //error
                               $('#codeboxTitle').html(dv.generateTitle(-1));
@@ -315,6 +318,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
               viewer.diffAndDraw(function() {
                   //success
                   $('#codeboxTitle').html(dv.generateTitle(1));
+                  setLanguageFromFilename(dv.diff.title);
               }, function (msg) {
                   //error
                   $('#codeboxTitle').html(dv.generateTitle(-1));
@@ -558,14 +562,30 @@ function clickBoundMarkersSetup() {
     });
 }
 
-// function changeLanguageGlobally(languageName, extention) {
-//
-//     //2 codeboxes for highlight js
-//     $('#src').removeClass(function (index, className) {
-//         return (className.match (/(^|\s)language-\S+/g) || []).join(' ');
-//     });
-//     // monaco
-//     window.editorDst;
-//
-//     //github wizard for filter
-// }
+function setLanguageFromFilename(filename) {
+    var fileExt = filename.toLowerCase().split('.').pop();
+    var converter = new FileExt();
+    changeLanguageGlobally(converter.getLanguageForExt(fileExt), '.'+fileExt);
+}
+
+function changeLanguageGlobally(languageName, ext) {
+    // console.log(extention);
+    //2 codeboxes for highlight js
+    $('.hljs').removeClass(function (index, className) {
+        return (className.match (/(^|\s)language-\S+/g) || []).join(' ');
+    });
+    $('#src').addClass(ext);
+    $('#dst').addClass(ext);
+    dv.enableSyntaxHighlighting();
+
+    // monaco
+    var modelSrc = window.editorSrc.getModel();
+    var modelDst = window.editorDst.getModel();
+    monaco.editor.setModelLanguage(modelSrc, languageName);
+    monaco.editor.setModelLanguage(modelDst, languageName);
+
+    //github wizard for filter
+    // gw.updateOptions({
+    //     allowedFileExt: ext
+    // });
+}

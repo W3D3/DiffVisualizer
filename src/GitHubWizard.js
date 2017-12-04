@@ -202,6 +202,10 @@ class GitHubWizard {
         return _.defaults({}, _.clone(options), defaults);
     }
 
+    updateOptions(options) {
+        this.options = this.setDefaults(options, this.options);
+    }
+
     loadCommits(repo, page, callback)
     {
         if(!callback) callback = function () { };
