@@ -38,6 +38,17 @@
     box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
 }
 
+.selected {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #2780E3;
+    z-index: 100;
+    position: relative;
+    /*font-weight: bold;*/
+    box-shadow: 2px 2px 5px #2780E3;
+    padding: 2px
+}
+
 .selected.MOVE {
     box-shadow: 2px 2px 5px rgba(241, 0, 255, 1);
     border-color: rgba(241, 0, 255, 1)
@@ -46,6 +57,16 @@
 .selected.UPDATE {
     box-shadow: 2px 2px 5px rgba(250, 255, 0, 0.7);
     border-color: rgba(255, 237, 0, 0.7);
+}
+
+.selected.DELETE {
+    box-shadow: 2px 2px 5px rgba(218, 1, 1, 0.7);
+    border-color: rgba(218, 1, 1, 0.7)
+}
+
+.selected.INSERT {
+    box-shadow: 2px 2px 5px rgba(121, 242, 107, 0.7);
+    border-color: rgba(121, 242, 107, 0.7);
 }
 
 body {
