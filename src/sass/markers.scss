@@ -63,3 +63,13 @@
     box-shadow: 2px 2px 5px rgba(117, 84, 0, 0.7);
     border-color: rgba(117, 84, 0, 0.7);
 }
+
+.selected.DELETE {
+    box-shadow: 2px 2px 5px rgba(218, 1, 1, 0.7);
+    border-color: rgba(218, 1, 1, 0.7)
+}
+
+.selected.INSERT {
+    box-shadow: 2px 2px 5px rgba(32, 212, 10, 0.7);
+    border-color: rgba(32, 212, 10, 0.7);
+}
