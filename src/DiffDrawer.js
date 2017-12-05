@@ -98,11 +98,7 @@ class DiffDrawer {
         return this.diff;
     }
 
-    generateHash() {
-        return hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID);
-    }
-
-    generateHashWithoutData() {
+    diffHash() {
         if(this.diff) {
             return hash(JSON.stringify(this.diff.toJSON()) + 'edited:' + this.edited);
         } else {
@@ -113,11 +109,10 @@ class DiffDrawer {
 
     getDiffId() {
         if(this.diff) return this.diff.id;
-        else return this.generateHash();
+        else return this.jobId;
     }
 
     setAsCurrentJob() {
-        debugger;
         DiffDrawer.currentJobId = this.jobId;
     }
 

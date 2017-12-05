@@ -352,7 +352,7 @@ function diffListSetup() {
             viewer.setMatcher(settings.loadSetting('matcher'));
         }
 
-        if(dv.generateHashWithoutData() == viewer.generateHashWithoutData())
+        if(dv.diffHash() == viewer.diffHash())
         {
             Utility.showWarning('Not loading same file with same matcher again');
             return;
