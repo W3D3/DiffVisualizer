@@ -133,15 +133,20 @@ function editorSetup() {
     // $('.monaco').addClass('hidden');
   //register clickhandler
     $('#saveSource').click(function() {
-        NProgress.start();
+        sc.enable();
+
         GUI.switchToViewer();
+        var oldJob = dv.jobId;
         dv.src = window.editorSrc.getValue();
         dv.dst = window.editorDst.getValue();
         dv.setFilter(filter);
-        dv.setAsCurrentJob();
-        //TODO check if really edited
-        dv.edited = true;
-
+        if(dv.jobId != oldJob){
+            dv.edited = true;
+            dv.setAsCurrentJob();
+        } else {
+            return;
+        }
+        NProgress.start();
         // dv.setEnableMinimap(false);
         dv.diffAndDraw(function() {
             $('#codeboxTitle').html(dv.generateTitle(1));
@@ -157,11 +162,17 @@ function editorSetup() {
     // window.editorSrc.setValue(jsCode);
 
     $('#changeSource').click(function() {
+        sc.disable();
+        var srcLinesScrolled = Math.ceil(($('.src').scrollTop() - 5)/20 + 1);
+        var dstLinesScrolled = Math.ceil(($('.dst').scrollTop() - 5)/20 + 1);
         GUI.switchToEditor();
 
         if(dv) {
             window.editorSrc.setValue(dv.src);
             window.editorDst.setValue(dv.dst);
+
+            GUI.srcEditorScrollTop(srcLinesScrolled);
+            GUI.dstEditorScrollTop(dstLinesScrolled);
         }
 
     });
@@ -541,10 +552,10 @@ function clickBoundMarkersSetup() {
         var title = $(this).data('title');
         var content = dv.metadata[$(this).data('metadata')];
 
-        var stringContent = '<pre><code class="metadatacode">'+$(this).html() + '</code></pre><br/> \
+        var stringContent = '<pre><code class="metadatacode">'+ $(this).html() + '</code></pre><br/> \
         <table class="table table-striped"><thead><tr><th>Property</th><th>Value</th></tr></thead> \
         <tbody>';
-
+        stringContent = 'lol';
         Object.entries(content).forEach(([key, value]) => {
             if(value == null) return;
 

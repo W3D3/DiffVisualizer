@@ -31,11 +31,11 @@ SOFTWARE.
         var minimapHeight = $minimap.height();
         var $viewport = $( '<div></div>' ).addClass( 'minimap-viewport' );
         var $mapCodeContainer;
-        if( $mapSource.hasClass('src'))
+        if($mapSource.hasClass('src'))
 		{
             $mapCodeContainer = $mapSource.find('#src');
         }
-        if( $mapSource.hasClass('dst'))
+        if($mapSource.hasClass('dst'))
 		{
             $mapCodeContainer = $mapSource.find('#dst');
         }

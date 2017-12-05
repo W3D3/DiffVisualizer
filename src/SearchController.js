@@ -18,6 +18,7 @@ class SearchController {
         this.visibilityState = [];
         this.focussedIndex = -1;
         this.lastSearched = '';
+        this.enabled = true;
 
         var defaults = {
             //on which event the focussed element should change
@@ -38,6 +39,14 @@ class SearchController {
 
     setDefaults(options, defaults) {
         return _.defaults({}, _.clone(options), defaults);
+    }
+
+    disable() {
+        this.enabled = false;
+    }
+
+    enable() {
+        this.enabled = true;
     }
 
     hideAll() {
@@ -64,7 +73,7 @@ class SearchController {
         var me = this;
 
         $(window).keydown(function(e) {
-            if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 70 && me.enabled == true) {
                 var searchPanel;
                 var container;
                 var input;

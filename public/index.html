@@ -406,12 +406,14 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
         require(['vs/editor/editor.main'], function() {
             window.editorSrc = monaco.editor.create(document.getElementById('monacoSrc'), {
                 folding: true,
-                contextmenu: false
+                contextmenu: false,
+                lineHeight: '20px'
             });
 
             window.editorDst = monaco.editor.create(document.getElementById('monacoDst'), {
                 folding: true,
-                contextmenu: false
+                contextmenu: false,
+                lineHeight: '20px'
             });
         });
     </script>

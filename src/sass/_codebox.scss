@@ -3,6 +3,7 @@
 .hljs {
   padding-left: 0px !important;
   border-bottom: 1px solid #ccc;
+
 }
 
 .hljs-line-numbers {
@@ -58,6 +59,14 @@ code {
     margin-right: 0px !important;
   }
   &.hljs {
-    padding-left: 5px !important;
+    padding: 5px !important;
   }
+}
+
+.src {
+    padding: 0;
+}
+
+.dst {
+    padding: 0;
 }

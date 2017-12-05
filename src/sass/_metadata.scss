@@ -11,10 +11,16 @@
     background-color: rgba(0, 0, 0, 0) !important;
 }
 
+#metadataContent pre {
+    // max-height: 300px;
+    overflow: scroll;
+}
 .metadatacode .subnode {
     cursor: default;
     margin: 0;
     padding: 0;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .label-inverted {

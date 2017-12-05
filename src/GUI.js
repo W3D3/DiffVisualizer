@@ -260,6 +260,7 @@ class GUI {
     }
 
     static switchToEditor() {
+
         $('.src').removeClass('codebox');
         $('.dst').removeClass('codebox');
         $('.src').removeClass('hljs');
@@ -268,12 +269,25 @@ class GUI {
         $('.monaco').show();
         window.editorSrc.layout();
         window.editorDst.layout();
+
         $('.precode').hide();
         $('.minimap').hide();
         $('#printCodebox').hide();
 
         $('#changeSource').hide();
         $('#saveSource').show();
+    }
+
+    static srcEditorScrollTop(line) {
+        var heightSrc = window.editorSrc.getScrollHeight();
+        window.editorSrc.setScrollPosition({scrollTop: heightSrc});
+        window.editorSrc.revealLine(line);
+    }
+
+    static dstEditorScrollTop(line) {
+        var heightDst = window.editorDst.getScrollHeight();
+        window.editorDst.setScrollPosition({scrollTop: heightDst});
+        window.editorDst.revealLine(line);
     }
 
     static switchToViewer() {
