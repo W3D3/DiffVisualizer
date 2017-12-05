@@ -47,10 +47,14 @@ class FileExt {
         this.fileMap.set('gemspec', 'ruby');
         this.fileMap.set('scss', 'scss');
         this.fileMap.set('sql', 'sql');
-
-        //continue here...
-        this.fileMap.set('xml', 'xml');
+        this.fileMap.set('swift', 'swift');
+        this.fileMap.set('swift', 'swift');
         this.fileMap.set('ts', 'typescript');
+        this.fileMap.set('typescript', 'typescript');
+        this.fileMap.set('vbnet', 'vb');
+        this.fileMap.set('vb', 'vb');
+        this.fileMap.set('xml', 'xml');
+        this.fileMap.set('yaml', 'yaml');
     }
 
     getLanguageForExt(ext) {
