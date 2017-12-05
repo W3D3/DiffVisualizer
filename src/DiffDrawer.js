@@ -33,6 +33,8 @@ class DiffDrawer {
    * @param {string} dst - destination code string
    */
     constructor(src, dst) {
+        this.LINE_SEPARATOR = '\r\n';
+
         this.src = src;
         this.dst = dst;
 
@@ -54,7 +56,7 @@ class DiffDrawer {
         this.metadata = [];
         this.edited = false;
 
-        this.jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
+        //this._jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
     }
 
     checkAPIState()
@@ -62,9 +64,10 @@ class DiffDrawer {
         return this.DIFF_API.get('/matchers');
     }
 
-    // get jobId() {
-    //     return hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited);
-    // }
+    get jobId() {
+        if(!this._jobId) return hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited);
+        else return this._jobId;
+    }
 
     setSrcUrl(value) {
         this.srcUrl = value;
@@ -114,16 +117,17 @@ class DiffDrawer {
     }
 
     setAsCurrentJob() {
+        debugger;
         DiffDrawer.currentJobId = this.jobId;
     }
 
-    setJobId(id) {
-        if (id === null) {
-            this.jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
-        } else {
-            this.jobId = hash(id + 'm' + this.matcherID);
-        }
-    }
+    // setJobId(id) {
+    //     if (id === null) {
+    //         this.jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
+    //     } else {
+    //         this.jobId = hash(id + 'm' + this.matcherID);
+    //     }
+    // }
 
     setBaseUrl(newBase) {
         this.DIFF_API.defaults.baseURL = newBase;
@@ -133,22 +137,30 @@ class DiffDrawer {
         return this.DIFF_API.defaults.baseURL;
     }
 
-    setSource(newSrc) {
-        this.src = newSrc;
-        //TODO update jobId if needed
+    set src(val) {
+        debugger;
+        if (val == null) {
+            this._src = '';
+        } else {
+            this._src = val.replace(new RegExp('(\\r)?\\n', 'g'), this.LINE_SEPARATOR);
+        }
+
     }
 
-    getSource() {
-        return this.src;
+    get src() {
+        return this._src;
     }
 
-    setDestination(newDst) {
-        this.dst = newDst;
-        //TODO update jobId if needed
+    set dst(val) {
+        if (val == null) {
+            this._src = '';
+        } else {
+            this._dst = val.replace(new RegExp('(\\r)?\\n', 'g'), this.LINE_SEPARATOR);
+        }
     }
 
-    getDestination() {
-        return this.dst;
+    get dst() {
+        return this._dst;
     }
 
     setFilter(filterarray) {
@@ -206,8 +218,8 @@ class DiffDrawer {
             return false;
         }
 
-        var linesSrc = this.getSource().split('\r\n');
-        var linesDst = this.getDestination().split('\r\n');
+        var linesSrc = this.src.split('\r\n');
+        var linesDst = this.dst.split('\r\n');
 
         for (var i = 0; i < linesSrc.length; i++) {
             //line numbers are indexed starting at 1 (human readable), so add 1 here
@@ -226,6 +238,8 @@ class DiffDrawer {
             }
         }
 
+        console.log(this.jobId);
+        console.log(DiffDrawer.currentJobId);
         if (this.checkIfCurrentJob()) { //only show if this is the current Job!
 
             $('#dst').html(linesDst.join('\n'));
@@ -309,55 +323,55 @@ class DiffDrawer {
 
     static fixSequencing(markers) {
         var markersSorted = _(markers).chain()
-          // .sortBy('id')
+          // .sortBy('length')
           .sortBy('position.offset')
           .sortBy('position.line')
           .reverse()
           .value();
 
 
-        var lastClosed = [];
-        var markersFixed = [];
-
-        markersSorted.forEach(function(marker) {
-            if (marker.isEndMarker) {
-                  //is endmarker and always fits there
-                markersFixed.push(marker);
-
-                  //fill the opening Marker into the last closed array for faster opening
-                var closingMarker = marker.createEndMarker(marker.position);
-                closingMarker.isEndMarker = false;
-                lastClosed.push(closingMarker);
-            } else {
-                  //startmarker
-                if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
-                      //can be inserted
-                    lastClosed.pop();
-                    markersFixed.push(marker);
-                } else {
-                    var markerNotYetOpened = false;
-                    lastClosed.forEach(function(startmarker) {
-                        if (startmarker.id == marker.id) {
-                            markerNotYetOpened = true;
-                        }
-                    });
-                    if (markerNotYetOpened) {
-                        var openingMarker = lastClosed.pop();
-                        while (openingMarker.id <= marker.id) {
-                            openingMarker.position = marker.position;
-                            markersFixed.push(openingMarker);
-
-                            if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
-                                openingMarker = lastClosed.pop();
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        return markersFixed;
+        // var lastClosed = [];
+        // var markersFixed = [];
+        //
+        // markersSorted.forEach(function(marker) {
+        //     if (marker.isEndMarker) {
+        //           //is endmarker and always fits there
+        //         markersFixed.push(marker);
+        //
+        //           //fill the opening Marker into the last closed array for faster opening
+        //         var closingMarker = marker.createEndMarker(marker.position);
+        //         closingMarker.isEndMarker = false;
+        //         lastClosed.push(closingMarker);
+        //     } else {
+        //           //startmarker
+        //         if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
+        //               //can be inserted
+        //             lastClosed.pop();
+        //             markersFixed.push(marker);
+        //         } else {
+        //             var markerNotYetOpened = false;
+        //             lastClosed.forEach(function(startmarker) {
+        //                 if (startmarker.id == marker.id) {
+        //                     markerNotYetOpened = true;
+        //                 }
+        //             });
+        //             if (markerNotYetOpened) {
+        //                 var openingMarker = lastClosed.pop();
+        //                 while (openingMarker.id <= marker.id) {
+        //                     openingMarker.position = marker.position;
+        //                     markersFixed.push(openingMarker);
+        //
+        //                     if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
+        //                         openingMarker = lastClosed.pop();
+        //                     } else {
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
+        return markersSorted;
     }
 
   /**
@@ -374,13 +388,6 @@ class DiffDrawer {
             return;
         }
 
-        const LINE_SEPARATOR = '\r\n';
-        var srcString = this.src.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
-        var dstString = this.dst.replace(new RegExp('(\\r)?\\n', 'g'), LINE_SEPARATOR);
-
-        this.src = srcString;
-        this.dst = dstString;
-
         var diffdrawer = this;
         if (!diffdrawer.checkIfCurrentJob()) {
             //console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
@@ -388,8 +395,8 @@ class DiffDrawer {
             return;
         }
         var payload = {
-            'src': base64.encode(srcString),
-            'dst': base64.encode(dstString),
+            'src': base64.encode(this.src),
+            'dst': base64.encode(this.dst),
             'matcher': this.getMatcherID()
         };
         this.DIFF_API.post('/changes', payload)

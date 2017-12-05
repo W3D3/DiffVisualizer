@@ -114,6 +114,8 @@ $(document).ready(function() {
             Loader.createDiffList([diffObject], true);
         }
     });
+    gw.updateOptions();
+
     $('#githubImportButton').click(function() {
         $('#wizard').modal('show');
         GUI.setMonacoMinimapsVisibility(false);
@@ -133,8 +135,8 @@ function editorSetup() {
     $('#saveSource').click(function() {
         NProgress.start();
         GUI.switchToViewer();
-        dv.setSource(window.editorSrc.getValue());
-        dv.setDestination(window.editorDst.getValue());
+        dv.src = window.editorSrc.getValue();
+        dv.dst = window.editorDst.getValue();
         dv.setFilter(filter);
         dv.setAsCurrentJob();
         //TODO check if really edited
@@ -158,8 +160,8 @@ function editorSetup() {
         GUI.switchToEditor();
 
         if(dv) {
-            window.editorSrc.setValue(dv.getSource());
-            window.editorDst.setValue(dv.getDestination());
+            window.editorSrc.setValue(dv.src);
+            window.editorDst.setValue(dv.dst);
         }
 
     });
@@ -224,8 +226,6 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
     viewer.setSrcUrl(srcUrl);
     viewer.setDstUrl(dstUrl);
 
-    viewer.setAsCurrentJob();
-
     var configSrc = {
         onDownloadProgress: progressEvent => {
             let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total) / 3;
@@ -266,9 +266,8 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
       .then(axios.spread(function (src, dst) {
           // Both requests are now complete
 
-          viewer.setSource(src.data);
-          viewer.setDestination(dst.data);
-
+          viewer.src = src.data;
+          viewer.dst = dst.data;
           viewer.setFilter(filter);
 
           var avg = (src.data.split(/\r\n|\r|\n/).length + dst.data.split(/\r\n|\r|\n/).length) / 2;
@@ -291,6 +290,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
                   callback: function (accepted) {
                       if(accepted) {
                           viewer.setEnableMinimap(false); //temporarily disable minimap for huge file
+                          viewer.setAsCurrentJob();
                           dv = viewer;
                           viewer.diffAndDraw(function() {
                               //success
@@ -313,6 +313,8 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
               });
           }
           else {
+              debugger;
+              viewer.setAsCurrentJob();
               dv = viewer;
               GUI.switchToViewer();
               viewer.diffAndDraw(function() {
@@ -535,6 +537,7 @@ function clickBoundMarkersSetup() {
     });
 
     $('#codeView').on('dblclick', 'span[data-metadata]', function() {
+        GUI.deselect();
 
         var title = $(this).data('title');
         var content = dv.metadata[$(this).data('metadata')];
