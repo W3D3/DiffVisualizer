@@ -133,7 +133,6 @@ class DiffDrawer {
     }
 
     set src(val) {
-        debugger;
         if (val == null) {
             this._src = '';
         } else {
@@ -233,8 +232,6 @@ class DiffDrawer {
             }
         }
 
-        console.log(this.jobId);
-        console.log(DiffDrawer.currentJobId);
         if (this.checkIfCurrentJob()) { //only show if this is the current Job!
 
             $('#dst').html(linesDst.join('\n'));

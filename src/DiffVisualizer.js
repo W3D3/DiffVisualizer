@@ -313,7 +313,6 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
               });
           }
           else {
-              debugger;
               viewer.setAsCurrentJob();
               dv = viewer;
               GUI.switchToViewer();
