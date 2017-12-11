@@ -315,55 +315,55 @@ class DiffDrawer {
 
     static fixSequencing(markers) {
         var markersSorted = _(markers).chain()
-          // .sortBy('length')
+          .sortBy('id')
           .sortBy('position.offset')
           .sortBy('position.line')
           .reverse()
           .value();
 
 
-        // var lastClosed = [];
-        // var markersFixed = [];
-        //
-        // markersSorted.forEach(function(marker) {
-        //     if (marker.isEndMarker) {
-        //           //is endmarker and always fits there
-        //         markersFixed.push(marker);
-        //
-        //           //fill the opening Marker into the last closed array for faster opening
-        //         var closingMarker = marker.createEndMarker(marker.position);
-        //         closingMarker.isEndMarker = false;
-        //         lastClosed.push(closingMarker);
-        //     } else {
-        //           //startmarker
-        //         if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
-        //               //can be inserted
-        //             lastClosed.pop();
-        //             markersFixed.push(marker);
-        //         } else {
-        //             var markerNotYetOpened = false;
-        //             lastClosed.forEach(function(startmarker) {
-        //                 if (startmarker.id == marker.id) {
-        //                     markerNotYetOpened = true;
-        //                 }
-        //             });
-        //             if (markerNotYetOpened) {
-        //                 var openingMarker = lastClosed.pop();
-        //                 while (openingMarker.id <= marker.id) {
-        //                     openingMarker.position = marker.position;
-        //                     markersFixed.push(openingMarker);
-        //
-        //                     if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
-        //                         openingMarker = lastClosed.pop();
-        //                     } else {
-        //                         break;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // });
-        return markersSorted;
+        var lastClosed = [];
+        var markersFixed = [];
+
+        markersSorted.forEach(function(marker) {
+            if (marker.isEndMarker) {
+                  //is endmarker and always fits there
+                markersFixed.push(marker);
+
+                  //fill the opening Marker into the last closed array for faster opening
+                var closingMarker = marker.createEndMarker(marker.position);
+                closingMarker.isEndMarker = false;
+                lastClosed.push(closingMarker);
+            } else {
+                  //startmarker
+                if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
+                      //can be inserted
+                    lastClosed.pop();
+                    markersFixed.push(marker);
+                } else {
+                    var markerNotYetOpened = false;
+                    lastClosed.forEach(function(startmarker) {
+                        if (startmarker.id == marker.id) {
+                            markerNotYetOpened = true;
+                        }
+                    });
+                    if (markerNotYetOpened) {
+                        var openingMarker = lastClosed.pop();
+                        while (openingMarker.id <= marker.id) {
+                            openingMarker.position = marker.position;
+                            markersFixed.push(openingMarker);
+
+                            if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
+                                openingMarker = lastClosed.pop();
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return markersFixed;
     }
 
   /**
