@@ -73,6 +73,7 @@ class SearchController {
         var me = this;
 
         $(window).keydown(function(e) {
+            //consider adding && e.shiftKey ?
             if ((e.ctrlKey || e.metaKey) && e.keyCode === 70 && me.enabled == true) {
                 var searchPanel;
                 var container;

@@ -58,6 +58,7 @@ $(document).ready(function() {
     });
     sc.addContainer($('.src'));
     sc.addContainer($('.dst'));
+    sc.disable(); // disable search until switchToViewer
 
     //create first DiffDrawer object to work on
     dv = new DiffDrawer();
@@ -127,11 +128,10 @@ $(document).ready(function() {
 });
 
 function editorSetup() {
-    // editorSrc = GUI.initializeEditor('editorSrc', 'monokai', 'java');
-    // editorDst = GUI.initializeEditor('editorDst', 'monokai', 'java');
+
     $('#changeSource').hide();
-    // $('.monaco').addClass('hidden');
-  //register clickhandler
+
+    // register clickhandler on Save
     $('#saveSource').click(function() {
         sc.enable();
 
@@ -159,14 +159,14 @@ function editorSetup() {
         });
     });
 
-    // window.editorSrc.setValue(jsCode);
-
+    // clickhandler for edit Source button
     $('#changeSource').click(function() {
         sc.disable();
         var srcLinesScrolled = Math.ceil(($('.src').scrollTop() - 5)/20 + 1);
         var dstLinesScrolled = Math.ceil(($('.dst').scrollTop() - 5)/20 + 1);
         GUI.switchToEditor();
 
+        // if we have a viewer active
         if(dv) {
             window.editorSrc.setValue(dv.src);
             window.editorDst.setValue(dv.dst);
@@ -203,7 +203,6 @@ function matcherChangerSetup() {
         Object.assign(changedDv, dv);
 
         changedDv.setMatcher(settings.loadSetting('matcher'));
-        // changedDv.setJobId(dv.getDiffId()); //to refresh job id
         changedDv.setAsCurrentJob();
 
         Utility.showMessage('Matcher changed to ' + $('option:selected', this).text());
@@ -523,7 +522,7 @@ function filterSetup() {
 
 function clickBoundMarkersSetup() {
   //register clickhandler for all the UPDATEs and MOVEs
-    $('#codeContent').on('click', 'span[data-boundto]', function() {
+    $('#codeContent').on('click', '.scriptmarker', function() {
     //reset old selected nodes
         $('.codebox').find('.scriptmarker').removeClass('selected');
 
@@ -555,7 +554,7 @@ function clickBoundMarkersSetup() {
         var stringContent = '<pre><code class="metadatacode">'+ $(this).html() + '</code></pre><br/> \
         <table class="table table-striped"><thead><tr><th>Property</th><th>Value</th></tr></thead> \
         <tbody>';
-        stringContent = 'lol';
+
         Object.entries(content).forEach(([key, value]) => {
             if(value == null) return;
 
