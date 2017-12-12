@@ -151,8 +151,12 @@ SOFTWARE.
         }
 
         function iterateChildren($node) {
+            if($($node).hasClass('selected')) {
+                return;
+            }
             $node.children().each( function() {
                 var $child = $( this );
+
                 if($($child).hasClass('scriptmarker'))
 				{
                     var mini = $( '<div></div>' ).addClass( 'minimap-node' );
