@@ -180,5 +180,18 @@ class Utility {
         });
     }
 
+    static startJSONDownload(filename, content) {
+        var a = window.document.createElement('a');
+        a.href = window.URL.createObjectURL(new Blob([JSON.stringify(content)], {type: 'text/json'}));
+        a.download = filename+'.json';
+
+        // Append anchor to body.
+        document.body.appendChild(a);
+        a.click();
+
+        // Remove anchor from body
+        document.body.removeChild(a);
+    }
+
 }
 export default Utility;
