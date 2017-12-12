@@ -24,7 +24,7 @@
 }
 
 .DELETE {
-    background-color: rgba(222, 166, 166, 0.7);
+    background-color: rgba(194, 81, 81, 0.7);
     text-shadow: none;
     border: none;
     border-color: rgba(218, 1, 1, 0.7);
@@ -41,12 +41,12 @@
 .selected {
     border-width: 2px;
     border-style: solid;
-    border-color: #2780E3;
+    /*border-color: #2780E3;*/
     z-index: 100;
     position: relative;
-    /*font-weight: bold;*/
+    /*font-weight: bold;
     box-shadow: 2px 2px 5px #2780E3;
-    padding: 2px
+    padding: 2px*/
 }
 
 .selected.MOVE {
