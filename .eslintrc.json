@@ -29,6 +29,7 @@
       }
     ],
     "no-restricted-syntax": 0,
+    "no-restricted-properties": 1,
     "complexity": ["warn", 20],
     "curly": ["warn", "all"],
     "dot-location": ["warn", "property"],
@@ -75,6 +76,14 @@
     "no-lonely-if": 1,
     "class-methods-use-this": 1,
     "consistent-this": 1,
+    "func-names": 0,
+    "no-shadow": 1,
+    "one-var": 0,
+    "no-continue": 1,
+    "no-useless-escape": 1,
+    "no-bitwise": 0,
+    "no-cond-assign": 1,
+    "one-var-declaration-per-line": ["error", "initializations"],
     "spaced-comment": [
       "error",
       "always",
