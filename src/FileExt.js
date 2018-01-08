@@ -1,5 +1,4 @@
 class FileExt {
-
     constructor() {
         this.fileMap = new Map();
         this.fileMap.set('bat', 'bat');
@@ -58,13 +57,12 @@ class FileExt {
     }
 
     getLanguageForExt(ext) {
-        var result = this.fileMap.get(ext);
-        if(result){
+        const result = this.fileMap.get(ext);
+        if (result) {
             return result;
-        } else {
-            //return ext;
-            return 'plaintext';
         }
+        // return ext;
+        return 'plaintext';
     }
 
     getLanguageForExtHLJS(ext) {

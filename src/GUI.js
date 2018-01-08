@@ -1,4 +1,4 @@
-/* global $ ace */
+/* global $ */
 /**
  * @file DOM manipulation that doesn't need context
  * @author Christoph Wedenig <christoph@wedenig.org>

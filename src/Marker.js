@@ -16,7 +16,7 @@ class Marker {
     }
 
     bindToId(bindingId) {
-        //type = src, dst
+        // type = src, dst
         this.bind = bindingId;
     }
 
@@ -29,7 +29,7 @@ class Marker {
     }
 
     createEndMarker(newpos) {
-        var endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
+        const endmarker = new Marker(this.id, this.position, this.type, true, this.sourceType);
         endmarker.position = newpos;
         endmarker.bind = this.bind;
         endmarker.metaDataMarkup = this.metaDataMarkup;
@@ -39,23 +39,19 @@ class Marker {
     generateTag() {
         if (this.isEndMarker) {
             return '</span>';
-        } else {
-            if (this.bind != null) {
-                var bindingId = Utility.getOpponent(this.sourceType) + this.bind;
-                return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" data-type="${this.type}" class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
-            } else {
-                return `<span class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
-            }
-
         }
+        if (this.bind != null) {
+            const bindingId = Utility.getOpponent(this.sourceType) + this.bind;
+            return `<span data-sourcetype="${this.sourceType}" data-boundto="${bindingId}" data-type="${this.type}" class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
+        }
+        return `<span class="${this.type} scriptmarker" id="${this.sourceType}${this.id}" ${this.metaDataMarkup}>`;
     }
 
     isValid() {
-        if(this.position.line < 1 || this.position.offset < 0) {
+        if (this.position.line < 1 || this.position.offset < 0) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 }
 export default Marker;

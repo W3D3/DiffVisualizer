@@ -1,21 +1,20 @@
-/* global $ */
+/* global */
 /**
  * @file Settings used to save Data temporarily or persistently
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
 import Utility from './Utility';
 import {
-  version
+    version,
 } from '../package.json';
 
 class Settings {
-
     static filePrefix() {
         return 'savedJSONFiles_';
     }
 
     constructor() {
-        if (typeof(Storage) !== undefined) {
+        if (typeof (Storage) != 'undefined') {
             this.initDefaults();
         } else {
             Utility.showError('No Web Storage support! Settings will not be saved permanently');
@@ -23,19 +22,15 @@ class Settings {
     }
 
     initDefaults() {
-        //if (sessionStorage.length == 0) {
         if (Settings.loadSettingPersistent('version') == null) {
-            //first start
+            // first start
             Settings.clearPersistentStorage();
-        }
-        else if(Settings.loadSettingPersistent('version').split('.').join('') < 190)
-        {
-            //not compatible with version 1.8.1 and below
+        } else if (Settings.loadSettingPersistent('version').split('.').join('') < 190) {
+            // not compatible with version 1.8.1 and below
             Utility.showWarning('Not compatible with version 1.8.1 and below, settings will be reset.');
             Settings.clearPersistentStorage();
         }
         Settings.saveSettingPersistent('version', version);
-
     }
 
     static saveSettingPersistent(key, value) {
@@ -43,20 +38,18 @@ class Settings {
     }
 
     static loadSettingPersistent(key) {
-        var val = localStorage.getItem(key);
-        if(val == 'true'){
+        const val = localStorage.getItem(key);
+        if (val == 'true') {
             return true;
-        } else if(val == 'false'){
+        } else if (val == 'false') {
             return false;
-        } else {
-            return JSON.parse(val);
         }
-
+        return JSON.parse(val);
     }
 
     static getAllSettingsPersistent() {
-        var arr = [];
-        for (var i = 0; i < localStorage.length; i++){
+        const arr = [];
+        for (let i = 0; i < localStorage.length; i++) {
             arr[i] = localStorage.getItem(localStorage.key(i));
         }
         return arr;
@@ -67,8 +60,8 @@ class Settings {
     }
 
     static getAllSettingsKeysPersistent() {
-        var arr = [];
-        for (var i = 0; i < localStorage.length; i++){
+        const arr = [];
+        for (let i = 0; i < localStorage.length; i++) {
             arr[i] = localStorage.key(i);
         }
         return arr;
@@ -87,18 +80,17 @@ class Settings {
     }
 
     static getAllFiles() {
-        var arr = Settings.getAllSettingsKeysPersistent();
-        var regex = new RegExp('^'+Settings.filePrefix(), 'g');
-        return arr.map(function (e) {
-            if(e.match(regex))
-            {
+        const arr = Settings.getAllSettingsKeysPersistent();
+        const regex = new RegExp(`^${Settings.filePrefix()}`, 'g');
+        return arr.map((e) => {
+            if (e.match(regex)) {
                 return e.replace(Settings.filePrefix(), '');
             }
+            return undefined;
         }).filter(item => typeof item !== 'undefined');
     }
 
-    static clearPersistentStorage()
-    {
+    static clearPersistentStorage() {
         localStorage.clear();
     }
 
@@ -107,16 +99,13 @@ class Settings {
     }
 
     loadSetting(key) {
-        var val = sessionStorage.getItem(key);
-        if(val == 'true'){
+        const val = sessionStorage.getItem(key);
+        if (val == 'true') {
             return true;
-        } else if(val == 'false'){
+        } else if (val == 'false') {
             return false;
-        } else {
-            return JSON.parse(val);
         }
-
+        return JSON.parse(val);
     }
-
 }
 export default Settings;
