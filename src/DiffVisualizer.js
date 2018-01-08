@@ -37,7 +37,7 @@ let filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
  */
 $(document).ready(() => {
     gui = new GUI();
-    gui.setVersion(version);
+    GUI.setVersion(version);
     NProgress.configure({trickle: false});
 
     settings = new Settings();
@@ -103,7 +103,7 @@ $(document).ready(() => {
     jumptToLineSetup();
 
     // register hover handler for all the UPDATEs and MOVEs
-    gui.setHoverEffect('.codebox', '.scriptmarker');
+    GUI.setHoverEffect('.codebox', '.scriptmarker');
 
     // create new GitHubWizard
     gw = new GitHubWizard({

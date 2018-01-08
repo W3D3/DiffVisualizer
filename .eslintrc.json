@@ -28,6 +28,7 @@
         "devDependencies": true
       }
     ],
+    "no-restricted-syntax": 0,
     "complexity": ["warn", 20],
     "curly": ["warn", "all"],
     "dot-location": ["warn", "property"],
