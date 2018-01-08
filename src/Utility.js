@@ -1,3 +1,4 @@
+/* global $ */
 /**
  * @file Utility class for various tasks
  * @author Christoph Wedenig <christoph@wedenig.org>
@@ -9,181 +10,225 @@ import moment from 'moment';
  * Utility class for various tasks
  */
 class Utility {
-
-  /**
-   * splits string at given index and returns both
-   * @param {string} value - string to be split
-   * @param {integer} index - where it should be splitValue
-   * @return {string[]} - array with two elements containing split values
-   */
+    /**
+    * Splits string at given index and returns both.
+    * @param {string} value - String to be split.
+    * @param {integer} index - Where it should be splitValue.
+    * @returns {string[]} - Array with two elements containing split values.
+    */
     static splitValue(value, index) {
-        var arr = [value.substring(0, index), value.substring(index)];
+        const arr = [value.substring(0, index), value.substring(index)];
         return arr;
     }
 
-  /**
-   * extracts a given range from a string and returns the string with left and right side
-   * @param {string} value - input string
-   * @param {integer} start - where the range begins
-   * @param {integer} length - how long the range is
-   * @return {string[]} - array with 3 elements containing left side, string in range and right side
-   */
+    /**
+    * Extracts a given range from a string and returns the string with left and right side.
+    * @param {string} value - Input string.
+    * @param {integer} start - Where the range begins.
+    * @param {integer} length - How long the range is.
+    * @returns {string[]} - Array with 3 elements containing left side, string in range and right side.
+    */
     static splitRange(value, start, length) {
-        var arr = [value.substring(0, start), value.substring(start, start + length), value.substring(start + length)];
+        const arr = [value.substring(0, start), value.substring(start, start + length), value.substring(start + length)];
         return arr;
     }
 
-  /**
-   * html safe escapes a given range from a string
-   * @param {string} value - html unsafe string
-   * @param {integer} start - where the range begins
-   * @param {integer} length - how long the range is
-   * @return {string} - html safe string with range escaped
-   */
+    /**
+    * HTML safe escapes a given range from a string.
+    * @param {string} value - HTML unsafe string.
+    * @param {integer} start - Where the unsafe range begins.
+    * @param {integer} end - Where the unsafe range ends.
+    * @returns {string} - HTML safe string with range escaped.
+    */
     static escapeSubpart(value, start, end) {
-        var arr = [value.substring(0, start), _.escape(value.substring(start, end)), value.substring(end)];
+        const arr = [value.substring(0, start), _.escape(value.substring(start, end)), value.substring(end)];
         return arr.join('');
     }
 
-  // Scrolls to elem inside main
+    /**
+    * Scrolls to elem inside container.
+    * @param {jQuery Selector} elem - Element to scroll to.
+    * @param {jQuery Selector} main - Container to scroll.
+    */
     static scrollToElementRelativeTo(elem, main) {
         if (elem) {
-            var t = main.offset().top;
+            const t = main.offset().top;
             main.animate({
-                scrollTop: elem.offset().top - t
+                scrollTop: elem.offset().top - t,
             }, 500);
         } else {
-      //console.error('No element found');
+            // console.error('No element found');
         }
     }
 
-  /**
-   * Jumps to a line based on 20px line size inside a specific container
-   * @example Utility.jumpToLine(120, $('.src')); // jumps to line 120 inside .src
-   * @param {integer} lineNumber - the line number to jump to
-   * @param {string} container - the jQuery selector element of the container to scroll inside
-   */
+    /**
+    * Jumps to a line based on 20px line size inside a specific container.
+    * @example Utility.jumpToLine(120, $('.src')); // Jumps to line 120 inside .src
+    * @param {integer} lineNumber - The line number to jump to.
+    * @param {string} container - The jQuery selector string of the container to scroll inside.
+    */
     static jumpToLine(lineNumber, container) {
         $('span.selectedLine', container.find('.hljs-line-numbers')).contents().unwrap();
 
-        var pixelTop = lineNumber * 20;
-        var offset = container.outerHeight() / 2;
+        const pixelTop = lineNumber * 20; // hardcoded line height here
+        const offset = container.outerHeight() / 2;
         $(container).scrollTo({
             top: pixelTop - offset,
-            left: 0
+            left: 0,
         }, 300);
 
-        if (lineNumber < 1)
-            {return;}
-        var numbers = container.find('.hljs-line-numbers').html();
-        container.find('.hljs-line-numbers').html(numbers.replace(lineNumber, '<span class="selectedLine">' + lineNumber + '</span>'));
+        if (lineNumber < 1) {
+            return;
+        }
+        const numbers = container.find('.hljs-line-numbers').html();
+        container.find('.hljs-line-numbers').html(numbers.replace(lineNumber, `<span class="selectedLine">${lineNumber}</span>`));
     }
 
-  /**
-   * gets the type of the opposing codeview
-   * @param {string} value - current type (src or dst)
-   * @return {string} - opposing type
-   */
+    /**
+    * Gets the type of the opposing codeview.
+    * @param {string} input - Current type (src or dst).
+    * @returns {string} - Opposing type.
+    */
     static getOpponent(input) {
-        if (input == 'src') {
+        if (input === 'src') {
             return 'dst';
-        } else if (input == 'dst') {
+        } else if (input === 'dst') {
             return 'src';
         }
+        return 'src';
     }
 
+    /**
+    * Shows top right notification with some settings.
+    * @param {string} title - Bold text before the message.
+    * @param {string} message - Notification content.
+    * @param {string} type - Bootrap class prefix for styling (info, warning, error etc.).
+    * @param {string} icon - CSS class of icon (glyph or fontawesome).
+    * @param {string} delay - Time until notification fades out (0 is never).
+    */
     static showNotify(title, message, type, icon, delay) {
         $.notify({
             // options
-            icon: icon,
-            title: title,
-            message: message
+            icon,
+            title,
+            message,
         }, {
             // settings
-            delay: delay,
-            type: type,
+            delay,
+            type,
             animate: {
                 enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
+                exit: 'animated fadeOutUp',
             },
             offset: {
                 y: 70,
-                x: 10
+                x: 10,
             },
-            //showProgressbar: true,
+            // showProgressbar: true,
             placement: {
                 from: 'top',
-                align: 'right'
+                align: 'right',
             },
-            z_index: 999999
+            z_index: 999999,
         });
     }
 
+    /**
+    * Shows top right error notification.
+    * @param {string} message - Notification content.
+    */
     static showError(message) {
         Utility.showNotify('Critical - ', message, 'danger', 'glyphicon glyphicon-remove-sign', 0);
     }
 
+    /**
+    * Shows top right default notification.
+    * @param {string} message - Notification content.
+    */
     static showMessage(message) {
         Utility.showNotify('', message, 'info', 'glyphicon glyphicon-info-sign', 3000);
     }
 
+    /**
+    * Shows top right warning notification.
+    * @param {string} message - Notification content.
+    */
     static showWarning(message) {
         Utility.showNotify('', message, 'warning', 'glyphicon glyphicon-alert', 5000);
     }
 
+    /**
+    * Shows top right success notification.
+    * @param {string} message - Notification content.
+    */
     static showSuccess(message) {
         Utility.showNotify('', message, 'success', 'glyphicon glyphicon-ok-sign', 2000);
     }
 
-    static changeCodeStyle(style, darkmode, custom) {
+    /**
+    * Changes the style of the codeboxes.
+    * @param {string} style - Valid hljs style (https://highlightjs.org/static/demo/).
+    * @param {boolean} darkmode - True for dark background and different node coloring.
+    * @param {boolean} local - If style is no valid hljs style, stylesheet will be chosen from local css folder if local is set.
+    */
+    static changeCodeStyle(style, darkmode, local) {
+        const oldlink = document.getElementById('codestyle');
+        const oldmarker = document.getElementById('markerstyle');
+        const newlink = document.createElement('link');
 
-        var oldlink = document.getElementById('codestyle');
-        var oldmarker = document.getElementById('markerstyle');
-
-        var newlink = document.createElement('link');
         newlink.setAttribute('rel', 'stylesheet');
         newlink.setAttribute('type', 'text/css');
         newlink.setAttribute('id', 'codestyle');
-        //TODO change this to local
-        if(!custom) {
-            newlink.setAttribute('href', 'http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/'+style+'.min.css');
-        }
-        else {
-            newlink.setAttribute('href', 'css/'+style+'.css');
+
+        // TODO change this to local
+        if (!local) {
+            newlink.setAttribute('href', `http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/${style}.min.css`);
+        } else {
+            newlink.setAttribute('href', `css/${style}.css`);
         }
 
-
-        var newmarker = document.createElement('link');
+        const newmarker = document.createElement('link');
         newmarker.setAttribute('rel', 'stylesheet');
         newmarker.setAttribute('type', 'text/css');
         newmarker.setAttribute('id', 'markerstyle');
 
-        if(darkmode) {
+        if (darkmode) {
             newmarker.setAttribute('href', 'css/marker-dark.css');
         } else {
             newmarker.setAttribute('href', 'css/marker-light.css');
         }
+
         document.getElementsByTagName('head').item(0).replaceChild(newmarker, oldmarker);
         document.getElementsByTagName('head').item(0).replaceChild(newlink, oldlink);
     }
 
+    /**
+    * Converts date to time ago string.
+    * @param {string} date - ISO 8601 date string.
+    * @returns {string} - Time ago string.
+    */
     static timeAgoString(date) {
-        var d = moment(date);
+        const d = moment(date);
         moment.locale('en');
         return d.calendar(null, {
-                    // sameDay: '[Today]',
-                    // nextDay: '[Tomorrow]',
-                    // nextWeek: 'dddd',
-                    // lastDay: '[Yesterday]',
-                    // lastWeek: '[Last] dddd',
-            sameElse: 'DD.MM.YYYY'
+            // sameDay: '[Today]',
+            // nextDay: '[Tomorrow]',
+            // nextWeek: 'dddd',
+            // lastDay: '[Yesterday]',
+            // lastWeek: '[Last] dddd',
+            sameElse: 'DD.MM.YYYY',
         });
     }
 
+    /**
+    * Converts an object/array into JSON and downloads it on the client.
+    * @param {string} filename - The name of the downloaded file.
+    * @param {Object} content - Object/Array to download as JSON.
+    */
     static startJSONDownload(filename, content) {
-        var a = window.document.createElement('a');
+        const a = window.document.createElement('a');
         a.href = window.URL.createObjectURL(new Blob([JSON.stringify(content)], {type: 'text/json'}));
-        a.download = filename+'.json';
+        a.download = `${filename}.json`;
 
         // Append anchor to body.
         document.body.appendChild(a);
@@ -192,6 +237,5 @@ class Utility {
         // Remove anchor from body
         document.body.removeChild(a);
     }
-
 }
 export default Utility;

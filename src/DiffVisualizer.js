@@ -1,4 +1,4 @@
-/* global $ bootbox monaco */
+/* global $ bootbox */
 /**
  * @file Main file that acts as the entry point
  * @author Christoph Wedenig <christoph@wedenig.org>
