@@ -3,20 +3,22 @@
  * @file Represents and draws Diffs
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
-import Marker from './Marker';
-import Utility from './Utility';
-import Diff from './Diff';
+
 
 import axios from 'axios';
-import Base64 from 'js-base64/base64';
-var base64 = Base64.Base64; //very nice packaging indeed.
 import _ from 'lodash';
 import NProgress from 'nprogress';
 import hash from 'object-hash';
+import Base64 from 'js-base64/base64';
+
+import Marker from './Marker';
+import Utility from './Utility';
+import Diff from './Diff';
 import {
-  client
+    client,
 } from '../config/default.json';
 
+const base64 = Base64.Base64; // very nice packaging indeed.
 /**
  * Used to fetch diff data from a webservice and show it on screen
  * @example var dd = new DiffDrawer(mySrc, myDst); dd.diffAndDraw();
@@ -25,13 +27,6 @@ import {
  * @param {string} dst - destination code string
  */
 class DiffDrawer {
-
-  /**
-   * sets up reasonable defaults for filtering and API endpoint
-   * @constructor
-   * @param {string} src - source code string
-   * @param {string} dst - destination code string
-   */
     constructor(src, dst) {
         this.LINE_SEPARATOR = '\r\n';
 
@@ -46,7 +41,7 @@ class DiffDrawer {
         this.matcherID = 0;
         this.matcherName = 'NONE';
 
-        //set default base URL
+        // set default base URL
         this.DIFF_API = axios.create();
         this.setBaseUrl(client.apibase);
 
@@ -56,17 +51,18 @@ class DiffDrawer {
         this.metadata = [];
         this.edited = false;
 
-        //this._jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
+        // this._jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
     }
 
-    checkAPIState()
-    {
+    checkAPIState() {
         return this.DIFF_API.get('/matchers');
     }
 
     get jobId() {
-        if(!this._jobId) return hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited);
-        else return this._jobId;
+        if (!this._jobId) {
+            return hash(base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited);
+        }
+        return this._jobId;
     }
 
     setSrcUrl(value) {
@@ -86,10 +82,6 @@ class DiffDrawer {
         this.filename = filename;
     }
 
-    /**
-     * [setDiff description]
-     * @param {[Diff]} diff [description]
-     */
     setDiff(diff) {
         this.diff = diff;
     }
@@ -99,17 +91,17 @@ class DiffDrawer {
     }
 
     diffHash() {
-        if(this.diff) {
-            return hash(JSON.stringify(this.diff.toJSON()) + 'edited:' + this.edited);
-        } else {
-            return '';
+        if (this.diff) {
+            return hash(`${JSON.stringify(this.diff.toJSON())}edited:${this.edited}`);
         }
-
+        return '';
     }
 
     getDiffId() {
-        if(this.diff) return this.diff.id;
-        else return this.jobId;
+        if (this.diff) {
+            return this.diff.id;
+        }
+        return this.jobId;
     }
 
     setAsCurrentJob() {
@@ -138,7 +130,6 @@ class DiffDrawer {
         } else {
             this._src = val.replace(new RegExp('(\\r)?\\n', 'g'), this.LINE_SEPARATOR);
         }
-
     }
 
     get src() {
@@ -177,7 +168,7 @@ class DiffDrawer {
     getMatcher() {
         return {
             id: this.matcherID,
-            name: this.matcherName
+            name: this.matcherName,
         };
     }
 
@@ -190,56 +181,54 @@ class DiffDrawer {
         $('span.scriptmarker', $('#dst')).contents().unwrap();
     }
 
-  /**
-   * Checks if current job is indeed this job
-   */
+    /**
+    * Checks if current job is indeed this job.
+    */
     checkIfCurrentJob() {
         if (this.jobId === DiffDrawer.currentJobId) {
-            //this is the current job
+            // this is the current job
             return true;
-        } else {
-            //console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
-            return false;
         }
+        // console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
+        return false;
     }
 
-  /**
-   * takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen
-   */
+    /**
+    * Takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen.
+    */
     showChanges() {
-        if (this.srcMarkersSorted == null || this.srcMarkersSorted == null) {
+        if (this.srcMarkersSorted === null || this.srcMarkersSorted === null) {
             Utility.showError('There are no changes to show');
             return false;
         }
 
-        var linesSrc = this.src.split('\r\n');
-        var linesDst = this.dst.split('\r\n');
+        const linesSrc = this.src.split('\r\n');
+        const linesDst = this.dst.split('\r\n');
 
-        for (var i = 0; i < linesSrc.length; i++) {
-            //line numbers are indexed starting at 1 (human readable), so add 1 here
-            if(this.srcMarkersSorted[i+1]) {
-                linesSrc[i] = DiffDrawer.insertMarkers(this.srcMarkersSorted[i+1], linesSrc[i]);
+        for (let i = 0; i < linesSrc.length; i++) {
+            // line numbers are indexed starting at 1 (human readable), so add 1 here
+            if (this.srcMarkersSorted[i + 1]) {
+                linesSrc[i] = DiffDrawer.insertMarkers(this.srcMarkersSorted[i + 1], linesSrc[i]);
             } else {
                 linesSrc[i] = _.escape(linesSrc[i]);
             }
         }
 
-        for (i = 0; i < linesDst.length; i++) {
-            if(this.dstMarkersSorted[i+1]) {
-                linesDst[i] = DiffDrawer.insertMarkers(this.dstMarkersSorted[i+1], linesDst[i]);
+        for (let i = 0; i < linesDst.length; i++) {
+            if (this.dstMarkersSorted[i + 1]) {
+                linesDst[i] = DiffDrawer.insertMarkers(this.dstMarkersSorted[i + 1], linesDst[i]);
             } else {
                 linesDst[i] = _.escape(linesDst[i]);
             }
         }
 
-        if (this.checkIfCurrentJob()) { //only show if this is the current Job!
-
+        if (this.checkIfCurrentJob()) { // only show if this is the current Job!
             $('#dst').html(linesDst.join('\n'));
             $('#src').html(linesSrc.join('\n'));
             this.enableSyntaxHighlighting();
             this.filter();
 
-            if(this.enableMinimap) {
+            if (this.enableMinimap) {
                 DiffDrawer.refreshMinimap();
                 $('.minimap').show();
 
@@ -250,19 +239,18 @@ class DiffDrawer {
             return true;
         }
         return false;
-
     }
 
     static refreshMinimap() {
-        var $src = $('.src');
-        var $dst = $('.dst');
+        const $src = $('.src');
+        const $dst = $('.dst');
 
-        var minimapHeight = $('.codebox').css('height');
-        var minimapTop = $('#codeboxTitle').css('height');
+        const minimapHeight = $('.codebox').css('height');
+        const minimapTop = $('#codeboxTitle').css('height');
         $('.minimap').css('height', minimapHeight);
-        $('.minimap').css('top', minimapTop+20);
+        $('.minimap').css('top', minimapTop + 20);
 
-        var right = parseInt($('.dst').innerWidth() + 3 + 'px');
+        const right = parseInt(`${$('.dst').innerWidth() + 3}px`, 10);
         $('.srcminimap').css('right', right);
         $('.dstminimap').css('right', '1px');
 
@@ -272,83 +260,82 @@ class DiffDrawer {
     }
 
 
-
-  /**
+    /**
    * Enables/refreshes syntax highlighting and line numbers for all code blocks
    */
     enableSyntaxHighlighting() {
-        $('pre code').each(function(i, block) {
+        $('pre code').each((i, block) => {
             hljs.highlightBlock(block);
         });
 
         $('code.hljs-line-numbers').remove();
 
-        $('code.hljs#src').each(function(i, block) {
+        $('code.hljs#src').each((i, block) => {
             hljs.lineNumbersBlock(block);
         });
-        $('code.hljs#dst').each(function(i, block) {
+        $('code.hljs#dst').each((i, block) => {
             hljs.lineNumbersBlock(block);
         });
     }
 
-  /**
+    /**
    * Takes a codestring and their already sorted markers and generates a string with all the inserted markers added
    * @param {Marker[]} markersSorted - sorted marker array of the given code string
    * @param {string} codeString - code string to be used, contained html tags will be escaped
    * @return {string} - code string with all the markers added as span tags
    */
     static insertMarkers(markersSorted, codeString) {
-        var escapeUntilPos = codeString.length;
-        markersSorted.forEach(function(marker) {
-            //Before inserting marker, escape everything up to this point
+        let escapeUntilPos = codeString.length;
+        markersSorted.forEach((marker) => {
+            // Before inserting marker, escape everything up to this point
             codeString = Utility.escapeSubpart(codeString, marker.position.offset, escapeUntilPos);
             escapeUntilPos = marker.position.offset;
 
-            var range = Utility.splitValue(codeString, marker.position.offset);
+            const range = Utility.splitValue(codeString, marker.position.offset);
             codeString = range[0] + marker.generateTag() + range[1];
         });
-        //after all markers, escape the rest of the string
+        // after all markers, escape the rest of the string
         codeString = Utility.escapeSubpart(codeString, 0, escapeUntilPos);
-        //formatted string
+        // formatted string
         return codeString;
     }
 
     static fixSequencing(markers) {
-        var markersSorted = _(markers).chain()
-          .sortBy('id')
-          .sortBy('position.offset')
-          .sortBy('position.line')
-          .reverse()
-          .value();
+        const markersSorted = _(markers).chain()
+            .sortBy('id')
+            .sortBy('position.offset')
+            .sortBy('position.line')
+            .reverse()
+            .value();
 
 
-        var lastClosed = [];
-        var markersFixed = [];
+        const lastClosed = [];
+        const markersFixed = [];
 
-        markersSorted.forEach(function(marker) {
+        markersSorted.forEach((marker) => {
             if (marker.isEndMarker) {
-                  //is endmarker and always fits there
+                // is endmarker and always fits there
                 markersFixed.push(marker);
 
-                  //fill the opening Marker into the last closed array for faster opening
-                var closingMarker = marker.createEndMarker(marker.position);
+                // fill the opening Marker into the last closed array for faster opening
+                const closingMarker = marker.createEndMarker(marker.position);
                 closingMarker.isEndMarker = false;
                 lastClosed.push(closingMarker);
             } else {
-                  //startmarker
+                // startmarker
                 if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
-                      //can be inserted
+                    // can be inserted
                     lastClosed.pop();
                     markersFixed.push(marker);
                 } else {
-                    var markerNotYetOpened = false;
-                    lastClosed.forEach(function(startmarker) {
+                    let markerNotYetOpened = false;
+                    lastClosed.forEach((startmarker) => {
                         if (startmarker.id == marker.id) {
                             markerNotYetOpened = true;
                         }
                     });
                     if (markerNotYetOpened) {
-                        var openingMarker = lastClosed.pop();
+                        let openingMarker = lastClosed.pop();
                         while (openingMarker.id <= marker.id) {
                             openingMarker.position = marker.position;
                             markersFixed.push(openingMarker);
@@ -366,7 +353,7 @@ class DiffDrawer {
         return markersFixed;
     }
 
-  /**
+    /**
    * Takes src and dst and send them to the webservice to get diffing information
    * This also calls @see showChanges to show the generated data right after fetching
    * This is the only method you have to execute from outside this class
@@ -374,238 +361,233 @@ class DiffDrawer {
    * @param {string} codeString - code string to be used, contained html tags will be escaped
    */
     diffAndDraw(callback, err) {
-
         if (this.src == null || this.dst == null) {
             NProgress.done();
             return;
         }
 
-        var diffdrawer = this;
+        const diffdrawer = this;
         if (!diffdrawer.checkIfCurrentJob()) {
-            //console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
+            // console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
             NProgress.done();
             return;
         }
-        var payload = {
-            'src': base64.encode(this.src),
-            'dst': base64.encode(this.dst),
-            'matcher': this.getMatcherID()
+        const payload = {
+            src: base64.encode(this.src),
+            dst: base64.encode(this.dst),
+            matcher: this.getMatcherID(),
         };
         this.DIFF_API.post('/changes', payload)
-        .then(function(response) {
+            .then((response) => {
+                $('.time').text(`${response.data.metrics.matchingTime} ms to match, ${response.data.metrics.classificationTime} ms to classify using matcher ${diffdrawer.matcherName}`);
 
-            $('.time').text(response.data.metrics.matchingTime + ' ms to match, ' + response.data.metrics.classificationTime + ' ms to classify using matcher ' + diffdrawer.matcherName);
+                const changes = response.data.results;
+                const dstMarkers = [];
+                const srcMarkers = [];
 
-            var changes = response.data.results;
-            var dstMarkers = new Array();
-            var srcMarkers = new Array();
+                changes.forEach((entry) => {
+                    let startPosition;
+                    let endPosition;
+                    let startMarker;
+                    let closingMarker;
 
-            changes.forEach(function(entry) {
-                var startPosition;
-                var endPosition;
-                var startMarker;
-                var closingMarker;
+                    if (entry.actionType == 'INSERT') {
+                        startPosition = {
+                            line: entry.dstStartLine,
+                            offset: entry.dstStartLineOffset,
+                            absolute: entry.dstPos,
+                        };
+                        startMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
 
-                if (entry.actionType == 'INSERT') {
-                    startPosition = {
-                        line: entry.dstStartLine,
-                        offset: entry.dstStartLineOffset,
-                        absolute: entry.dstPos
-                    };
-                    startMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
+                        diffdrawer.metadata.push(entry.metadata);
+                        startMarker.addMetaData(`INSERT ${entry.dstId}`, diffdrawer.metadata.length - 1);
 
-                    diffdrawer.metadata.push(entry.metadata);
-                    startMarker.addMetaData('INSERT ' + entry.dstId, diffdrawer.metadata.length - 1);
+                        endPosition = {
+                            line: entry.dstEndLine,
+                            offset: entry.dstEndLineOffset,
+                            absolute: entry.dstPos + entry.dstLength,
+                        };
+                        closingMarker = startMarker.createEndMarker(endPosition);
 
-                    endPosition = {
-                        line: entry.dstEndLine,
-                        offset: entry.dstEndLineOffset,
-                        absolute: entry.dstPos + entry.dstLength
-                    };
-                    closingMarker = startMarker.createEndMarker(endPosition);
-
-                    if(!startMarker.isValid()) {
-                        err('<pre>'+JSON.stringify(startMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
+                        if (!startMarker.isValid()) {
+                            err(`<pre>${JSON.stringify(startMarker, undefined, 2)}</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.`);
+                        }
+                        dstMarkers.push(startMarker);
+                        dstMarkers.push(closingMarker);
                     }
-                    dstMarkers.push(startMarker);
-                    dstMarkers.push(closingMarker);
+
+                    if (entry.actionType === 'UPDATE' || entry.actionType === 'MOVE') {
+                        // SRCMARKER
+                        startPosition = {
+                            line: entry.srcStartLine,
+                            offset: entry.srcStartLineOffset,
+                            absolute: entry.srcPos,
+                        };
+                        startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
+                        startMarker.bindToId(entry.dstId);
+
+                        diffdrawer.metadata.push(entry.metadata);
+                        startMarker.addMetaData(`${entry.actionType} (Source) ${entry.srcId}`, diffdrawer.metadata.length - 1);
+
+                        endPosition = {
+                            line: entry.srcEndLine,
+                            offset: entry.srcEndLineOffset,
+                            absolute: entry.srcPos + entry.srcLength,
+                        };
+                        closingMarker = startMarker.createEndMarker(endPosition);
+
+                        if (!startMarker.isValid()) {
+                            err(`<pre>${JSON.stringify(startMarker, undefined, 2)}</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.`);
+                        }
+                        srcMarkers.push(startMarker);
+                        srcMarkers.push(closingMarker);
+
+                        // DSTMARKER
+                        startPosition = {
+                            line: entry.dstStartLine,
+                            offset: entry.dstStartLineOffset,
+                            absolute: entry.dstPos,
+                        };
+                        const dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
+                        dstStartMarker.bindToId(entry.srcId);
+
+                        dstStartMarker.addMetaData(`${entry.actionType} (Destination) ${entry.dstId}`, diffdrawer.metadata.length - 1);
+                        // dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
+                        // startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
+                        endPosition = {
+                            line: entry.dstEndLine,
+                            offset: entry.dstEndLineOffset,
+                            absolute: entry.dstPos + entry.dstLength,
+                        };
+                        const dstClosingMarker = dstStartMarker.createEndMarker(endPosition);
+
+                        if (!dstStartMarker.isValid()) {
+                            err(`<pre>${JSON.stringify(dstStartMarker, undefined, 2)}</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.`);
+                        }
+                        dstMarkers.push(dstStartMarker);
+                        dstMarkers.push(dstClosingMarker);
+                    }
+
+                    if (entry.actionType === 'DELETE') {
+                    // SRCMARKER
+                        startPosition = {
+                            line: entry.srcStartLine,
+                            offset: entry.srcStartLineOffset,
+                            absolute: entry.srcPos,
+                        };
+                        startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
+                        // startMarker.bindToId(entry.dstId);
+
+                        diffdrawer.metadata.push(entry.metadata);
+                        startMarker.addMetaData(`DELETE ${entry.srcId}`, diffdrawer.metadata.length - 1);
+                        // startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
+
+                        endPosition = {
+                            line: entry.srcEndLine,
+                            offset: entry.srcEndLineOffset,
+                            absolute: entry.srcPos + entry.srcLength,
+                        };
+                        closingMarker = startMarker.createEndMarker(endPosition);
+
+                        if (!startMarker.isValid()) {
+                            err(`<pre>${JSON.stringify(startMarker, undefined, 2)}</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.`);
+                        }
+                        srcMarkers.push(startMarker);
+                        srcMarkers.push(closingMarker);
+                    }
+                });
+
+                // markers are now full, sort and fix them
+                const fixedSrcMarkers = DiffDrawer.fixSequencing(srcMarkers);
+                diffdrawer.srcMarkersSorted = _.groupBy(fixedSrcMarkers, (item) => {
+                    return item.position.line;
+                });
+
+                const fixedDstMarkers = DiffDrawer.fixSequencing(dstMarkers);
+                diffdrawer.dstMarkersSorted = _.groupBy(fixedDstMarkers, (item) => {
+                    return item.position.line;
+                });
+
+
+                if (!diffdrawer.checkIfCurrentJob()) {
+                    return false;
                 }
 
-                if (entry.actionType == 'UPDATE' || entry.actionType == 'MOVE') {
-                    //SRCMARKER
-                    startPosition = {
-                        line: entry.srcStartLine,
-                        offset: entry.srcStartLineOffset,
-                        absolute: entry.srcPos
-                    };
-                    startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
-                    startMarker.bindToId(entry.dstId);
-
-                    diffdrawer.metadata.push(entry.metadata);
-                    startMarker.addMetaData(entry.actionType + ' (Source) ' + entry.srcId, diffdrawer.metadata.length - 1);
-
-                    endPosition = {
-                        line: entry.srcEndLine,
-                        offset: entry.srcEndLineOffset,
-                        absolute: entry.srcPos + entry.srcLength
-                    };
-                    closingMarker = startMarker.createEndMarker(endPosition);
-
-                    if(!startMarker.isValid()) {
-                        err('<pre>'+JSON.stringify(startMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
-                    }
-                    srcMarkers.push(startMarker);
-                    srcMarkers.push(closingMarker);
-
-                    //DSTMARKER
-                    startPosition = {
-                        line: entry.dstStartLine,
-                        offset: entry.dstStartLineOffset,
-                        absolute: entry.dstPos
-                    };
-                    var dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
-                    dstStartMarker.bindToId(entry.srcId);
-
-                    dstStartMarker.addMetaData(entry.actionType + ' (Destination) ' + entry.dstId, diffdrawer.metadata.length - 1);
-                    //dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
-                    //startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
-                    endPosition = {
-                        line: entry.dstEndLine,
-                        offset: entry.dstEndLineOffset,
-                        absolute: entry.dstPos + entry.dstLength
-                    };
-                    var dstClosingMarker = dstStartMarker.createEndMarker(endPosition);
-
-                    if(!dstStartMarker.isValid()) {
-                        err('<pre>'+JSON.stringify(dstStartMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
-                    }
-                    dstMarkers.push(dstStartMarker);
-                    dstMarkers.push(dstClosingMarker);
+                if (diffdrawer.showChanges()) {
+                    callback();
                 }
-
-                if (entry.actionType == 'DELETE') {
-                    //SRCMARKER
-                    startPosition = {
-                        line: entry.srcStartLine,
-                        offset: entry.srcStartLineOffset,
-                        absolute: entry.srcPos
-                    };
-                    startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
-                    // startMarker.bindToId(entry.dstId);
-
-                    diffdrawer.metadata.push(entry.metadata);
-                    startMarker.addMetaData('DELETE ' + entry.srcId, diffdrawer.metadata.length - 1);
-                    //startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
-
-                    endPosition = {
-                        line: entry.srcEndLine,
-                        offset: entry.srcEndLineOffset,
-                        absolute: entry.srcPos + entry.srcLength
-                    };
-                    closingMarker = startMarker.createEndMarker(endPosition);
-
-                    if(!startMarker.isValid()) {
-                        err('<pre>'+JSON.stringify(startMarker, undefined, 2) + '</pre>Marker is invalid and cannot be displayed. This is likely an error with the diff webservice.');
+                return true;
+            })
+            .catch((error) => {
+                // make sure we don't throw errors for old jobs!
+                if (diffdrawer.checkIfCurrentJob()) {
+                    if (error.response) {
+                        err(`${error} (using matcher ${diffdrawer.matcherName})<pre>${JSON.stringify(error.response.data, undefined, 2)}</pre>`);
+                        return;
                     }
-                    srcMarkers.push(startMarker);
-                    srcMarkers.push(closingMarker);
+                    err(`${error} (using matcher ${diffdrawer.matcherName})`);
+                    // console.error(error);
                 }
-
             });
-
-            //markers are now full, sort and fix them
-            var fixedSrcMarkers = DiffDrawer.fixSequencing(srcMarkers);
-            diffdrawer.srcMarkersSorted = _.groupBy(fixedSrcMarkers, function (item) {
-                return item.position.line;
-            });
-
-            var fixedDstMarkers = DiffDrawer.fixSequencing(dstMarkers);
-            diffdrawer.dstMarkersSorted = _.groupBy(fixedDstMarkers, function (item) {
-                return item.position.line;
-            });
-
-
-            if (!diffdrawer.checkIfCurrentJob()) {
-                return false;
-            }
-
-            if(diffdrawer.showChanges()) {
-                callback();
-            }
-
-        })
-      .catch(function(error) {
-
-          //make sure we don't throw errors for old jobs!
-          if (diffdrawer.checkIfCurrentJob()) {
-              if (error.response) {
-                  err(error + ' (using matcher ' + diffdrawer.matcherName + ')<pre>' + JSON.stringify(error.response.data, undefined, 2)  + '</pre>');
-                  return;
-              }
-              err(error + ' (using matcher ' + diffdrawer.matcherName + ')');
-              //console.error(error);
-          }
-      });
     }
 
-      //status
-      // -2 aborted
-      // -1 error
-      // 0 = in progress
-      // 1 = done
+    // status
+    // -2 aborted
+    // -1 error
+    // 0 = in progress
+    // 1 = done
     generateTitle(status) {
-        var titlestring = '';
-        if(this.diff == null)
-        {
+        let titlestring = '';
+        if (this.diff == null) {
             titlestring = `<span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
         } else {
             titlestring = `<span class="label label-default id-expand" data-id="${this.diff.id}">${this.diff.shortId}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
         }
 
-        if(status === 0) {
+        if (status === 0) {
             titlestring += '<span class="label label-primary">IN PROGRESS</span>';
-        }
-        else if(status === -1) {
+        } else if (status === -1) {
             titlestring += '<span class="label label-danger">ERROR</span>';
-        }
-        else if(status === -2) {
+        } else if (status === -2) {
             titlestring += '<span class="label label-danger">ABORTED</span>';
         }
-        if(this.diff != null) {
+        if (this.diff !== null) {
             titlestring += ` <b>${this.diff.title}</b> `;
-            if(this.edited) titlestring += ' (Edited) ';
+            if (this.edited) {
+                titlestring += ' (Edited) ';
+            }
 
-            if(this.srcUrl) titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a>`;
-            if(this.dstUrl) titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a>`;
+            if (this.srcUrl) {
+                titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a>`;
+            }
+            if (this.dstUrl) {
+                titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a>`;
+            }
 
-            if(this.diff.commitUrl) titlestring += `<a href="${this.diff.commitUrl}" target="${this.diff.id}"><span class="badge"><i class="fa fa-github"></i> Commit</span></a>`;
-
+            if (this.diff.commitUrl) {
+                titlestring += `<a href="${this.diff.commitUrl}" target="${this.diff.id}"><span class="badge"><i class="fa fa-github"></i> Commit</span></a>`;
+            }
         } else {
             titlestring += ' <b>Editor Input</b> ';
         }
         return titlestring;
     }
 
-    filter()
-    {
-        var allTypes = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
-        allTypes.forEach(type => {
-            if(!this.filterArray.includes(type))
-            {
-                var typedMarkers = $('#codeContent').find('.'+type);
+    filter() {
+        const allTypes = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+        allTypes.forEach((type) => {
+            if (!this.filterArray.includes(type)) {
+                const typedMarkers = $('#codeContent').find(`.${type}`);
                 typedMarkers.removeClass(type);
                 typedMarkers.removeClass('scriptmarker');
-                typedMarkers.addClass(type+'-hidden');
-            }else {
-
-                var hiddenMarkers = $('#codeContent').find('.'+type+'-hidden');
-                hiddenMarkers.removeClass(type+'-hidden');
+                typedMarkers.addClass(`${type}-hidden`);
+            } else {
+                const hiddenMarkers = $('#codeContent').find(`.${type}-hidden`);
+                hiddenMarkers.removeClass(`${type}-hidden`);
                 hiddenMarkers.addClass('scriptmarker');
                 hiddenMarkers.addClass(type);
-
             }
         });
-
     }
 }
 export default DiffDrawer;

@@ -70,6 +70,11 @@
         }
       }
     ],
+    "require-jsdoc": 0,
+    "no-plusplus": 0,
+    "no-lonely-if": 1,
+    "class-methods-use-this": 1,
+    "consistent-this": 1,
     "spaced-comment": [
       "error",
       "always",
