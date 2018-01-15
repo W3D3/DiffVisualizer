@@ -77,7 +77,7 @@
     "class-methods-use-this": 1,
     "consistent-this": 1,
     "func-names": 0,
-    "no-shadow": 1,
+    "no-shadow": 0,
     "one-var": 0,
     "no-continue": 1,
     "no-useless-escape": 1,
@@ -86,6 +86,7 @@
     "eqeqeq": 0,
     "prefer-const": 1,
     "one-var-declaration-per-line": ["error", "initializations"],
+    "consistent-this": ["error", "me"],
     "spaced-comment": [
       "error",
       "always",

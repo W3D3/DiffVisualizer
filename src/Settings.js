@@ -13,24 +13,20 @@ class Settings {
         return 'savedJSONFiles_';
     }
 
-    constructor() {
+    static initDefaults() {
         if (typeof (Storage) != 'undefined') {
-            this.initDefaults();
+            if (Settings.loadSettingPersistent('version') == null) {
+                // first start
+                Settings.clearPersistentStorage();
+            } else if (Settings.loadSettingPersistent('version').split('.').join('') < 190) {
+                // not compatible with version 1.8.1 and below
+                Utility.showWarning('Not compatible with version 1.8.1 and below, settings will be reset.');
+                Settings.clearPersistentStorage();
+            }
+            Settings.saveSettingPersistent('version', version);
         } else {
             Utility.showError('No Web Storage support! Settings will not be saved permanently');
         }
-    }
-
-    initDefaults() {
-        if (Settings.loadSettingPersistent('version') == null) {
-            // first start
-            Settings.clearPersistentStorage();
-        } else if (Settings.loadSettingPersistent('version').split('.').join('') < 190) {
-            // not compatible with version 1.8.1 and below
-            Utility.showWarning('Not compatible with version 1.8.1 and below, settings will be reset.');
-            Settings.clearPersistentStorage();
-        }
-        Settings.saveSettingPersistent('version', version);
     }
 
     static saveSettingPersistent(key, value) {
@@ -94,11 +90,11 @@ class Settings {
         localStorage.clear();
     }
 
-    saveSetting(key, value) {
+    static saveSetting(key, value) {
         sessionStorage.setItem(key, JSON.stringify(value));
     }
 
-    loadSetting(key) {
+    static loadSetting(key) {
         const val = sessionStorage.getItem(key);
         if (val == 'true') {
             return true;

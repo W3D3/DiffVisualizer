@@ -39,19 +39,19 @@
 
 
     /**
-     * @param {Node} node - The DOM Node object to render
-     * @param {Object} options - Rendering options
-     * @param {Function} options.filter - Should return true if passed node should be included in the output
+     * @param {Node} node - The DOM Node object to render.
+     * @param {Object} options - Rendering options.
+     * @param {Function} options.filter - Should return true if passed node should be included in the output.
      *          (excluding node means excluding it's children as well). Not called on the root node.
-     * @param {String} options.bgcolor - color for the background, any valid CSS color value.
-     * @param {Number} options.width - width to be applied to node before rendering.
-     * @param {Number} options.height - height to be applied to node before rendering.
-     * @param {Object} options.style - an object whose properties to be copied to node's style before rendering.
-     * @param {Number} options.quality - a Number between 0 and 1 indicating image quality (applicable to JPEG only),
+     * @param {String} options.bgcolor - Color for the background, any valid CSS color value.
+     * @param {Number} options.width - Width to be applied to node before rendering.
+     * @param {Number} options.height - Height to be applied to node before rendering.
+     * @param {Object} options.style - An object whose properties to be copied to node's style before rendering.
+     * @param {Number} options.quality - A Number between 0 and 1 indicating image quality (applicable to JPEG only),
                 defaults to 1.0.
-     * @param {String} options.imagePlaceholder - dataURL to use as a placeholder for failed images, default behaviour is to fail fast on images we can't fetch
-     * @param {Boolean} options.cacheBust - set to true to cache bust by appending the time to the request url
-     * @return {Promise} - A promise that is fulfilled with a SVG image data URL
+     * @param {String} options.imagePlaceholder - DataURL to use as a placeholder for failed images, default behaviour is to fail fast on images we can't fetch.
+     * @param {Boolean} options.cacheBust - Set to true to cache bust by appending the time to the request url.
+     * @returns {Promise} - A promise that is fulfilled with a SVG image data URL.
      * */
     function toSvg(node, options) {
         options = options || {};
@@ -94,9 +94,9 @@
     }
 
     /**
-     * @param {Node} node - The DOM Node object to render
-     * @param {Object} options - Rendering options, @see {@link toSvg}
-     * @return {Promise} - A promise that is fulfilled with a Uint8Array containing RGBA pixel data.
+     * @param {Node} node - The DOM Node object to render.
+     * @param {Object} options - Rendering options, @see {@link toSvg}.
+     * @returns {Promise} - A promise that is fulfilled with a Uint8Array containing RGBA pixel data.
      * */
     function toPixelData(node, options) {
         return draw(node, options || {})
@@ -111,9 +111,9 @@
     }
 
     /**
-     * @param {Node} node - The DOM Node object to render
-     * @param {Object} options - Rendering options, @see {@link toSvg}
-     * @return {Promise} - A promise that is fulfilled with a PNG image data URL
+     * @param {Node} node - The DOM Node object to render.
+     * @param {Object} options - Rendering options, @see {@link toSvg}.
+     * @returns {Promise} - A promise that is fulfilled with a PNG image data URL.
      * */
     function toPng(node, options) {
         return draw(node, options || {})
@@ -123,9 +123,9 @@
     }
 
     /**
-     * @param {Node} node - The DOM Node object to render
-     * @param {Object} options - Rendering options, @see {@link toSvg}
-     * @return {Promise} - A promise that is fulfilled with a JPEG image data URL
+     * @param {Node} node - The DOM Node object to render.
+     * @param {Object} options - Rendering options, @see {@link toSvg}.
+     * @returns {Promise} - A promise that is fulfilled with a JPEG image data URL.
      * */
     function toJpeg(node, options) {
         options = options || {};
@@ -136,9 +136,9 @@
     }
 
     /**
-     * @param {Node} node - The DOM Node object to render
-     * @param {Object} options - Rendering options, @see {@link toSvg}
-     * @return {Promise} - A promise that is fulfilled with a PNG image blob
+     * @param {Node} node - The DOM Node object to render.
+     * @param {Object} options - Rendering options, @see {@link toSvg}.
+     * @returns {Promise} - A promise that is fulfilled with a PNG image blob.
      * */
     function toBlob(node, options) {
         return draw(node, options || {})
@@ -176,10 +176,10 @@
                 return canvas;
             });
 
-        function newCanvas(domNode) {
+        function newCanvas(node) {
             const canvas = document.createElement('canvas');
-            canvas.width = options.width || util.width(domNode);
-            canvas.height = options.height || util.height(domNode);
+            canvas.width = options.width || util.width(node);
+            canvas.height = options.height || util.height(node);
 
             if (options.bgcolor) {
                 const ctx = canvas.getContext('2d');
@@ -205,11 +205,11 @@
                 return processClone(node, clone);
             });
 
-        function makeNodeCopy(node) {
-            if (node instanceof HTMLCanvasElement) {
-                return util.makeImage(node.toDataURL());
+        function makeNodeCopy(n) {
+            if (n instanceof HTMLCanvasElement) {
+                return util.makeImage(n.toDataURL());
             }
-            return node.cloneNode(false);
+            return n.cloneNode(false);
         }
 
         function cloneChildren(original, clone, filter) {
@@ -505,7 +505,7 @@
         }
 
         function parseExtension(url) {
-            const match = /\.([^\.\/]*?)$/g.exec(url);
+            const match = /\.([^./]*?)$/g.exec(url);
             if (match) {
                 return match[1];
             }
@@ -566,7 +566,7 @@
 
                 function fourRandomChars() {
                     /* see http://stackoverflow.com/a/6248722/2519373 */
-                    return (`0000${(Math.random() * Math.pow(36, 4) << 0).toString(36)}`).slice(-4);
+                    return (`0000${(Math.random() * (36 ** 4) << 0).toString(36)}`).slice(-4);
                 }
             };
         }
@@ -651,7 +651,7 @@
         }
 
         function escape(string) {
-            return string.replace(/([.*+?^${}()|\[\]\/\\])/g, '\\$1');
+            return string.replace(/([.*+?^${}()|[\]/\\])/g, '\\$1');
         }
 
         function delay(ms) {

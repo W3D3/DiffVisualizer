@@ -1,4 +1,4 @@
-/* global $ */
+/* global $ hljs */
 /**
  * @file DOM manipulation that doesn't need context
  * @author Christoph Wedenig <christoph@wedenig.org>
@@ -174,9 +174,9 @@ class GUI {
     }
 
     /**
-     * Shows metaData Panel and fills it with data
-     * @param {string} title - title of the metaData.
-     * @param {string} title - HTML content of the metaData.
+     * Shows metaData Panel and fills it with data.
+     * @param {string} title - Title of the metaData.
+     * @param {string} content - HTML content of the metaData.
      */
     static showMetaData(title, content) {
         $('#metadataTitle').text(title);
@@ -378,6 +378,29 @@ class GUI {
         } else if (document.selection) { // IE?
             document.selection.empty();
         }
+    }
+
+    static clearMarkers() {
+        $('span.scriptmarker', $('#src')).contents().unwrap();
+        $('span.scriptmarker', $('#dst')).contents().unwrap();
+    }
+
+    /**
+    * Enables/refreshes syntax highlighting and line numbers for all code blocks.
+    */
+    static enableSyntaxHighlighting() {
+        $('pre code').each((i, block) => {
+            hljs.highlightBlock(block);
+        });
+
+        $('code.hljs-line-numbers').remove();
+
+        $('code.hljs#src').each((i, block) => {
+            hljs.lineNumbersBlock(block);
+        });
+        $('code.hljs#dst').each((i, block) => {
+            hljs.lineNumbersBlock(block);
+        });
     }
 }
 export default GUI;

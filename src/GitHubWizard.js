@@ -6,7 +6,6 @@
 
 /**
  * GitHubWizard
- *
  */
 import NProgress from 'nprogress';
 import _ from 'lodash';
@@ -41,7 +40,7 @@ class GitHubWizard {
 
             },
         };
-        this.options = this.setDefaults(options, defaults);
+        this.setDefaults(options, defaults);
 
         $('.abort').on('click', () => {
             me.resetWizard();
@@ -78,13 +77,12 @@ class GitHubWizard {
             $this.toggleClass('active');
             me.selectedCommitSha = $('#commitShaInput').val();
 
-            me.generateCommitHTML(me.selectedRepoString, me.selectedCommitSha, (genhtml) => {
+            GitHubWizard.generateCommitHTML(me.selectedRepoString, me.selectedCommitSha, (genhtml) => {
                 me.html.commit = genhtml;
                 $('#commitpreview').html(genhtml);
                 $('#commitpreview').data('sha', me.selectedCommitSha);
                 $('.commit-item.active').removeClass('active');
                 $('#commitpreview').toggleClass('active');
-                // $('#commit-next').trigger('click');
             });
         });
 
@@ -139,6 +137,8 @@ class GitHubWizard {
             $this.addClass('active');
             me.selectedFileName = $this.data('name');
             me.html.file = `<div class="file-item">${$(this).html()}</div>`;
+            // we can restrict files here, depending on which global file type is set
+            // currently this is not enabled.
             // if(!me.selectedFileName.endsWith('.java'))
             // {
             //     Utility.showWarning('The selected file doesn\'t seem to be a Java file. Proceed with caution as this application currently only supports Java diffing.');
@@ -198,7 +198,7 @@ class GitHubWizard {
     }
 
     setDefaults(options, defaults) {
-        return _.defaults({}, _.clone(options), defaults);
+        this.options = _.defaults({}, _.clone(options), defaults);
     }
 
     updateOptions(options) {
@@ -381,7 +381,7 @@ class GitHubWizard {
         me.resetWizard();
     }
 
-    generateCommitHTML(repo, commitsha, callback) {
+    static generateCommitHTML(repo, commitsha, callback) {
         // var me = this;
         axios.get('/githubapi', {
             params: {
@@ -413,7 +413,8 @@ class GitHubWizard {
         const commit = data.commit;
         const html = `<img src="${data.author ? `${data.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`}" alt="" class="pull-left avatar">` +
         `<p><b class="list-group-item-heading">${_.escape(commit.message)}</b><br/>` +
-        `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code> <span title="${commit.author.date}">${Utility.timeAgoString(commit.author.date)}</span></small>` +
+        `<small class="list-group-item-text">${commit.author.name} <code>&lt;${commit.author.email}&gt;</code>` +
+        `<span title="${commit.author.date}">${Utility.timeAgoString(commit.author.date)}</span></small>` +
         '</p>';
         return html;
     }

@@ -1,9 +1,8 @@
-/* global $ hljs */
+/* global $ */
 /**
  * @file Represents and draws Diffs
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
-
 
 import axios from 'axios';
 import _ from 'lodash';
@@ -14,6 +13,7 @@ import Base64 from 'js-base64/base64';
 import Marker from './Marker';
 import Utility from './Utility';
 import Diff from './Diff';
+import GUI from './GUI';
 import {
     client,
 } from '../config/default.json';
@@ -50,8 +50,6 @@ class DiffDrawer {
 
         this.metadata = [];
         this.edited = false;
-
-        // this._jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
     }
 
     checkAPIState() {
@@ -176,11 +174,6 @@ class DiffDrawer {
         return this.matcherID;
     }
 
-    clear() {
-        $('span.scriptmarker', $('#src')).contents().unwrap();
-        $('span.scriptmarker', $('#dst')).contents().unwrap();
-    }
-
     /**
     * Checks if current job is indeed this job.
     */
@@ -225,7 +218,7 @@ class DiffDrawer {
         if (this.checkIfCurrentJob()) { // only show if this is the current Job!
             $('#dst').html(linesDst.join('\n'));
             $('#src').html(linesSrc.join('\n'));
-            this.enableSyntaxHighlighting();
+            GUI.enableSyntaxHighlighting();
             this.filter();
 
             if (this.enableMinimap) {
@@ -261,28 +254,10 @@ class DiffDrawer {
 
 
     /**
-   * Enables/refreshes syntax highlighting and line numbers for all code blocks
-   */
-    enableSyntaxHighlighting() {
-        $('pre code').each((i, block) => {
-            hljs.highlightBlock(block);
-        });
-
-        $('code.hljs-line-numbers').remove();
-
-        $('code.hljs#src').each((i, block) => {
-            hljs.lineNumbersBlock(block);
-        });
-        $('code.hljs#dst').each((i, block) => {
-            hljs.lineNumbersBlock(block);
-        });
-    }
-
-    /**
-   * Takes a codestring and their already sorted markers and generates a string with all the inserted markers added
-   * @param {Marker[]} markersSorted - sorted marker array of the given code string
-   * @param {string} codeString - code string to be used, contained html tags will be escaped
-   * @return {string} - code string with all the markers added as span tags
+   * Takes a codestring and their already sorted markers and generates a string with all the inserted markers added.
+   * @param {Marker[]} markersSorted - Sorted marker array of the given code string.
+   * @param {string} codeString - Code string to be used, contained html tags will be escaped.
+   * @returns {string} - Code string with all the markers added as span tags.
    */
     static insertMarkers(markersSorted, codeString) {
         let escapeUntilPos = codeString.length;
@@ -321,30 +296,28 @@ class DiffDrawer {
                 const closingMarker = marker.createEndMarker(marker.position);
                 closingMarker.isEndMarker = false;
                 lastClosed.push(closingMarker);
+            } else if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
+                // is startmarker
+                // can be inserted
+                lastClosed.pop();
+                markersFixed.push(marker);
             } else {
-                // startmarker
-                if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id === marker.id) {
-                    // can be inserted
-                    lastClosed.pop();
-                    markersFixed.push(marker);
-                } else {
-                    let markerNotYetOpened = false;
-                    lastClosed.forEach((startmarker) => {
-                        if (startmarker.id == marker.id) {
-                            markerNotYetOpened = true;
-                        }
-                    });
-                    if (markerNotYetOpened) {
-                        let openingMarker = lastClosed.pop();
-                        while (openingMarker.id <= marker.id) {
-                            openingMarker.position = marker.position;
-                            markersFixed.push(openingMarker);
+                let markerNotYetOpened = false;
+                lastClosed.forEach((startmarker) => {
+                    if (startmarker.id == marker.id) {
+                        markerNotYetOpened = true;
+                    }
+                });
+                if (markerNotYetOpened) {
+                    let openingMarker = lastClosed.pop();
+                    while (openingMarker.id <= marker.id) {
+                        openingMarker.position = marker.position;
+                        markersFixed.push(openingMarker);
 
-                            if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
-                                openingMarker = lastClosed.pop();
-                            } else {
-                                break;
-                            }
+                        if (lastClosed.length > 0 && lastClosed[lastClosed.length - 1].id <= marker.id) {
+                            openingMarker = lastClosed.pop();
+                        } else {
+                            break;
                         }
                     }
                 }
@@ -354,11 +327,11 @@ class DiffDrawer {
     }
 
     /**
-   * Takes src and dst and send them to the webservice to get diffing information
-   * This also calls @see showChanges to show the generated data right after fetching
-   * This is the only method you have to execute from outside this class
-   * @param {Marker[]} markersSorted - sorted marker array of the given code string
-   * @param {string} codeString - code string to be used, contained html tags will be escaped
+   * Takes src and dst and send them to the webservice to get diffing information.
+   * This also calls @see showChanges to show the generated data right after fetching.
+   * This is the only method you have to execute from outside this class.
+   * @param {function} callback - Function to execute after successfully displaying content.
+   * @param {function} err - Function to execute if something goes wrong, gets passed the error object.
    */
     diffAndDraw(callback, err) {
         if (this.src == null || this.dst == null) {
@@ -366,8 +339,8 @@ class DiffDrawer {
             return;
         }
 
-        const diffdrawer = this;
-        if (!diffdrawer.checkIfCurrentJob()) {
+        const me = this;
+        if (!me.checkIfCurrentJob()) {
             // console.log('Aborted Operation wiht id ' + DiffDrawer.currentJobId);
             NProgress.done();
             return;
@@ -379,7 +352,7 @@ class DiffDrawer {
         };
         this.DIFF_API.post('/changes', payload)
             .then((response) => {
-                $('.time').text(`${response.data.metrics.matchingTime} ms to match, ${response.data.metrics.classificationTime} ms to classify using matcher ${diffdrawer.matcherName}`);
+                $('.time').text(`${response.data.metrics.matchingTime} ms to match, ${response.data.metrics.classificationTime} ms to classify using matcher ${me.matcherName}`);
 
                 const changes = response.data.results;
                 const dstMarkers = [];
@@ -399,8 +372,8 @@ class DiffDrawer {
                         };
                         startMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
 
-                        diffdrawer.metadata.push(entry.metadata);
-                        startMarker.addMetaData(`INSERT ${entry.dstId}`, diffdrawer.metadata.length - 1);
+                        me.metadata.push(entry.metadata);
+                        startMarker.addMetaData(`INSERT ${entry.dstId}`, me.metadata.length - 1);
 
                         endPosition = {
                             line: entry.dstEndLine,
@@ -426,8 +399,8 @@ class DiffDrawer {
                         startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
                         startMarker.bindToId(entry.dstId);
 
-                        diffdrawer.metadata.push(entry.metadata);
-                        startMarker.addMetaData(`${entry.actionType} (Source) ${entry.srcId}`, diffdrawer.metadata.length - 1);
+                        me.metadata.push(entry.metadata);
+                        startMarker.addMetaData(`${entry.actionType} (Source) ${entry.srcId}`, me.metadata.length - 1);
 
                         endPosition = {
                             line: entry.srcEndLine,
@@ -451,7 +424,7 @@ class DiffDrawer {
                         const dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
                         dstStartMarker.bindToId(entry.srcId);
 
-                        dstStartMarker.addMetaData(`${entry.actionType} (Destination) ${entry.dstId}`, diffdrawer.metadata.length - 1);
+                        dstStartMarker.addMetaData(`${entry.actionType} (Destination) ${entry.dstId}`, me.metadata.length - 1);
                         // dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
                         // startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
                         endPosition = {
@@ -478,8 +451,8 @@ class DiffDrawer {
                         startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
                         // startMarker.bindToId(entry.dstId);
 
-                        diffdrawer.metadata.push(entry.metadata);
-                        startMarker.addMetaData(`DELETE ${entry.srcId}`, diffdrawer.metadata.length - 1);
+                        me.metadata.push(entry.metadata);
+                        startMarker.addMetaData(`DELETE ${entry.srcId}`, me.metadata.length - 1);
                         // startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
 
                         endPosition = {
@@ -499,33 +472,33 @@ class DiffDrawer {
 
                 // markers are now full, sort and fix them
                 const fixedSrcMarkers = DiffDrawer.fixSequencing(srcMarkers);
-                diffdrawer.srcMarkersSorted = _.groupBy(fixedSrcMarkers, (item) => {
+                me.srcMarkersSorted = _.groupBy(fixedSrcMarkers, (item) => {
                     return item.position.line;
                 });
 
                 const fixedDstMarkers = DiffDrawer.fixSequencing(dstMarkers);
-                diffdrawer.dstMarkersSorted = _.groupBy(fixedDstMarkers, (item) => {
+                me.dstMarkersSorted = _.groupBy(fixedDstMarkers, (item) => {
                     return item.position.line;
                 });
 
 
-                if (!diffdrawer.checkIfCurrentJob()) {
+                if (!me.checkIfCurrentJob()) {
                     return false;
                 }
 
-                if (diffdrawer.showChanges()) {
+                if (me.showChanges()) {
                     callback();
                 }
                 return true;
             })
             .catch((error) => {
                 // make sure we don't throw errors for old jobs!
-                if (diffdrawer.checkIfCurrentJob()) {
+                if (me.checkIfCurrentJob()) {
                     if (error.response) {
-                        err(`${error} (using matcher ${diffdrawer.matcherName})<pre>${JSON.stringify(error.response.data, undefined, 2)}</pre>`);
+                        err(`${error} (using matcher ${me.matcherName})<pre>${JSON.stringify(error.response.data, undefined, 2)}</pre>`);
                         return;
                     }
-                    err(`${error} (using matcher ${diffdrawer.matcherName})`);
+                    err(`${error} (using matcher ${me.matcherName})`);
                     // console.error(error);
                 }
             });
@@ -541,31 +514,32 @@ class DiffDrawer {
         if (this.diff == null) {
             titlestring = `<span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
         } else {
-            titlestring = `<span class="label label-default id-expand" data-id="${this.diff.id}">${this.diff.shortId}</span><span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
+            titlestring = `<span class="label label-default id-expand" data-id="${this.diff.id}">${this.diff.shortId}</span>\
+            <span class="label label-info" id="currentMatcher">${this.matcherName}</span>`;
         }
 
         if (status === 0) {
-            titlestring += '<span class="label label-primary">IN PROGRESS</span>';
+            titlestring += ' <span class="label label-primary">IN PROGRESS</span>';
         } else if (status === -1) {
-            titlestring += '<span class="label label-danger">ERROR</span>';
+            titlestring += ' <span class="label label-danger">ERROR</span>';
         } else if (status === -2) {
-            titlestring += '<span class="label label-danger">ABORTED</span>';
+            titlestring += ' <span class="label label-danger">ABORTED</span>';
         }
-        if (this.diff !== null) {
+        if (this.diff != null) {
             titlestring += ` <b>${this.diff.title}</b> `;
             if (this.edited) {
                 titlestring += ' (Edited) ';
             }
 
             if (this.srcUrl) {
-                titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a>`;
+                titlestring += `<a href="${this.srcUrl}" target="src"><span class="badge"><i class="fa fa-file-text-o"></i> SRC</span></a> `;
             }
             if (this.dstUrl) {
-                titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a>`;
+                titlestring += `<a href="${this.dstUrl}" target="dst"><span class="badge"><i class="fa fa-file-text"></i> DST</span></a> `;
             }
 
             if (this.diff.commitUrl) {
-                titlestring += `<a href="${this.diff.commitUrl}" target="${this.diff.id}"><span class="badge"><i class="fa fa-github"></i> Commit</span></a>`;
+                titlestring += `<a href="${this.diff.commitUrl}" target="${this.diff.id}"><span class="badge"><i class="fa fa-github"></i> Commit</span></a> `;
             }
         } else {
             titlestring += ' <b>Editor Input</b> ';

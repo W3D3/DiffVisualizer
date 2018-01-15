@@ -31,13 +31,13 @@ class SearchController {
             // switch for enabling search over all the added searchbars on toggle via GUI
             enableGlobalSearch: true,
         };
-        this.options = this.setDefaults(options, defaults);
+        this.setDefaults(options, defaults);
 
         this.hijackCrtlF();
     }
 
     setDefaults(options, defaults) {
-        return _.defaults({}, _.clone(options), defaults);
+        this.options = _.defaults({}, _.clone(options), defaults);
     }
 
     disable() {
@@ -135,8 +135,8 @@ class SearchController {
     }
 
     /**
-     * generates and attaches the Searchbar to a Dom elemen
-     * @param  {[jQuery Element]} $elem [the element to attach the searchbar to]
+     * Generates and attaches the Searchbar to a DOM element.
+     * @param  {[Node]} $elem - The element to attach the searchbar to.
      */
     generateSearchBar($elem) {
         const me = this;
@@ -175,20 +175,20 @@ class SearchController {
 
         let finalResults = [];
         // the input field
-        let $clearBtn = $searchbar.find('button[data-search=\'clear\']'),
-            // prev button
-            $prevBtn = $searchbar.find('button[data-search=\'prev\']'),
-            // next button
-            $nextBtn = $searchbar.find('button[data-search=\'next\']'),
-            // the context where to search
-            $content = $elem,
-            // jQuery object to save <mark> elements
-            $results,
-            // the class that will be appended to the current
-            // focused element
-            currentClass = 'current',
-            // the current index of the focused element
-            currentIndex = 0;
+        const $clearBtn = $searchbar.find('button[data-search=\'clear\']');
+        // prev button
+        const $prevBtn = $searchbar.find('button[data-search=\'prev\']');
+        // next button
+        const $nextBtn = $searchbar.find('button[data-search=\'next\']');
+        // the context where to search
+        let $content = $elem;
+        // jQuery object to save <mark> elements
+        let $results;
+        // the class that will be appended to the current
+        // focused element
+        const currentClass = 'current';
+        // the current index of the focused element
+        let currentIndex = 0;
 
         $searchbar.find('#globalToggle').on('change', function() {
             if (me.options.enableGlobalSearch) {
@@ -278,7 +278,6 @@ class SearchController {
                                 charCounter = 0;
                                 i++;
                             } else {
-                                // console.log(charCounter+'/'+searchValLength);
                                 finalResults[i].push(marked);
                             }
                         },

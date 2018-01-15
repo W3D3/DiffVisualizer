@@ -26,7 +26,6 @@ let dv;
 let sc;
 let gw;
 let matchers;
-let settings;
 
 // start unfiltered
 let filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
@@ -40,7 +39,7 @@ $(document).ready(() => {
     GUI.setVersion(version);
     NProgress.configure({trickle: false});
 
-    settings = new Settings();
+    Settings.initDefaults();
 
     $('#accordion').collapse().height('auto');
 
@@ -185,26 +184,26 @@ function matcherChangerSetup() {
     dv.getAvailableMatchers().then((response) => {
         gui.setMatcherSelectionSource(response.data.matchers);
         matchers = response.data.matchers;
-        settings.saveSetting('matcher', matchers[0]);
+        Settings.saveSetting('matcher', matchers[0]);
 
-        if (settings.loadSetting('matcher')) {
-            gui.setSelectedMatcher(settings.loadSetting('matcher').id);
+        if (Settings.loadSetting('matcher')) {
+            gui.setSelectedMatcher(Settings.loadSetting('matcher').id);
         }
 
-        dv.setMatcher(settings.loadSetting('matcher'));
+        dv.setMatcher(Settings.loadSetting('matcher'));
     });
 
     // matcher on change
     gui.setMatcherChangeHandler(function handler() {
         NProgress.start();
-        dv.clear();
+        GUI.clearMarkers();
         $('.minimap').hide();
-        settings.saveSetting('matcher', matchers[this.value - 1]);
+        Settings.saveSetting('matcher', matchers[this.value - 1]);
 
         const changedDv = new DiffDrawer();
         Object.assign(changedDv, dv);
 
-        changedDv.setMatcher(settings.loadSetting('matcher'));
+        changedDv.setMatcher(Settings.loadSetting('matcher'));
         changedDv.setAsCurrentJob();
 
         Utility.showMessage(`Matcher changed to ${$('option:selected', this).text()}`);
@@ -368,9 +367,9 @@ function diffListSetup() {
         const viewer = new DiffDrawer();
         viewer.setDiff(selectedDiff);
 
-        // take the matcher from our settings
-        if (settings.loadSetting('matcher')) {
-            viewer.setMatcher(settings.loadSetting('matcher'));
+        // take the matcher from our Settings
+        if (Settings.loadSetting('matcher')) {
+            viewer.setMatcher(Settings.loadSetting('matcher'));
         }
 
         if (dv.diffHash() === viewer.diffHash()) {
@@ -439,8 +438,8 @@ function diffListSetup() {
  * Initialized handlers for jumping to lines.
  */
 function jumptToLineSetup() {
-    // initialize from settings
-    if (settings.loadSetting('jumpToSource') !== false) {
+    // initialize from Settings
+    if (Settings.loadSetting('jumpToSource') !== false) {
         $('#jumpToLineSelector').bootstrapToggle('on');
     } else {
         $('#jumpToLineSelector').bootstrapToggle('off');
@@ -449,7 +448,7 @@ function jumptToLineSetup() {
     // register clickhandler
     $('#jump').click(() => {
         let selector;
-        if (settings.loadSetting('jumpToSource') !== false) {
+        if (Settings.loadSetting('jumpToSource') !== false) {
             selector = '.src';
         } else {
             selector = '.dst';
@@ -464,7 +463,7 @@ function jumptToLineSetup() {
     });
 
     $('#jumpToLineSelector').change(function updateJumpSettings() {
-        settings.saveSetting('jumpToSource', $(this).prop('checked'));
+        Settings.saveSetting('jumpToSource', $(this).prop('checked'));
     });
 }
 
@@ -604,7 +603,7 @@ function changeLanguageGlobally(languageName, ext) {
     });
     $('#src').addClass(ext);
     $('#dst').addClass(ext);
-    dv.enableSyntaxHighlighting();
+    GUI.enableSyntaxHighlighting(); // This also refreshes Syntax highlighting
 
     // monaco language setting
     const modelSrc = window.editorSrc.getModel();
