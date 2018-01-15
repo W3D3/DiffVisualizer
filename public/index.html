@@ -221,43 +221,10 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
         </div>
     </div>
-    <!-- Modal -->
-    <!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document" style="width: 100%; height: 100%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Change source code</h4>
-                </div>
-                <div class="modal-body" style="height: 100%">
-                    <div class="row">
-                        <div class="col-xs-6" style="position: relative;height: 700px">
-                            <h3>Source code</h3>
-                            <hr />
-                            <div id="editorSrc" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-                        </div>
-                        <div class="col-xs-6" style="height: 700px">
-                            <h3>Destination code</h3>
-                            <hr />
-                            <div id="editorDst" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0; height: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <div class="modal fade" id="wizard" tabindex="0" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <!-- <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Change source code</h4>
-        </div> -->
                 <div class="modal-body" style="padding: 0;">
                     <form id="githubForm" method="get" action="" class="form-horizontal">
                         <div id="githubwizard">
@@ -272,22 +239,14 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane" id="tab1">
-                                    <!-- <div class="control-group">
-                                        <label class="control-label" for="url">GitHub Project URL</label>
-                                        <div class="controls">
-                                            <input type="text" id="projecturl" name="projecturl">
-                                        </div>
-                                    </div> -->
 
                                     <div class="form-group">
                                         <label class="control-label" for="projecturl">GitHub Project URL</label>
-                                        <!-- <input type="text" class="form-control" id="projecturl" name="projecturl"> -->
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="projecturl" id="projecturl">
                                             <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" id="projecturl-next">Next</button>
                                           </span>
-
                                         </div>
                                         <span id="projecturl-error" class="help-block"></span>
 
@@ -299,8 +258,7 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="commitShaInput" placeholder="Commit SHA" style="width: 100%">
                                         <span class="input-group-btn">
-                              <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
-                                        <a class="btn btn-default" id="loadCommitSha">Load</span></a>
+                                            <a class="btn btn-default" id="loadCommitSha">Load</span></a>
                                         </span>
                                     </div>
                                     <a id="commitpreview" class="list-group-item commit-item">
@@ -311,14 +269,9 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                     <!-- <span class="centerline"> or </span> -->
                                     <h4>Select commit from list:</h4>
 
-                                    <div class="list-group" id="commit-list" style="overflow: scroll; max-height: 600px">
+                                    <div class="list-group" id="commit-list" style="overflow: scroll; max-height: 600px"></div>
 
-                                    </div>
-                                    <div id="paginationdiv">
-
-                                    </div>
-
-
+                                    <div id="paginationdiv"></div>
 
                                     <button class="btn btn-default pull-right" type="button" id="commit-next">Next</button>
                                 </div>
@@ -346,9 +299,6 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                 </div>
                                 <ul class="pager wizard">
                                     <li class="previous btn btn-default pull-left" href="#">Back</li>
-                                    <!-- <li class="back pull-left"><a href="#">Back</a></li> -->
-                                    <!-- <li class="next last" style="display:none;"><a href="#">Last</a></li> -->
-                                    <!-- <li class="next"><a href="#">Next</a></li> -->
                                     <a class="abort btn btn-warning pull-left" href="#">Abort</a>
                                 </ul>
                             </div>
@@ -359,10 +309,6 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
                 </div>
             </div>
-            <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" id="saveSource" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-        </div> -->
         </div>
     </div>
     </div>
@@ -385,8 +331,6 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
     <script src="js/bootbox.min.js" charset="utf-8"></script>
     <!-- scrolling -->
     <script src="js/perfect-scrollbar.jquery.min.js" charset="utf-8"></script>
-    <!-- ace editor -->
-    <!-- <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" charset="utf-8"></script> -->
 
     <script src="js/minimap.js" charset="utf-8"></script>
     <!-- mark.js library -->
