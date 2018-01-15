@@ -324,7 +324,7 @@ class GUI {
         $('#printCodebox').hide();
 
         $('#changeSource').hide();
-        $('#saveSource').show();
+        $('#editorControls').show();
     }
 
     /**
@@ -361,7 +361,7 @@ class GUI {
         $('.minimap').show();
         $('#printCodebox').show();
 
-        $('#saveSource').hide();
+        $('#editorControls').hide();
         $('#changeSource').show();
     }
 

@@ -70,9 +70,14 @@
                             <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="dst" data-on="SRC" data-off="DST" data-height="43px" data-width="70px" />
                         </form>
                         <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="#" id="saveSource"><span class="fa fa-save"></span> Save</a>
-                            </li>
+                            <!-- <ul class="nav navbar-nav" id="editorControls">
+                                <li>
+                                    <a href="#" id="discardSource"><span class="fa fa-times"></span> Discard</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="saveSource"><span class="fa fa-save"></span> Save</a>
+                                </li>
+                            </ul> -->
                             <li>
                                 <a href="#" id="changeSource"><span class="fa fa-pencil-square-o"></span> Edit Source</a>
                             </li>
@@ -189,7 +194,17 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                 <!-- END ACCORDION NAV -->
             </div>
             <div class="col-xs-9 box panel panel-default" id="codeView">
-                <div class="panel-heading" id="codeboxTitle">DiffViewer &trade;</div>
+                <div class="pull-right" style="right: 0; position: absolute" id="editorControls">
+
+                    <a href="#" class="btn  btn-default" id="discardSource"><span class="fa fa-times"></span> Discard</a>
+
+                    <a href="#" class="btn btn-success" id="saveSource"><span class="fa fa-save"></span> Save</a>
+
+                </div>
+                <div class="panel-heading" id="codeboxTitle">DiffViewer &trade;
+
+                </div>
+
                 <div class="row content panel-body" style="padding: 0" id="codeContent">
                     <div id="minimap" class="srcminimap minimap"></div>
                     <div class="col-xs-6 codebox src scrollbar-chrome hljs">

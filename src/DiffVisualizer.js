@@ -157,6 +157,13 @@ function editorSetup() {
         });
     });
 
+    // register clickhandler on discard
+    $('#discardSource').click(() => {
+        sc.enable();
+
+        GUI.switchToViewer();
+    });
+
     // clickhandler for edit Source button
     $('#changeSource').click(() => {
         sc.disable();
