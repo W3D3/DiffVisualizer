@@ -4,7 +4,7 @@
   "engines": {
     "node": "8.2.1"
   },
-  "docker-registry": "swdyn-isys.aau.at:5000",
+  "docker-registry": "swdyn.aau.at:5000",
   "main": "server/index.js",
   "repository": "https://bitbucket.org/W3D3/diffvisualizer",
   "license": "MIT",
