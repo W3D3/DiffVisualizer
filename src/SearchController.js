@@ -31,13 +31,13 @@ class SearchController {
             // switch for enabling search over all the added searchbars on toggle via GUI
             enableGlobalSearch: true,
         };
-        this.setDefaults(options, defaults);
+        this.options = SearchController.setDefaults(options, defaults);
 
         this.hijackCrtlF();
     }
 
-    setDefaults(options, defaults) {
-        this.options = _.defaults({}, _.clone(options), defaults);
+    static setDefaults(options, defaults) {
+        return _.defaults({}, _.clone(options), defaults);
     }
 
     disable() {

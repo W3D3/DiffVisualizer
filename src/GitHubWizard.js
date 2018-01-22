@@ -40,7 +40,7 @@ class GitHubWizard {
 
             },
         };
-        this.setDefaults(options, defaults);
+        this.options = GitHubWizard.setDefaults(options, defaults);
 
         $('.abort').on('click', () => {
             me.resetWizard();
@@ -197,12 +197,12 @@ class GitHubWizard {
         me.options.wizardElement.bootstrapWizard();
     }
 
-    setDefaults(options, defaults) {
-        this.options = _.defaults({}, _.clone(options), defaults);
+    static setDefaults(options, defaults) {
+        return _.defaults({}, _.clone(options), defaults);
     }
 
     updateOptions(options) {
-        this.options = this.setDefaults(options, this.options);
+        return GitHubWizard.setDefaults(options, this.options);
     }
 
     loadCommits(repo, page, callback) {
@@ -260,6 +260,7 @@ class GitHubWizard {
             me.currentCommitsPage = 1;
 
             errorspan.text(`${me.selectedRepoString} exists and will be loaded`);
+            console.log(me.options);
             me.options.wizardElement.bootstrapWizard('show', 1);
 
             NProgress.done();
@@ -281,6 +282,7 @@ class GitHubWizard {
             } else {
                 // Something happened in setting up the request that triggered an Error
                 Utility.showError(error.message);
+                console.error(error.message);
             }
         });
     }

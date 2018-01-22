@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* global require module __dirname process */
 var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -131,7 +132,7 @@ module.exports = {
             // By default, we only copy modified files during
             // a watch or webpack-dev-server build. Setting this
             // to `true` copies all files.
-            copyUnmodified: true
+            copyUnmodified: false
         }),
         extractSass,
         // new Uglify()
