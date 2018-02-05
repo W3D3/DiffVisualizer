@@ -485,7 +485,7 @@ function filterSetup() {
             filter = _.sortBy(filter);
             lastFiltered = _.sortBy(lastFiltered);
 
-            if (dv.getDiff() === null) {
+            if (dv.getDiff() === null && dv.edited == false) {
                 lastFiltered = filter.slice(0);
                 Utility.showWarning('No Diff loaded');
                 return true;

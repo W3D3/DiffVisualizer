@@ -218,7 +218,12 @@ class DiffDrawer {
         if (this.checkIfCurrentJob()) { // only show if this is the current Job!
             $('#dst').html(linesDst.join('\n'));
             $('#src').html(linesSrc.join('\n'));
-            Utility.setLanguageFromFilename(this.diff.srcFileName);
+            if (this.diff != null) {
+                Utility.setLanguageFromFilename(this.diff.srcFileName);
+            } else {
+                Utility.changeLanguageGlobally('java', 'java');
+            }
+
             GUI.enableSyntaxHighlighting();
             this.filter();
 
