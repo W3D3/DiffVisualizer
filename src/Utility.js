@@ -5,6 +5,7 @@
  */
 import _ from 'lodash';
 import moment from 'moment';
+import FileExt from './FileExt';
 
 /**
  * Utility class for various tasks
@@ -227,7 +228,8 @@ class Utility {
     */
     static startJSONDownload(filename, content) {
         const a = window.document.createElement('a');
-        a.href = window.URL.createObjectURL(new Blob([JSON.stringify(content)], {type: 'text/json'}));
+        const contentFiltered = _.without(content, undefined);
+        a.href = window.URL.createObjectURL(new Blob([JSON.stringify(contentFiltered)], {type: 'text/json'}));
         a.download = `${filename}.json`;
 
         // Append anchor to body.
@@ -236,6 +238,41 @@ class Utility {
 
         // Remove anchor from body
         document.body.removeChild(a);
+    }
+
+    /**
+     * Converts filename into Language and sets it globally for editor and viewer.
+     * @param {String} filename The filename of the file with an extention after the last dot.
+     */
+    static setLanguageFromFilename(filename) {
+        const fileExt = filename.toLowerCase().split('.').pop();
+        console.log(fileExt);
+        const converter = new FileExt();
+        console.log(converter.getLanguageForExt(fileExt));
+        Utility.changeLanguageGlobally(converter.getLanguageForExt(fileExt), fileExt);
+    }
+
+    /**
+     * Changes the language globally for editor and viewer.
+     * @param {String} languageName Monaco supported language name (https://github.com/Microsoft/monaco-languages).
+     * @param {String} ext Valid extention and therfore valid hljs class name.
+     */
+    static changeLanguageGlobally(languageName, ext) {
+        // remove previous languages from 2 codeboxes with highlight.js
+        // $('#src').removeClass((index, className) => {
+        //     return (className.match(/(^|\s)\S+/g) || []).join(' ');
+        // });
+        $('#src').removeClass();
+        $('#dst').removeClass();
+        $('#src').addClass(`language-${ext}`);
+        $('#dst').addClass(ext);
+        // GUI.enableSyntaxHighlighting(); // This also refreshes Syntax highlighting
+
+        // monaco language setting
+        const modelSrc = window.editorSrc.getModel();
+        const modelDst = window.editorDst.getModel();
+        monaco.editor.setModelLanguage(modelSrc, languageName);
+        monaco.editor.setModelLanguage(modelDst, languageName);
     }
 }
 export default Utility;

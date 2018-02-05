@@ -15,7 +15,7 @@ import GUI from './GUI';
 import Settings from './Settings';
 import SearchController from './SearchController';
 import GitHubWizard from './GitHubWizard';
-import FileExt from './FileExt';
+
 import {
     version,
 } from '../package.json';
@@ -330,7 +330,6 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
                             viewer.diffAndDraw(() => {
                                 // success
                                 $('#codeboxTitle').html(dv.generateTitle(1));
-                                setLanguageFromFilename(dv.diff.title);
                             }, (msg) => {
                                 // error
                                 $('#codeboxTitle').html(dv.generateTitle(-1));
@@ -350,7 +349,6 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
                 viewer.diffAndDraw(() => {
                     // success
                     $('#codeboxTitle').html(dv.generateTitle(1));
-                    setLanguageFromFilename(dv.diff.title);
                 }, (msg) => {
                     // error
                     $('#codeboxTitle').html(dv.generateTitle(-1));
@@ -586,35 +584,4 @@ function clickBoundMarkersSetup() {
         // stop propagation by returning
         return false;
     });
-}
-
-/**
- * Converts filename into Language and sets it globally for editor and viewer.
- * @param {String} filename The filename of the file with an extention after the last dot.
- */
-function setLanguageFromFilename(filename) {
-    const fileExt = filename.toLowerCase().split('.').pop();
-    const converter = new FileExt();
-    changeLanguageGlobally(converter.getLanguageForExt(fileExt), `.${fileExt}`);
-}
-
-/**
- * Changes the language globally for editor and viewer.
- * @param {String} languageName Monaco supported language name (https://github.com/Microsoft/monaco-languages).
- * @param {String} ext Valid extention and therfore valid hljs class name.
- */
-function changeLanguageGlobally(languageName, ext) {
-    // remove previous languages from 2 codeboxes with highlight.js
-    $('.hljs').removeClass((index, className) => {
-        return (className.match(/(^|\s)language-\S+/g) || []).join(' ');
-    });
-    $('#src').addClass(ext);
-    $('#dst').addClass(ext);
-    GUI.enableSyntaxHighlighting(); // This also refreshes Syntax highlighting
-
-    // monaco language setting
-    const modelSrc = window.editorSrc.getModel();
-    const modelDst = window.editorDst.getModel();
-    monaco.editor.setModelLanguage(modelSrc, languageName);
-    monaco.editor.setModelLanguage(modelDst, languageName);
 }
