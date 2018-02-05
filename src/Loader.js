@@ -8,13 +8,13 @@ import Dropzone from 'dropzone';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import BootstrapMenu from 'bootstrap-menu';
+// import _ from 'lodash';
 
 import Utility from './Utility';
 import GUI from './GUI';
 import Settings from './Settings';
 import Diff from './Diff';
 
-// import _ from 'lodash';
 
 class Loader {
     constructor() {
@@ -125,25 +125,42 @@ class Loader {
             fetchElementData($elem) {
                 return $elem;
             },
-            actions: [{
-                name: 'Show raw SRC',
-                iconClass: 'fa-file-text-o',
-                onClick(item) {
-                    window.open(Loader.loadedDiffObjects[$(item).data('index')].rawSrcUrl, '_src');
+            actionsGroups: [
+                ['delete'],
+            ],
+            actions: {
+                rawSrc: {
+                    name: 'Show raw SRC',
+                    iconClass: 'fa-file-text-o',
+                    onClick(item) {
+                        window.open(Loader.loadedDiffObjects[$(item).data('index')].rawSrcUrl, '_src');
+                    },
                 },
-            }, {
-                name: 'Show raw DST',
-                iconClass: 'fa-file-text',
-                onClick(item) {
-                    window.open(Loader.loadedDiffObjects[$(item).data('index')].rawDstUrl, '_dst');
+                rawDst: {
+                    name: 'Show raw DST',
+                    iconClass: 'fa-file-text',
+                    onClick(item) {
+                        window.open(Loader.loadedDiffObjects[$(item).data('index')].rawDstUrl, '_dst');
+                    },
                 },
-            }, {
-                name: 'Inspect Commit',
-                iconClass: 'fa-github',
-                onClick(item) {
-                    window.open(Loader.loadedDiffObjects[$(item).data('index')].commitUrl, '_inspect');
+                inspect: {
+                    name: 'Inspect Commit',
+                    iconClass: 'fa-github',
+                    onClick(item) {
+                        window.open(Loader.loadedDiffObjects[$(item).data('index')].commitUrl, '_inspect');
+                    },
                 },
-            }],
+                delete: {
+                    name: 'Delete',
+                    iconClass: 'fa-trash',
+                    onClick(item) {
+                        Loader.loadedDiffObjects[$(item).data('index')] = undefined;
+                        // _.pullAt(Loader.loadedDiffObjects, $(item).data('index'));
+                        // console.log(Loader.loadedDiffObjects);
+                        $(item).remove();
+                    },
+                },
+            },
         });
     }
 }
