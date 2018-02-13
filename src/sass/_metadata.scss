@@ -11,9 +11,9 @@
     background-color: rgba(0, 0, 0, 0) !important;
 }
 
-#metadataContent pre {
-    // max-height: 300px;
-    overflow: scroll;
+#metadataContent {
+    max-height: 600px;
+    overflow-y: scroll;
 }
 .metadatacode .subnode {
     cursor: default;
