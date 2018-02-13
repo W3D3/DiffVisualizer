@@ -102,7 +102,7 @@ class Diff {
      * Generates a list-group-item tag with the information of the diff object attached.
      * @param  {[integer]} index - If an index is provided, all data attributes are omitted except data-index with the specified index
      *                           this is useful if storing the data itself somewhere else.
-     * @returns {[string]} - Returns list-group-item html string with all the attributes of this object as data attributes.
+     * @returns {string} - Returns list-group-item html string with all the attributes of this object as data attributes.
      */
     generateTag(index) {
         // if(!this.id) {
@@ -123,7 +123,7 @@ class Diff {
 
     /**
      * Generates an object to create JSON strings from.
-     * @returns {[object]} Valid JSON object representation.
+     * @returns {object} Valid JSON object representation.
      */
     toJSON() {
         try {
@@ -136,7 +136,7 @@ class Diff {
                 dstFileName: this.dstFileName,
             };
         } catch (e) {
-            return '';
+            return {};
         }
     }
 }

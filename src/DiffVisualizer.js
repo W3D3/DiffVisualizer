@@ -575,9 +575,41 @@ function clickBoundMarkersSetup() {
                 return;
             }
 
+            if (key === 'spoonSrc' || key === 'spoonDst') {
+                return;
+            }
+
+
             stringContent += `<tr><td>${GUI.makeHumanReadable(key)}</td><td><code>${value}</code></td></tr>`;
         });
         stringContent += '</tbody>';
+
+        // if (content.spoonSrc == null && content.spoonDst == null) {
+        //     stringContent += '<tr><td>No Spoon metadata</td><td></td><td></td><td></td></tr>';
+        // }
+        if (content.spoonSrc != null) {
+            stringContent += '<tr><th>Spoon Property</th><th>Src Value</th><th></th><th>Dst Value</th></tr>';
+            Object.entries(content.spoonSrc).forEach(([name, val]) => {
+                const newVal = Object.is(content.spoonDst[name], undefined) ? 'N/A' : content.spoonDst[name];
+                stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>${val}</code></td><td>⇒</td><td><code>${newVal}</code></td></tr>`;
+            });
+        }
+        if (content.spoonDst != null) {
+            Object.entries(content.spoonDst).forEach(([name, val]) => {
+                if (Object.is(content.spoonSrc[name], undefined)) {
+                    stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>N/A</code></td><td>⇒</td><td><code>${val}</code></td></tr>`;
+                }
+            });
+        }
+        console.log(stringContent);
+        // if (content.spoonDst != null) {
+        //     stringContent += '<div class="col-xs-6"><tr><th>Destination Property</th><th>Value</th></tr>';
+        //     Object.entries(content.spoonDst).forEach(([name, val]) => {
+        //         stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>${val}</code></td></tr>`;
+        //     });
+        //     stringContent += '</div>';
+        // }
+        // console.log(stringContent);
 
         GUI.showMetaData(title, stringContent);
 
