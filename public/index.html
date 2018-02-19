@@ -148,7 +148,11 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
 
                                             <!--<input class="form-control" id="endpoint"></input>-->
 
-                                            <input type="text" class="form-control" id="endpoint" placeholder="http://example.com/diffws" autocorrect="off" autocapitalize="off" spellcheck="false">
+                                            <input type="text" list="commonendpoints" class="form-control" id="endpoint" placeholder="http://example.com/diffws" autocorrect="off" autocapitalize="off" spellcheck="false">
+                                            <datalist id="commonendpoints">
+                                                <option value="http://localhost:8080/v1/">
+                                                <option value="http://swdyn.aau.at:8080/v1/">
+                                              </datalist>
                                             <span class="input-group-btn">
                           <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
                                             <a class="btn btn-default" id="changeEndpoint" title="Change endpoint"><i class="fa fa-play"></i></a>
