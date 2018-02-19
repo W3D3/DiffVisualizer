@@ -201,6 +201,10 @@ class GUI {
      * @param {Matcher[]} matchers - Array of matchers.
      */
     setMatcherSelectionSource(matchers) {
+        this.matcherSelector
+            .find('option')
+            .remove()
+            .end();
         for (const item of matchers) {
             this.matcherSelector
                 .append($('<option></option>')

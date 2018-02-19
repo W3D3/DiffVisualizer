@@ -14,9 +14,8 @@ import Marker from './Marker';
 import Utility from './Utility';
 import Diff from './Diff';
 import GUI from './GUI';
-import {
-    client,
-} from '../config/default.json';
+
+import Settings from './Settings';
 
 const base64 = Base64.Base64; // very nice packaging indeed.
 /**
@@ -43,7 +42,8 @@ class DiffDrawer {
 
         // set default base URL
         this.DIFF_API = axios.create();
-        this.setBaseUrl(client.apibase);
+        // this.setBaseUrl(client.apibase);
+        this.setBaseUrl(Settings.loadSettingPersistent('endpoint'));
 
         this.enableMinimap = true;
         this.diff = new Diff();

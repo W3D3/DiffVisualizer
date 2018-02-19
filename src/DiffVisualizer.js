@@ -20,6 +20,10 @@ import {
     version,
 } from '../package.json';
 
+import {
+    client,
+} from '../config/default.json';
+
 // global variables
 let gui;
 let dv;
@@ -40,6 +44,7 @@ $(document).ready(() => {
     NProgress.configure({trickle: false});
 
     Settings.initDefaults();
+    Settings.saveSettingPersistent('endpoint', client.apibase);
 
     $('#accordion').collapse().height('auto');
 
@@ -82,6 +87,8 @@ $(document).ready(() => {
 
     // setup clickhandlers for showing / hiding monaco
     editorSetup();
+
+    endpointChangeSetup();
 
     // setup on change and fill with all available matchers
     matcherChangerSetup();
@@ -181,7 +188,21 @@ function editorSetup() {
         }
     });
 }
+/**
+ * Sets correct endpoint in settings
+ * Sets click handler for endpoint change button
+ */
+function endpointChangeSetup() {
+    $('#endpoint').val(dv.getBaseUrl());
+    console.log(dv.getBaseUrl())
 
+    $('#changeEndpoint').click(() => {
+        Settings.saveSettingPersistent('endpoint', $('#endpoint').val());
+        dv.setBaseUrl($('#endpoint').val()); // just to be safe, set it here as well
+
+        matcherChangerSetup();
+    });
+}
 /**
  * This fills the dropdown box with the available diff algorithms (here called matchers).
  * Also it sets the selected one in the Settings.
@@ -198,6 +219,10 @@ function matcherChangerSetup() {
         }
 
         dv.setMatcher(Settings.loadSetting('matcher'));
+        Utility.showMessage(`Connected to endpoint: ${dv.getBaseUrl()}`);
+    }).catch((error) => {
+        Utility.showError(`Endpoint ${dv.getBaseUrl()} is invalid. - ${error}`);
+        gui.setMatcherSelectionSource([]);
     });
 
     // matcher on change
@@ -370,6 +395,7 @@ function diffListSetup() {
     $('body').on('click', '#diffItem', _.debounce(function loadDiff() {
         const selectedDiff = Loader.loadedDiffObjects[$(this).data('index')];
         const viewer = new DiffDrawer();
+        const hasError = $('#codeboxTitle span').hasClass('label-danger'); // TODO make not as hacky...
         viewer.setDiff(selectedDiff);
 
         // take the matcher from our Settings
@@ -377,7 +403,7 @@ function diffListSetup() {
             viewer.setMatcher(Settings.loadSetting('matcher'));
         }
 
-        if (dv.diffHash() === viewer.diffHash()) {
+        if (dv.diffHash() === viewer.diffHash() && !hasError) {
             // this is the same diff pair
             Utility.showWarning('Not loading same file with same matcher again');
             return;
@@ -591,7 +617,12 @@ function clickBoundMarkersSetup() {
             stringContent += '<tr><th>Spoon Property</th><th>Src Value</th><th></th><th>Dst Value</th></tr>';
             Object.entries(content.spoonSrc).forEach(([name, val]) => {
                 const newVal = Object.is(content.spoonDst[name], undefined) ? 'N/A' : content.spoonDst[name];
-                stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>${val}</code></td><td>⇒</td><td><code>${newVal}</code></td></tr>`;
+                stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>${val}</code></td>`;
+                if (val != newVal) {
+                    stringContent += `<td style="color: red">⇒</td><td><code>${newVal}</code></td></tr>`;
+                } else {
+                    stringContent += '<td>no change</td><td></td></tr>';
+                }
             });
         }
         if (content.spoonDst != null) {

@@ -82,7 +82,7 @@
                                 <a href="#" id="changeSource"><span class="fa fa-pencil-square-o"></span> Edit Source</a>
                             </li>
                             <li>
-                                <a href="#" id="printCodebox"><i class="glyphicon glyphicon-picture"></i> Screenshot</a>
+                                <a href="#" id="printCodebox" style="display: none;"><i class="glyphicon glyphicon-picture"></i> Screenshot</a>
                             </li>
 
                         </ul>
@@ -141,6 +141,21 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                         <div id="settingsPanel" class="panel-collapse collapse">
                             <ul class="list-group">
                                 <li class="list-group-item">
+                                    <div class="form-group">
+                                        <label>Diff Webservice Endpoint</label>
+                                        <div class="input-group">
+                                            <!-- <h4>Webservice</h4> -->
+
+                                            <!--<input class="form-control" id="endpoint"></input>-->
+
+                                            <input type="text" class="form-control" id="endpoint" placeholder="http://example.com/diffws" autocorrect="off" autocapitalize="off" spellcheck="false">
+                                            <span class="input-group-btn">
+                          <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
+                                            <a class="btn btn-default" id="changeEndpoint" title="Change endpoint"><i class="fa fa-play"></i></a>
+                                            </span>
+
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <!-- <h4>Webservice</h4> -->
                                         <label for="matcherID">Select Differ</label>
