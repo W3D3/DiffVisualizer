@@ -200,14 +200,11 @@ function endpointChangeSetup() {
         Settings.saveSettingPersistent('endpoint', $('#endpoint').val());
         dv.setBaseUrl($('#endpoint').val()); // just to be safe, set it here as well
 
-        matcherChangerSetup();
+        fillAvailableMatchers()();
     });
 }
-/**
- * This fills the dropdown box with the available diff algorithms (here called matchers).
- * Also it sets the selected one in the Settings.
- */
-function matcherChangerSetup() {
+
+function fillAvailableMatchers() {
     // fill dropdown box with available matchers
     dv.getAvailableMatchers().then((response) => {
         gui.setMatcherSelectionSource(response.data.matchers);
@@ -224,6 +221,14 @@ function matcherChangerSetup() {
         Utility.showError(`Endpoint ${dv.getBaseUrl()} is invalid. - ${error}`);
         gui.setMatcherSelectionSource([]);
     });
+}
+/**
+ * This fills the dropdown box with the available diff algorithms (here called matchers).
+ * Also it sets the selected one in the Settings.
+ */
+function matcherChangerSetup() {
+    // fill dropdown box with available matchers
+    fillAvailableMatchers();
 
     // matcher on change
     gui.setMatcherChangeHandler(function handler() {
