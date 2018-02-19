@@ -1,6 +1,6 @@
 {
   "name": "diffvisualizer",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "engines": {
     "node": "8.2.1"
   },
