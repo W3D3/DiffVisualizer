@@ -194,7 +194,7 @@ function editorSetup() {
  */
 function endpointChangeSetup() {
     $('#endpoint').val(dv.getBaseUrl());
-    console.log(dv.getBaseUrl())
+    console.log(dv.getBaseUrl());
 
     $('#changeEndpoint').click(() => {
         Settings.saveSettingPersistent('endpoint', $('#endpoint').val());
