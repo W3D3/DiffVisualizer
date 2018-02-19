@@ -1,3 +1,4 @@
+/* eslint-disable */
 // spec.js
 describe('DiffVisualizer', function() {
   it('should have a title', function() {

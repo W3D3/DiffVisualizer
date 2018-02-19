@@ -1,3 +1,4 @@
+/* eslint-disable */
 // conf.js
 exports.config = {
   framework: 'jasmine',

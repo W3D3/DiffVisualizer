@@ -1,4 +1,5 @@
-/*global require describe */
+/* eslint-disable */
+/* global require describe */
 // Import chai.
 let chai = require('chai');
 
