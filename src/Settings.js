@@ -18,10 +18,6 @@ class Settings {
             if (Settings.loadSettingPersistent('version') == null) {
                 // first start
                 Settings.clearPersistentStorage();
-            } else if (Settings.loadSettingPersistent('version').split('.').join('') < 190) {
-                // not compatible with version 1.8.1 and below
-                Utility.showWarning('Not compatible with version 1.8.1 and below, settings will be reset.');
-                Settings.clearPersistentStorage();
             }
             Settings.saveSettingPersistent('version', version);
         } else {
