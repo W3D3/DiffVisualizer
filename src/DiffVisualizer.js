@@ -189,8 +189,8 @@ function editorSetup() {
     });
 }
 /**
- * Sets correct endpoint in settings
- * Sets click handler for endpoint change button
+ * Sets correct endpoint in settings.
+ * Sets click handler for endpoint change button.
  */
 function endpointChangeSetup() {
     $('#endpoint').val(dv.getBaseUrl());
