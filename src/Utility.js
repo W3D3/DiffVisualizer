@@ -246,9 +246,9 @@ class Utility {
      */
     static setLanguageFromFilename(filename) {
         const fileExt = filename.toLowerCase().split('.').pop();
-        console.log(fileExt);
+        // console.log(fileExt);
         const converter = new FileExt();
-        console.log(converter.getLanguageForExt(fileExt));
+        // console.log(converter.getLanguageForExt(fileExt));
         Utility.changeLanguageGlobally(converter.getLanguageForExt(fileExt), fileExt);
     }
 

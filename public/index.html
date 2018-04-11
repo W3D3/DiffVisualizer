@@ -52,7 +52,7 @@
                                     <li><a href="#" class="small DELETE" data-value="DELETE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;DELETE</a></li>
                                     <li><a href="#" class="small UPDATE" data-value="UPDATE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;UPDATE</a></li>
                                     <li><a href="#" class="small MOVE" data-value="MOVE" tabIndex="-1"><input type="checkbox" checked="true"/>&nbsp;MOVE</a></li>
-                                    <!-- Following button may be reenabled when files get too big? -->
+                                    <li><a href="#" class="small META" data-value="META" tabIndex="-1"><input type="checkbox" checked="false"/> META</a></li>
                                     <div class="dropdown-divider"></div>
 
                                     <li><a href="#" id="applyFilter">Apply filter</a></li>
@@ -70,14 +70,6 @@
                             <input id="jumpToLineSelector" type="checkbox" checked data-toggle="toggle" data-onstyle="info" data-offstyle="dst" data-on="SRC" data-off="DST" data-height="43px" data-width="70px" />
                         </form>
                         <ul class="nav navbar-nav navbar-right">
-                            <!-- <ul class="nav navbar-nav" id="editorControls">
-                                <li>
-                                    <a href="#" id="discardSource"><span class="fa fa-times"></span> Discard</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="saveSource"><span class="fa fa-save"></span> Save</a>
-                                </li>
-                            </ul> -->
                             <li>
                                 <a href="#" id="changeSource"><span class="fa fa-pencil-square-o"></span> Edit Source</a>
                             </li>
@@ -154,7 +146,6 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                                                 <option value="http://swdyn.aau.at:8080/v1/">
                                               </datalist>
                                             <span class="input-group-btn">
-                          <!-- <a class="btn btn-primary" id="filterListSearch"><span class="fa fa-search"></span></a> -->
                                             <a class="btn btn-default" id="changeEndpoint" title="Change endpoint"><i class="fa fa-play"></i></a>
                                             </span>
 
@@ -213,6 +204,11 @@ vertical-align: middle; white-space: normal; padding-top: 50px;" id="githubImpor
                 <!-- END ACCORDION NAV -->
             </div>
             <div class="col-xs-9 box panel panel-default" id="codeView">
+                <div class="pull-right" style="right: 0; position: absolute" id="diffControls">
+
+                    <a href="#" class="btn  btn-default" id="refreshDiff"><span class="fa fa-refresh"></span> Refresh</a>
+
+                </div>
                 <div class="pull-right" style="right: 0; position: absolute" id="editorControls">
 
                     <a href="#" class="btn  btn-default" id="discardSource"><span class="fa fa-times"></span> Discard</a>
