@@ -542,6 +542,7 @@ function filterSetup() {
 
             dv.setFilter(filter);
             dv.showChanges();
+            clickBoundMarkersSetup();
             lastFiltered = filter.slice(0);
             const filterNodes = filter.map((filtertype) => {
                 return `<span class="${filtertype}">${filtertype}</span>`;
@@ -600,7 +601,7 @@ function clickBoundMarkersSetup() {
         return false;
     });
 
-    $('#codeView').on('dblclick', 'span[data-metadata]', function showMetaData() {
+    $('#codeView').on('dblclick', 'span.scriptmarker[data-metadata]', function showMetaData() {
         GUI.deselect();
 
         const title = $(this).data('title');
