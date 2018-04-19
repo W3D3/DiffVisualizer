@@ -32,7 +32,7 @@ let gw;
 let matchers;
 
 // start unfiltered
-let filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+let filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE', 'META'];
 
 /**
  * This sets up all handlers and
@@ -128,6 +128,21 @@ $(document).ready(() => {
     $('#wizard').on('hidden.bs.modal', () => {
         GUI.setMonacoMinimapsVisibility(true);
     });
+
+    $('#refreshDiff').click(() => {
+        GUI.switchToViewer();
+        NProgress.start();
+        // Utility.showMessage('Refreshing...');
+        dv.diffAndDraw(() => {
+            // success
+            $('#codeboxTitle').html(dv.generateTitle(1));
+        }, (msg) => {
+            // error
+            $('#codeboxTitle').html(dv.generateTitle(-1));
+            Utility.showError(msg);
+            NProgress.done();
+        });
+    });
 });
 
 /**
@@ -194,13 +209,12 @@ function editorSetup() {
  */
 function endpointChangeSetup() {
     $('#endpoint').val(dv.getBaseUrl());
-    console.log(dv.getBaseUrl());
 
     $('#changeEndpoint').click(() => {
         Settings.saveSettingPersistent('endpoint', $('#endpoint').val());
         dv.setBaseUrl($('#endpoint').val()); // just to be safe, set it here as well
 
-        fillAvailableMatchers()();
+        fillAvailableMatchers();
     });
 }
 
@@ -516,7 +530,7 @@ function filterSetup() {
             filter = _.sortBy(filter);
             lastFiltered = _.sortBy(lastFiltered);
 
-            if (dv.getDiff() === null && dv.edited == false) {
+            if (dv.getDiff() === null && dv.edited === false) {
                 lastFiltered = filter.slice(0);
                 Utility.showWarning('No Diff loaded');
                 return true;
@@ -528,6 +542,7 @@ function filterSetup() {
 
             dv.setFilter(filter);
             dv.showChanges();
+            clickBoundMarkersSetup();
             lastFiltered = filter.slice(0);
             const filterNodes = filter.map((filtertype) => {
                 return `<span class="${filtertype}">${filtertype}</span>`;
@@ -586,12 +601,13 @@ function clickBoundMarkersSetup() {
         return false;
     });
 
-    $('#codeView').on('dblclick', 'span[data-metadata]', function showMetaData() {
+    $('#codeView').on('dblclick', 'span.scriptmarker[data-metadata]', function showMetaData() {
         GUI.deselect();
 
         const title = $(this).data('title');
         const content = dv.metadata[$(this).data('metadata')];
 
+        // language=HTML
         let stringContent = `<pre><code class="metadatacode">${$(this).html()}</code></pre><br/> \
                             <table class="table table-striped"><thead><tr><th>Property</th><th>Value</th></tr></thead> \
                             <tbody>`;
@@ -615,9 +631,6 @@ function clickBoundMarkersSetup() {
         });
         stringContent += '</tbody>';
 
-        // if (content.spoonSrc == null && content.spoonDst == null) {
-        //     stringContent += '<tr><td>No Spoon metadata</td><td></td><td></td><td></td></tr>';
-        // }
         if (content.spoonSrc != null) {
             stringContent += '<tr><th>Spoon Property</th><th>Src Value</th><th></th><th>Dst Value</th></tr>';
             Object.entries(content.spoonSrc).forEach(([name, val]) => {
@@ -637,15 +650,6 @@ function clickBoundMarkersSetup() {
                 }
             });
         }
-        console.log(stringContent);
-        // if (content.spoonDst != null) {
-        //     stringContent += '<div class="col-xs-6"><tr><th>Destination Property</th><th>Value</th></tr>';
-        //     Object.entries(content.spoonDst).forEach(([name, val]) => {
-        //         stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>${val}</code></td></tr>`;
-        //     });
-        //     stringContent += '</div>';
-        // }
-        // console.log(stringContent);
 
         GUI.showMetaData(title, stringContent);
 

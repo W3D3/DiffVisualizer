@@ -35,7 +35,7 @@ class DiffDrawer {
         this.srcMarkersSorted = {};
         this.dstMarkersSorted = {};
 
-        this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+        this.filterArray = ['INSERT', 'DELETE', 'UPDATE', 'MOVE', 'META'];
 
         this.matcherID = 0;
         this.matcherName = 'NONE';
@@ -187,8 +187,9 @@ class DiffDrawer {
     }
 
     /**
-    * Takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen.
-    */
+     * Takes existing changes in srcMarkersSorted and dstMarkersSorted and prints them on the screen.
+     * @returns {boolean}
+     */
     showChanges() {
         if (this.srcMarkersSorted === null || this.srcMarkersSorted === null) {
             Utility.showError('There are no changes to show');
@@ -448,7 +449,7 @@ class DiffDrawer {
                     }
 
                     if (entry.actionType === 'DELETE') {
-                    // SRCMARKER
+                        // SRCMARKER
                         startPosition = {
                             line: entry.srcStartLine,
                             offset: entry.srcStartLineOffset,
@@ -473,6 +474,59 @@ class DiffDrawer {
                         }
                         srcMarkers.push(startMarker);
                         srcMarkers.push(closingMarker);
+                    }
+
+                    // new meta marker
+                    if (entry.actionType === 'META') {
+                        // SRCMARKER
+                        startPosition = {
+                            line: entry.srcStartLine,
+                            offset: entry.srcStartLineOffset,
+                            absolute: entry.srcPos,
+                        };
+                        startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
+                        // startMarker.bindToId(entry.dstId);
+
+                        me.metadata.push(entry.metadata);
+                        startMarker.addMetaData(`${entry.actionType} (Source) ${entry.srcId}`, me.metadata.length - 1);
+
+                        endPosition = {
+                            line: entry.srcEndLine,
+                            offset: entry.srcEndLineOffset,
+                            absolute: entry.srcPos + entry.srcLength,
+                        };
+                        closingMarker = startMarker.createEndMarker(endPosition);
+
+                        if (!startMarker.isValid()) {
+                            console.log(`<pre>${JSON.stringify(startMarker, undefined, 2)}</pre>META node has no src (this can be fine) `);
+                        }
+                        srcMarkers.push(startMarker);
+                        srcMarkers.push(closingMarker);
+
+                        // DSTMARKER
+                        startPosition = {
+                            line: entry.dstStartLine,
+                            offset: entry.dstStartLineOffset,
+                            absolute: entry.dstPos,
+                        };
+                        const dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
+                        // dstStartMarker.bindToId(entry.srcId);
+
+                        dstStartMarker.addMetaData(`${entry.actionType} (Destination) ${entry.dstId}`, me.metadata.length - 1);
+                        // dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
+                        // startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
+                        endPosition = {
+                            line: entry.dstEndLine,
+                            offset: entry.dstEndLineOffset,
+                            absolute: entry.dstPos + entry.dstLength,
+                        };
+                        const dstClosingMarker = dstStartMarker.createEndMarker(endPosition);
+
+                        if (!dstStartMarker.isValid()) {
+                            console.log(`<pre>${JSON.stringify(dstStartMarker, undefined, 2)}</pre>META node has no destination (this can be fine) `);
+                        }
+                        dstMarkers.push(dstStartMarker);
+                        dstMarkers.push(dstClosingMarker);
                     }
                 });
 
@@ -554,7 +608,7 @@ class DiffDrawer {
     }
 
     filter() {
-        const allTypes = ['INSERT', 'DELETE', 'UPDATE', 'MOVE'];
+        const allTypes = ['INSERT', 'DELETE', 'UPDATE', 'MOVE', 'META'];
         allTypes.forEach((type) => {
             if (!this.filterArray.includes(type)) {
                 const typedMarkers = $('#codeContent').find(`.${type}`);

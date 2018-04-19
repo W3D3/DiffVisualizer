@@ -105,9 +105,6 @@ class Diff {
      * @returns {string} - Returns list-group-item html string with all the attributes of this object as data attributes.
      */
     generateTag(index) {
-        // if(!this.id) {
-        //     this.id = hash(this._commit + this._parentCommit + this._dstFileName);
-        // }
         if (index < 0) {
             return `<a href="#" class="list-group-item" id="diffItem"\
                 data-rawsrcurl="${this.rawSrcUrl}" data-rawdsturl="${this.rawDstUrl}" data-id="${this.id}" data-commit="${this.commit}"\
