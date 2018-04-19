@@ -12,7 +12,8 @@ import _ from 'lodash';
 
 class SearchController {
     constructor(options) {
-        this.containerList = [];
+        this.containerList = []; // holding the gui
+        this.seachContainerList = []; // the container to search
         this.searchPanelList = [];
         this.visibilityState = [];
         this.focussedIndex = -1;
@@ -124,9 +125,18 @@ class SearchController {
         });
     }
 
-    addContainer($container) {
+    /**
+     * Adds a container to the controller which is seachable.
+     * @param $searchcontainer : container to search inside.
+     * @param $container (optional) : container to print the searchbar in if it differs from $searchcontainer.
+     */
+    addContainer($searchcontainer, $container) {
+        if ($container == undefined) {
+            $container = $searchcontainer;
+        }
         const me = this;
         me.containerList.push($container);
+        me.seachContainerList.push($searchcontainer);
         this.generateSearchBar($container);
 
         $container.on(me.options.focusChangeEvent, () => {
@@ -181,7 +191,9 @@ class SearchController {
         // next button
         const $nextBtn = $searchbar.find('button[data-search=\'next\']');
         // the context where to search
-        let $content = $elem;
+        let $content = this.seachContainerList[index];
+        // scrollable area
+        let $scrollable = this.containerList[index];
         // jQuery object to save <mark> elements
         let $results;
         // the class that will be appended to the current
@@ -193,7 +205,10 @@ class SearchController {
         $searchbar.find('#globalToggle').on('change', function() {
             if (me.options.enableGlobalSearch) {
                 if ($(this).prop('checked')) {
-                    $content = $($.map(me.containerList, (el) => {
+                    $content = $($.map(me.seachContainerList, (el) => {
+                        return $.makeArray(el);
+                    }));
+                    $scrollable = $($.map(me.containerList, (el) => {
                         return $.makeArray(el);
                     }));
                     $input.trigger('input');
@@ -201,7 +216,8 @@ class SearchController {
                 } else {
                     $content.unmark({
                         done() {
-                            $content = $elem;
+                            $content = me.seachContainerList[index];
+                            $scrollable = me.containerList[index];
                             $input.trigger('input');
                             $input.focus();
                         },
@@ -222,19 +238,19 @@ class SearchController {
                     $(subelem).addClass(currentClass);
                 });
                 const firsElem = currentElements[0];
-                const localOffset = $content.offset().top;
+                const localOffset = $scrollable.offset().top;
                 $searchbar.find('.overInput').text(`${parseInt(currentIndex + 1, 10)} of ${finalResults.length}`);
                 if ($searchbar.find('#globalToggle').prop('checked')) {
-                    for (let i = 0; i < me.containerList.length; i++) {
+                    for (let i = 0; i < me.seachContainerList.length; i++) {
                         if (me.containerList[i].has(`.${currentClass}`).length > 0) {
                             $(me.containerList[i]).scrollTo(firsElem, 50, {
                                 offset: 0 - localOffset - 100,
                             });
-                            i = me.containerList.length;
+                            i = me.seachContainerList.length;
                         }
                     }
                 } else {
-                    $($content).scrollTo(firsElem, 50, {
+                    $(me.containerList[index]).scrollTo(firsElem, 50, {
                         offset: 0 - localOffset - 100,
                     });
                 }
@@ -252,6 +268,7 @@ class SearchController {
             let i = 0;
             finalResults = [];
             me.lastSearched = searchVal;
+
 
             // disable search when length is 3 or less characters
             if (searchVal.length > 0 && searchVal.length < 4) {

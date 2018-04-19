@@ -57,8 +57,8 @@ $(document).ready(() => {
         focusChangeEvent: 'mouseover',
         globalScope: '#codeContent',
     });
-    sc.addContainer($('.src'));
-    sc.addContainer($('.dst'));
+    sc.addContainer($('#src'), $('.src'));
+    sc.addContainer($('#dst'), $('.dst'));
     sc.disable(); // disable search until switchToViewer
 
     // create first DiffDrawer object to work on
@@ -156,6 +156,7 @@ function editorSetup() {
         sc.enable();
 
         GUI.switchToViewer();
+        sc.enable();
         const oldJob = dv.jobId;
         dv.src = window.editorSrc.getValue();
         dv.dst = window.editorDst.getValue();
@@ -370,6 +371,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
                             viewer.setEnableMinimap(false); // temporarily disable minimap for huge file
                             viewer.setAsCurrentJob();
                             dv = viewer;
+                            sc.enable();
                             GUI.switchToViewer();
                             viewer.diffAndDraw(() => {
                                 // success
@@ -389,6 +391,7 @@ function loadIntoViewer(srcUrl, dstUrl, viewer) {
             } else {
                 viewer.setAsCurrentJob();
                 dv = viewer;
+                sc.enable();
                 GUI.switchToViewer();
                 viewer.diffAndDraw(() => {
                     // success
