@@ -1,14 +1,22 @@
 # DiffVisualizer
 
 ![Version](https://img.shields.io/github/package-json/v/W3D3/DiffVisualizer.svg) 
-[![Travis](https://img.shields.io/travis/W3D3/DiffVisualizer.svg)](https://travis-ci.com/W3D3/DiffVisualizer)
+[![Build Status](https://travis-ci.com/W3D3/DiffVisualizer.svg?branch=master)](https://travis-ci.com/W3D3/DiffVisualizer)
 
 ## Installation
+
+### via NPM
 
 - Clone repo
 - `npm install`
 - `npm start`
-- Visit [localhost:9999](localhost:9999) (or change port in config/default.json)
+- Visit [localhost:9999](localhost:9999) (or change port in `config/default.json`)
+
+### via Docker
+
+- Clone repo
+- Run `./scripts/docker-build.sh` (not tested on Windows) or build and tag an image yourself
+- Run the generated image
 
 ## Development
 
