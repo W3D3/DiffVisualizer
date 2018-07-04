@@ -1,6 +1,7 @@
 # DiffVisualizer
 
-![v 2.8.1](https://img.shields.io/badge/version-2.8.1-brightgreen.svg) [![Codeship](https://img.shields.io/codeship/01939780-4ced-0135-0db8-1a20c3f2c8a7.svg)](https://app.codeship.com/projects/232991)
+![Version](https://img.shields.io/github/package-json/v/W3D3/DiffVisualizer.svg) 
+[![Travis](https://img.shields.io/travis/W3D3/DiffVisualizer.svg)](https://travis-ci.com/W3D3/DiffVisualizer)
 
 ## Installation
 
