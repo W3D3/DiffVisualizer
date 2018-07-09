@@ -123,11 +123,11 @@ module.exports = {
             },
             // monaco editor
             // COMMENT OUT WHEN DEVELOPING, BIG PERFORMANCE HIT!
-            // {
-            //     context: path.join(__dirname, 'node_modules/monaco-editor/'),
-            //     from: '**/*',
-            //     to: 'monaco-editor'
-            // },
+            {
+                context: path.join(__dirname, 'node_modules/monaco-editor/'),
+                from: '**/*',
+                to: 'monaco-editor'
+            },
         ], {
             // By default, we only copy modified files during
             // a watch or webpack-dev-server build. Setting this
