@@ -485,7 +485,7 @@ class DiffDrawer {
                             absolute: entry.srcPos,
                         };
                         startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
-                        // startMarker.bindToId(entry.dstId);
+                        startMarker.bindToId(entry.dstId);
 
                         me.metadata.push(entry.metadata);
                         startMarker.addMetaData(`${entry.actionType} (Source) ${entry.srcId}`, me.metadata.length - 1);
@@ -510,7 +510,7 @@ class DiffDrawer {
                             absolute: entry.dstPos,
                         };
                         const dstStartMarker = new Marker(entry.dstId, startPosition, entry.actionType, false, 'dst');
-                        // dstStartMarker.bindToId(entry.srcId);
+                        dstStartMarker.bindToId(entry.srcId);
 
                         dstStartMarker.addMetaData(`${entry.actionType} (Destination) ${entry.dstId}`, me.metadata.length - 1);
                         // dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
