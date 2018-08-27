@@ -20,7 +20,7 @@
     "chalk": "^2.4.1",
     "console-stamp": "^0.2.6",
     "cors": "^2.8.4",
-    "dropzone": "^4.3.0",
+    "dropzone": "^5.5.1",
     "express": "^4.16.3",
     "file-loader": "^0.11.2",
     "github-api": "^3.0.0",
@@ -55,6 +55,7 @@
     "chai": "^4.1.2",
     "chai-html": "^1.2.1",
     "copy-webpack-plugin": "^4.5.2",
+    "cross-env": "^5.2.0",
     "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
@@ -91,8 +92,8 @@
     "unittest": "./node_modules/.bin/mocha --compilers js:babel-core/register test/*-test.js",
     "preunittest": "npm run lint",
     "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-core/register test/*-test.js",
-    "docker-build": "./scripts/docker-build",
-    "docker-push": "./scripts/docker-push",
+    "docker-build": "bash ./scripts/docker-build",
+    "docker-push": "bash ./scripts/docker-push",
     "deploy": "./scripts/docker-build && ./scripts/docker-push"
   },
   "babel": {

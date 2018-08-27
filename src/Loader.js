@@ -18,16 +18,16 @@ import Diff from './Diff';
 
 class Loader {
     constructor() {
-        // var me = this;
         Loader.loadedDiffObjects = [];
+
         // Configure dropzone
-        Dropzone.options.jsonUploader = {
+        const myDropzone = new Dropzone('#jsonUploader', {
             paramName: 'file', // The name that will be used to transfer the file
-            dictDefaultMessage: 'Import as JSON file (Drag and Drop)',
+            dictDefaultMessage: 'Import JSON file',
             maxFilesize: 2, // MB
             accept(file, done) {
-                // accept all files for now
-                // console.log(file);
+            // accept all files for now
+            // console.log(file);
                 NProgress.configure({
                     parent: '#jsonUploader',
                 });
@@ -36,9 +36,12 @@ class Loader {
             },
             acceptedFiles: '.json',
             maxFiles: 1,
-            success: Loader.loadDiffsFromFile,
+            success(file, filename) {
+            // filename is the server response
+                Loader.loadDiffsFromFile(file, filename);
+            },
             error(file, err, xhr) {
-                // console.log(file);
+            // console.log(file);
                 NProgress.done();
                 this.removeAllFiles();
 
@@ -56,8 +59,10 @@ class Loader {
                         this.removeFile(this.files[0]);
                     }
                 });
-            },
-        };
+            }});
+
+        console.log(myDropzone);
+
 
         // show all the already uploaded elements
         Loader.showUploadedElements();

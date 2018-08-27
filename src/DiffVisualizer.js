@@ -23,6 +23,7 @@ import {
 import {
     client,
 } from '../config/default.json';
+import Dropzone from 'dropzone';
 
 // global variables
 let gui;
@@ -33,6 +34,8 @@ let matchers;
 
 // start unfiltered
 let filter = ['INSERT', 'DELETE', 'UPDATE', 'MOVE', 'META'];
+
+Dropzone.autoDiscover = false;
 
 /**
  * This sets up all handlers and
