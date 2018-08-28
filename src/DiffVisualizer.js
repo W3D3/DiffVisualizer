@@ -7,6 +7,7 @@
 import axios from 'axios';
 import NProgress from 'nprogress';
 import _ from 'lodash';
+import Dropzone from 'dropzone';
 
 import DiffDrawer from './DiffDrawer';
 import Loader from './Loader';
@@ -23,7 +24,6 @@ import {
 import {
     client,
 } from '../config/default.json';
-import Dropzone from 'dropzone';
 
 // global variables
 let gui;
