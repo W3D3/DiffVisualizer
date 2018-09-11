@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Diff Pair",
+  "description": "A pair of text files and diffing information",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "src": {
+        "description": "Original contents of the file",
+        "type": "string"
+      },
+      "dst": {
+        "description": "Revised contents of the file",
+        "type": "string"
+      },
+      "matcher": {
+        "description": "The id of the selected differencing algorithm",
+        "type": "number"
+      }
+    }
+  }
+}

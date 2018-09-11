@@ -91,6 +91,7 @@ $(document).ready(() => {
     // setup clickhandlers for showing / hiding monaco
     editorSetup();
 
+    // handler for changing the endpoints
     endpointChangeSetup();
 
     // setup on change and fill with all available matchers
@@ -212,7 +213,10 @@ function editorSetup() {
  * Sets click handler for endpoint change button.
  */
 function endpointChangeSetup() {
-    $('#endpoint').val(dv.getBaseUrl());
+    if(Settings.loadSettingPersistent('endpoint') == undefined) {
+        $('#endpoint').val(dv.getBaseUrl());
+    }
+
 
     $('#changeEndpoint').click(() => {
         Settings.saveSettingPersistent('endpoint', $('#endpoint').val());

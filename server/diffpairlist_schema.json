@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Diff Pair List",
+  "description": "A list of diff pairs",
+  "type": "array",
+  "items": {
+    "type": "object",
+  	"properties": {
+      "id": {
+        "description": "Id of the diffpair",
+        "type": ["integer", "string"]
+      },
+      "baseUrl": {
+        "description": "URL of the repo",
+        "type": "string",
+        "format": "uri"
+      },
+      "commit": {
+        "description": "The hash of the selected commit",
+        "type": "string"
+      },
+        "parentCommit": {
+        "description": "The hash of the selected parent commit",
+        "type": "string"
+      },
+        "srcFileName": {
+        "description": "The path to the src file, relative to baseUrl",
+        "type": "string"
+      },
+        "dstFileName": {
+        "description": "The path to the dst file, relative to baseUrl",
+        "type": "string"
+      }
+    },
+    "required": [ "id", "baseUrl", "commit", "parentCommit", "srcFileName", "dstFileName" ]
+  }
+}
