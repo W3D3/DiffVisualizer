@@ -222,6 +222,13 @@ class GUI {
     }
 
     /**
+     * Forces the matcher to be updated
+     */
+    forceMatcherUpdate() {
+        this.matcherSelector.change();
+    }
+
+    /**
      * Sets selected matcher in dropdown.
      * @param {number} id - Matcher id.
      */

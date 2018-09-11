@@ -47,7 +47,6 @@ $(document).ready(() => {
     NProgress.configure({trickle: false});
 
     Settings.initDefaults();
-    Settings.saveSettingPersistent('endpoint', client.apibase);
 
     $('#accordion').collapse().height('auto');
 
@@ -213,14 +212,19 @@ function editorSetup() {
  * Sets click handler for endpoint change button.
  */
 function endpointChangeSetup() {
-    if(Settings.loadSettingPersistent('endpoint') == undefined) {
-        $('#endpoint').val(dv.getBaseUrl());
+    if (Settings.loadSettingPersistent('endpoint') == undefined) {
+        Settings.saveSettingPersistent('endpoint', client.apibase);
     }
 
+    $('#endpoint').val(Settings.loadSettingPersistent('endpoint'));
+    dv.setBaseUrl($('#endpoint').val());
+
+    // fill dropdown box with available matchers
+    fillAvailableMatchers();
 
     $('#changeEndpoint').click(() => {
         Settings.saveSettingPersistent('endpoint', $('#endpoint').val());
-        dv.setBaseUrl($('#endpoint').val()); // just to be safe, set it here as well
+        dv.setBaseUrl($('#endpoint').val());
 
         fillAvailableMatchers();
     });
@@ -239,6 +243,7 @@ function fillAvailableMatchers() {
 
         dv.setMatcher(Settings.loadSetting('matcher'));
         Utility.showMessage(`Connected to endpoint: ${dv.getBaseUrl()}`);
+        gui.forceMatcherUpdate();
     }).catch((error) => {
         Utility.showError(`Endpoint ${dv.getBaseUrl()} is invalid. - ${error}`);
         gui.setMatcherSelectionSource([]);
@@ -249,9 +254,6 @@ function fillAvailableMatchers() {
  * Also it sets the selected one in the Settings.
  */
 function matcherChangerSetup() {
-    // fill dropdown box with available matchers
-    fillAvailableMatchers();
-
     // matcher on change
     gui.setMatcherChangeHandler(function handler() {
         NProgress.start();
