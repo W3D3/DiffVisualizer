@@ -276,7 +276,7 @@ class Utility {
     }
 
     /**
-     * Checks if this application is run inside an electron window
+     * Checks if this application is run inside an electron window.
      * @returns {boolean}
      */
     static isElectron() {
@@ -284,7 +284,7 @@ class Utility {
     }
 
     static isNullOrEmpty(string) {
-        return string == undefined || string == "";
+        return string == undefined || string == '';
     }
 }
 export default Utility;

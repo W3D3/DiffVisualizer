@@ -163,8 +163,12 @@ function setDiffContents(src, dst) {
 
     GUI.switchToViewer();
     const oldJob = dv.jobId;
-    if(src != null) dv.src = src;
-    if(dst != null) dv.dst = dst;
+    if (src != null) {
+        dv.src = src;
+    }
+    if (dst != null) {
+        dv.dst = dst;
+    }
     dv.setFilter(filter);
     if (dv.jobId !== oldJob) {
         dv.edited = true;
