@@ -274,5 +274,17 @@ class Utility {
         monaco.editor.setModelLanguage(modelSrc, languageName);
         monaco.editor.setModelLanguage(modelDst, languageName);
     }
+
+    /**
+     * Checks if this application is run inside an electron window
+     * @returns {boolean}
+     */
+    static isElectron() {
+        return 'Bridge' in window;
+    }
+
+    static isNullOrEmpty(string) {
+        return string == undefined || string == "";
+    }
 }
 export default Utility;

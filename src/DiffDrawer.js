@@ -560,7 +560,7 @@ class DiffDrawer {
                         return;
                     }
                     err(`${error} (using matcher ${me.matcherName})`);
-                    // console.error(error);
+                    console.error(error);
                 }
             });
     }

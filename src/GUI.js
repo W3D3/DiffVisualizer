@@ -123,13 +123,21 @@ class GUI {
      */
     static setupToggleSidebar() {
         $('#toggleSidebar').click(() => {
-            $('#accordion').toggle();
-            $('#codeView').toggleClass('col-xs-9');
-            $('#codeView').toggleClass('col-xs-12');
-            DiffDrawer.refreshMinimap();
-            // also resize monaco
-            GUI.recalcMonacoSize();
+            GUI.toggleSidebar(false);
         });
+    }
+
+    static toggleSidebar(forceHide) {
+        if(forceHide) {
+            $('#accordion').hide();
+        } else {
+            $('#accordion').toggle();
+        }
+        $('#codeView').toggleClass('col-xs-9');
+        $('#codeView').toggleClass('col-xs-12');
+        DiffDrawer.refreshMinimap();
+        // also resize monaco
+        GUI.recalcMonacoSize();
     }
 
     /**

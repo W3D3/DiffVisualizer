@@ -70,6 +70,7 @@ $(document).ready(() => {
     dv.checkAPIState().then(() => {
         // working as expected
     }).catch((error) => {
+        console.error(error);
         if (error.response) {
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
@@ -146,7 +147,43 @@ $(document).ready(() => {
             NProgress.done();
         });
     });
+
+    // *ADDITION* we expose this method here to Electron
+    if (Utility.isElectron()) {
+        console.log('is electron');
+        GUI.toggleSidebar(true); // force hide sidebar
+        window.Bridge.transferArguments = (args) => {
+            setDiffContents(args.file1, args.file2);
+        };
+    }
 });
+
+function setDiffContents(src, dst) {
+    sc.enable();
+
+    GUI.switchToViewer();
+    const oldJob = dv.jobId;
+    if(src != null) dv.src = src;
+    if(dst != null) dv.dst = dst;
+    dv.setFilter(filter);
+    if (dv.jobId !== oldJob) {
+        dv.edited = true;
+        dv.setAsCurrentJob();
+    } else {
+        return;
+    }
+    NProgress.start();
+
+    dv.diffAndDraw(() => {
+        $('#codeboxTitle').html(dv.generateTitle(1));
+        $('#changeSource').show();
+        DiffDrawer.refreshMinimap();
+    }, (msg) => {
+        $('#codeboxTitle').html(dv.generateTitle(-1));
+        Utility.showError(msg);
+        NProgress.done();
+    });
+}
 
 /**
  * This sets up click handlers for hiding/showing the monaco editor.
