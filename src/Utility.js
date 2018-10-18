@@ -262,10 +262,13 @@ class Utility {
         // $('#src').removeClass((index, className) => {
         //     return (className.match(/(^|\s)\S+/g) || []).join(' ');
         // });
-        $('#src').removeClass();
-        $('#dst').removeClass();
-        $('#src').addClass(`language-${ext}`);
-        $('#dst').addClass(ext);
+        const $src = $('#src');
+        const $dst = $('#dst');
+
+        $src.removeClass();
+        $dst.removeClass();
+        $src.addClass(`language-${ext}`);
+        $dst.addClass(ext);
         // GUI.enableSyntaxHighlighting(); // This also refreshes Syntax highlighting
 
         // monaco language setting
