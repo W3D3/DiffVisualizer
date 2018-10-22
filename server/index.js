@@ -138,7 +138,7 @@ app.get('/githubapi', (req, res) => {
 app.use(express.static('public'));
 // serve uploaded files
 app.use(express.static('uploads'));
-console.log(config);
+
 app.listen(config.get('server.port'), () => {
     console.log(chalk.blue(`${'\n ____  _  __  ____     ___                 _ _              \n' +
         '|  _ \\(_)/ _|/ _\\ \\   / (_)___ _   _  __ _| (_)_______ _ __ \n' +

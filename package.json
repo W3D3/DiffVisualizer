@@ -20,6 +20,7 @@
     "bootstrap-toggle": "^2.2.2",
     "chalk": "^2.4.1",
     "config": "^2.0.1",
+    "config-webpack": "^1.0.4",
     "console-stamp": "^0.2.6",
     "cors": "^2.8.4",
     "dropzone": "^5.5.1",

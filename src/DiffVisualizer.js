@@ -1,4 +1,4 @@
-/* global $ bootbox */
+/* global $ bootbox CONFIG */
 /**
  * @file Main file that acts as the entry point
  * @author Christoph Wedenig <christoph@wedenig.org>
@@ -20,10 +20,6 @@ import GitHubWizard from './GitHubWizard';
 import {
     version,
 } from '../package.json';
-
-import {
-    client,
-} from '../config/default.json';
 
 // global variables
 let gui;
@@ -66,25 +62,6 @@ $(document).ready(() => {
     // create first DiffDrawer object to work on
     dv = new DiffDrawer();
     dv.diff = null;
-
-    dv.checkAPIState().then(() => {
-        // working as expected
-    }).catch((error) => {
-        console.error(error);
-        if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            Utility.showError(`${dv.getBaseUrl()} is down. Status: ${error.response.status} ${error.response.statusText}`);
-        } else if (error.request) {
-            // The request was made but no response was received
-            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-            // http.ClientRequest in node.js
-            Utility.showError(`${dv.getBaseUrl()} did not answer to request.`);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            Utility.showError(`Cannot connect to ${dv.getBaseUrl()} with request ${error.request}`);
-        }
-    });
 
     new Loader();
 
@@ -146,6 +123,25 @@ $(document).ready(() => {
             Utility.showError(msg);
             NProgress.done();
         });
+    });
+
+    dv.checkAPIState().then(() => {
+        // working as expected
+    }).catch((error) => {
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            Utility.showError(`${dv.getBaseUrl()} is down. Status: ${error.response.status} ${error.response.statusText}`);
+        } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            Utility.showError(`${dv.getBaseUrl()} did not answer to request.`);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            Utility.showError(`Cannot connect to ${dv.getBaseUrl()} with request ${error.request}`);
+        }
     });
 
     // *ADDITION* we expose this method here to Electron
@@ -254,7 +250,7 @@ function editorSetup() {
  */
 function endpointChangeSetup() {
     if (Settings.loadSettingPersistent('endpoint') == undefined) {
-        Settings.saveSettingPersistent('endpoint', client.apibase);
+        Settings.saveSettingPersistent('endpoint', CONFIG.client.apibase);
     }
 
     $('#endpoint').val(Settings.loadSettingPersistent('endpoint'));
