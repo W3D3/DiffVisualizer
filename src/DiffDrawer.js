@@ -28,6 +28,10 @@ const base64 = Base64.Base64; // very nice packaging indeed.
 class DiffDrawer {
     constructor(src, dst) {
         this.LINE_SEPARATOR = '\r\n';
+        this._mode = 'changes';
+        if(Settings.loadSetting('mode')) {
+            this.mode = Settings.loadSetting('mode');
+        }
 
         this.src = src;
         this.dst = dst;
@@ -42,7 +46,6 @@ class DiffDrawer {
 
         // set default base URL
         this.DIFF_API = axios.create();
-        // this.setBaseUrl(client.apibase);
         this.setBaseUrl(Settings.loadSettingPersistent('endpoint'));
 
         this.enableMinimap = true;
@@ -120,6 +123,14 @@ class DiffDrawer {
 
     getBaseUrl() {
         return this.DIFF_API.defaults.baseURL;
+    }
+
+    set mode(val) {
+        this._mode = val;
+    }
+
+    get mode() {
+        return this._mode;
     }
 
     set src(val) {
@@ -358,7 +369,7 @@ class DiffDrawer {
             dst: base64.encode(this.dst),
             matcher: this.getMatcherID(),
         };
-        this.DIFF_API.post('/changes', payload)
+        this.DIFF_API.post(`/${this.mode}`, payload)
             .then((response) => {
                 $('.time').text(`${response.data.metrics.matchingTime} ms to match, ${response.data.metrics.classificationTime} ms to classify using matcher ${me.matcherName}`);
 
@@ -478,7 +489,7 @@ class DiffDrawer {
                     }
 
                     // new meta marker
-                    if (entry.actionType === 'META') {
+                    else {
                         // SRCMARKER
                         startPosition = {
                             line: entry.srcStartLine,

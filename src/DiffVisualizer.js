@@ -74,6 +74,9 @@ $(document).ready(() => {
     // setup on change and fill with all available matchers
     matcherChangerSetup();
 
+    // enable changing between modes
+    modeChangeSetup();
+
     // setup style changer
     styleChangerSetup();
 
@@ -264,6 +267,39 @@ function endpointChangeSetup() {
         dv.setBaseUrl($('#endpoint').val());
 
         fillAvailableMatchers();
+    });
+}
+
+/**
+ * Sets correct endpoint in settings.
+ * Sets click handler for endpoint change button.
+ */
+function modeChangeSetup() {
+    gui.setModeChangeHandler(function() {
+        NProgress.start();
+        GUI.clearMarkers();
+        $('.minimap').hide();
+
+        Settings.saveSetting('mode', this.value);
+
+        const changedDv = new DiffDrawer();
+        Object.assign(changedDv, dv);
+
+        changedDv.mode = this.value;
+        changedDv.setAsCurrentJob();
+
+        Utility.showMessage(`Mode changed to ${$('option:selected', this).text()}`);
+        $('#codeboxTitle').html(changedDv.generateTitle(0));
+
+        changedDv.diffAndDraw(() => {
+            $('#codeboxTitle').html(changedDv.generateTitle(1));
+            dv = changedDv;
+        }, (msg) => {
+            // on error
+            $('#codeboxTitle').html(changedDv.generateTitle(-1));
+            Utility.showError(msg);
+            NProgress.done();
+        });
     });
 }
 

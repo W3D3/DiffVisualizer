@@ -29,6 +29,7 @@ class GUI {
 
         this.matcherSelector = $('#matcherID');
         this.styleSelector = $('#themePicker');
+        this.modeSelector = $('#modePicker');
 
         $('.minimap').hide();
 
@@ -260,6 +261,24 @@ class GUI {
         this.styleSelector.val(id);
         this.styleSelector.trigger('change');
     }
+
+    /**
+     * Sets function to execute when matcher gets changed.
+     * @param {function} handler - Handler function.
+     */
+    setModeChangeHandler(handler) {
+        this.modeSelector.on('change', handler);
+    }
+
+    /**
+     * Sets selected style in dropdown.
+     * @param {string} id - Style name.
+     */
+    setSelectedMode(id) {
+        this.modeSelector.val(id);
+        this.modeSelector.trigger('change');
+    }
+
 
     /**
      * Sets node hover effect for all elements that get selected inside container.

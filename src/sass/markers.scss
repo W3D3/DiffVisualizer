@@ -43,6 +43,15 @@
     /*border: 1px solid rgba(222, 166, 166, 0.7);*/
 }
 
+.DEPENDENCY {
+    background-color: rgba(0, 244, 238, 0.7);
+    text-shadow: none;
+    cursor: pointer;
+    border: none;
+    border-color: rgba(8, 194, 209, 0.7);
+    /*border: 2px solid rgba(238, 135, 244, 0.7);*/
+}
+
 .hovered {
     z-index: 50;
     position: relative;
