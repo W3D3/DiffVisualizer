@@ -49,7 +49,7 @@ class Marker {
     }
 
     isValid() {
-        if (this.position.line < 1 || this.position.offset < 0) {
+        if (this.position.line < 0 || this.position.offset < 0) {
             return false;
         }
         return true;
