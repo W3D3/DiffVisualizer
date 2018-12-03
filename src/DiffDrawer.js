@@ -486,7 +486,7 @@ class DiffDrawer {
                         }
                         srcMarkers.push(startMarker);
                         srcMarkers.push(closingMarker);
-                    } else if (entry.actionType === 'META' || entry.actionType === 'DEPENDENCY'){
+                    } else if (entry.actionType === 'META' || entry.actionType === 'DEPENDENCY') {
                         // META MARKER
                         // SRCMARKER
                         startPosition = {
