@@ -712,7 +712,7 @@ function clickBoundMarkersSetup() {
             }
 
 
-            stringContent += `<tr><td>${GUI.makeHumanReadable(key)}</td><td><code>${value}</code></td></tr>`;
+            stringContent += `<tr><td>${GUI.makeHumanReadable(key)}</td><td><code>${_.escape(value)}</code></td></tr>`;
         });
         stringContent += '</tbody>';
 
@@ -720,9 +720,9 @@ function clickBoundMarkersSetup() {
             stringContent += '<tr><th>Spoon Property</th><th>Src Value</th><th></th><th>Dst Value</th></tr>';
             Object.entries(content.spoonSrc).forEach(([name, val]) => {
                 const newVal = Object.is(content.spoonDst[name], undefined) ? 'N/A' : content.spoonDst[name];
-                stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>${val}</code></td>`;
+                stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>${_.escape(val)}</code></td>`;
                 if (val != newVal) {
-                    stringContent += `<td style="color: red">⇒</td><td><code>${newVal}</code></td></tr>`;
+                    stringContent += `<td style="color: red">⇒</td><td><code>${_.escape(newVal)}</code></td></tr>`;
                 } else {
                     stringContent += '<td>no change</td><td></td></tr>';
                 }
@@ -731,7 +731,7 @@ function clickBoundMarkersSetup() {
         if (content.spoonDst != null) {
             Object.entries(content.spoonDst).forEach(([name, val]) => {
                 if (Object.is(content.spoonSrc[name], undefined)) {
-                    stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>N/A</code></td><td>⇒</td><td><code>${val}</code></td></tr>`;
+                    stringContent += `<tr><td>${GUI.makeHumanReadable(name)}</td><td><code>N/A</code></td><td>⇒</td><td><code>${_.escape(val)}</code></td></tr>`;
                 }
             });
         }
