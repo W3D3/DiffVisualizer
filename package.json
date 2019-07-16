@@ -34,7 +34,7 @@
     "jquery-validation": "^1.17.0",
     "jquery.scrollto": "^2.1.2",
     "js-base64": "^2.4.5",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "mark.js": "github:julmot/mark.js",
     "moment": "^2.22.2",
     "monaco-editor": "^0.10.1",
