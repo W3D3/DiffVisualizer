@@ -1,11 +1,10 @@
-/*marker highlighting*/
+/* marker highlighting */
 
 .META {
     background-color: rgba(216, 216, 218, 0.7);
     text-shadow: none;
     border: none;
     border-color: rgba(166, 163, 163, 0.7);
-    /*border: 1px solid rgba(155, 245, 144, 0.7);*/
 }
 
 .INSERT {
@@ -13,7 +12,6 @@
     text-shadow: none;
     border: none;
     border-color: rgba(32, 212, 10, 0.7);
-    /*border: 1px solid rgba(155, 245, 144, 0.7);*/
 }
 
 .MOVE {
@@ -22,17 +20,14 @@
     cursor: pointer;
     border: none;
     border-color: rgba(200, 48, 209, 0.7);
-    /*border: 2px solid rgba(238, 135, 244, 0.7);*/
 }
 
 .UPDATE {
     background-color: rgba(243, 250, 110, 0.7);
-    /*background-color: rgba(240, 210, 0, 0.7);*/
     text-shadow: none;
     cursor: pointer;
     border: none;
     border-color: rgba(240, 210, 0, 0.7);
-    /*border: 2px solid rgba(231, 194, 3, 0.7);*/
 }
 
 .DELETE {
@@ -40,7 +35,6 @@
     text-shadow: none;
     border: none;
     border-color: rgba(218, 1, 1, 0.7);
-    /*border: 1px solid rgba(222, 166, 166, 0.7);*/
 }
 
 .DEPENDENCY {
@@ -49,7 +43,6 @@
     cursor: pointer;
     border: none;
     border-color: rgba(8, 194, 209, 0.7);
-    /*border: 2px solid rgba(238, 135, 244, 0.7);*/
 }
 
 .hovered {
@@ -59,42 +52,3 @@
     padding: 2px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
-// .selected {
-//     border-width: 2px;
-//     border-style: solid;
-//     border-color: #2780E3;
-//     z-index: 100;
-//     position: relative;
-//     /*font-weight: bold;*/
-//     box-shadow: 2px 2px 5px #2780E3;
-//     padding: 2px
-// }
-//
-// .selected.MOVE {
-//     box-shadow: 2px 2px 5px rgba(192, 5, 203, 1);
-//     border-color: rgba(192, 5, 203, 1)
-//     border-width: 2px;
-//     border-style: solid;
-// }
-//
-// .selected.UPDATE {
-//     box-shadow: 2px 2px 5px rgba(117, 84, 0, 0.7);
-//     border-color: rgba(117, 84, 0, 0.7);
-//     border-width: 2px;
-//     border-style: solid;
-// }
-//
-// .selected.DELETE {
-//     box-shadow: 2px 2px 5px rgba(218, 1, 1, 0.7);
-//     border-color: rgba(218, 1, 1, 0.7)
-//     border-width: 2px;
-//     border-style: solid;
-// }
-//
-// .selected.INSERT {
-//     box-shadow: 2px 2px 5px rgba(32, 212, 10, 0.7);
-//     border-color: rgba(32, 212, 10, 0.7);
-//     border-width: 2px;
-//     border-style: solid;
-// }

@@ -29,7 +29,7 @@ class DiffDrawer {
     constructor(src, dst) {
         this.LINE_SEPARATOR = '\r\n';
         this._mode = 'changes';
-        if(Settings.loadSetting('mode')) {
+        if (Settings.loadSetting('mode')) {
             this.mode = Settings.loadSetting('mode');
         }
 
@@ -109,14 +109,6 @@ class DiffDrawer {
         DiffDrawer.currentJobId = this.jobId;
     }
 
-    // setJobId(id) {
-    //     if (id === null) {
-    //         this.jobId = base64.encode(this.src) + base64.encode(this.dst) + this.matcherID + this.edited;
-    //     } else {
-    //         this.jobId = hash(id + 'm' + this.matcherID);
-    //     }
-    // }
-
     setBaseUrl(newBase) {
         this.DIFF_API.defaults.baseURL = newBase;
     }
@@ -189,12 +181,7 @@ class DiffDrawer {
     * Checks if current job is indeed this job.
     */
     checkIfCurrentJob() {
-        if (this.jobId === DiffDrawer.currentJobId) {
-            // this is the current job
-            return true;
-        }
-        // console.log(`This job (${this.jobId}) is not supposed to be worked on anymore and should terminate. currentJobId: (${DiffDrawer.currentJobId})`);
-        return false;
+        return (this.jobId === DiffDrawer.currentJobId);
     }
 
     /**
@@ -252,6 +239,9 @@ class DiffDrawer {
         return false;
     }
 
+    /**
+     * Recalculates margins for minimaps dynamically.
+     */
     static refreshMinimap() {
         const $src = $('.src');
         const $dst = $('.dst');
@@ -293,6 +283,11 @@ class DiffDrawer {
         return codeString;
     }
 
+    /**
+     * Sorts the list of markers so they are ready to be inserted from
+     * end of file to beginning of file.
+     * @param {*} markers A list of markers.
+     */
     static fixSequencing(markers) {
         const markersSorted = _(markers).chain()
             .sortBy('id')
@@ -300,7 +295,6 @@ class DiffDrawer {
             .sortBy('position.line')
             .reverse()
             .value();
-
 
         const lastClosed = [];
         const markersFixed = [];
@@ -409,7 +403,7 @@ class DiffDrawer {
                     }
 
                     if (entry.actionType === 'UPDATE' || entry.actionType === 'MOVE') {
-                        // SRCMARKER
+                        // SRC MARKER
                         startPosition = {
                             line: entry.srcStartLine,
                             offset: entry.srcStartLineOffset,
@@ -434,7 +428,7 @@ class DiffDrawer {
                         srcMarkers.push(startMarker);
                         srcMarkers.push(closingMarker);
 
-                        // DSTMARKER
+                        // DST MARKER
                         startPosition = {
                             line: entry.dstStartLine,
                             offset: entry.dstStartLineOffset,
@@ -444,8 +438,6 @@ class DiffDrawer {
                         dstStartMarker.bindToId(entry.srcId);
 
                         dstStartMarker.addMetaData(`${entry.actionType} (Destination) ${entry.dstId}`, me.metadata.length - 1);
-                        // dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
-                        // startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
                         endPosition = {
                             line: entry.dstEndLine,
                             offset: entry.dstEndLineOffset,
@@ -461,18 +453,16 @@ class DiffDrawer {
                     }
 
                     if (entry.actionType === 'DELETE') {
-                        // SRCMARKER
+                        // SRC MARKER
                         startPosition = {
                             line: entry.srcStartLine,
                             offset: entry.srcStartLineOffset,
                             absolute: entry.srcPos,
                         };
                         startMarker = new Marker(entry.srcId, startPosition, entry.actionType, false, 'src');
-                        // startMarker.bindToId(entry.dstId);
 
                         me.metadata.push(entry.metadata);
                         startMarker.addMetaData(`DELETE ${entry.srcId}`, me.metadata.length - 1);
-                        // startMarker.addMetaData('src' + entry.srcId, 'FROM ' + entry.srcPos + ' LENGTH ' + entry.srcLength);
 
                         endPosition = {
                             line: entry.srcEndLine,
@@ -488,7 +478,7 @@ class DiffDrawer {
                         srcMarkers.push(closingMarker);
                     } else if (entry.actionType === 'META' || entry.actionType === 'DEPENDENCY') {
                         // META MARKER
-                        // SRCMARKER
+                        // SRC MARKER
                         startPosition = {
                             line: entry.srcStartLine,
                             offset: entry.srcStartLineOffset,
@@ -508,12 +498,13 @@ class DiffDrawer {
                         closingMarker = startMarker.createEndMarker(endPosition);
 
                         if (!startMarker.isValid()) {
+                            // eslint-disable-next-line no-console
                             console.log(`<pre>${JSON.stringify(startMarker, undefined, 2)}</pre>META node has no src (this can be fine) `);
                         }
                         srcMarkers.push(startMarker);
                         srcMarkers.push(closingMarker);
 
-                        // DSTMARKER
+                        // DST MARKER
                         startPosition = {
                             line: entry.dstStartLine,
                             offset: entry.dstStartLineOffset,
@@ -523,8 +514,6 @@ class DiffDrawer {
                         dstStartMarker.bindToId(entry.srcId);
 
                         dstStartMarker.addMetaData(`${entry.actionType} (Destination) ${entry.dstId}`, me.metadata.length - 1);
-                        // dstMarker.addMetaData('dst' + entry.dstId, 'This is a ' + entry.actionType);
-                        // startMarker.addMetaData('dst' + entry.dstId, 'FROM ' + entry.dstPos + ' LENGTH ' + entry.dstLength);
                         endPosition = {
                             line: entry.dstEndLine,
                             offset: entry.dstEndLineOffset,
@@ -533,6 +522,7 @@ class DiffDrawer {
                         const dstClosingMarker = dstStartMarker.createEndMarker(endPosition);
 
                         if (!dstStartMarker.isValid()) {
+                            // eslint-disable-next-line no-console
                             console.log(`<pre>${JSON.stringify(dstStartMarker, undefined, 2)}</pre>META node has no destination (this can be fine) `);
                         }
                         dstMarkers.push(dstStartMarker);
@@ -569,6 +559,7 @@ class DiffDrawer {
                         return;
                     }
                     err(`${error} (using matcher ${me.matcherName})`);
+                    // eslint-disable-next-line no-console
                     console.error(error);
                 }
             });

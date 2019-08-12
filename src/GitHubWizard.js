@@ -138,7 +138,7 @@ class GitHubWizard {
             me.selectedFileName = $this.data('name');
             me.html.file = `<div class="file-item">${$(this).html()}</div>`;
             // we can restrict files here, depending on which global file type is set
-            // currently this is not enabled.
+            // currently this is not enabled. example code below:
             // if(!me.selectedFileName.endsWith('.java'))
             // {
             //     Utility.showWarning('The selected file doesn\'t seem to be a Java file. Proceed with caution as this application currently only supports Java diffing.');
@@ -147,7 +147,6 @@ class GitHubWizard {
         });
 
         $('#files-next').on('click', () => {
-            // finish();
             me.selected.commit.files.forEach((file) => {
                 if (file.filename === me.selectedFileName) {
                     me.html.patch = `<pre class="patch">${_.escape(file.patch)}</pre>`;
@@ -169,30 +168,14 @@ class GitHubWizard {
 
         me.options.wizardElement.bootstrapWizard({
             tabClass: 'nav nav-pills',
-            // 'onNext': function (tab, navigation, index) {
-            //     console.log(index);
-            //     var isValid = $('#githubForm').valid();
-            //     if (!isValid) {
-            //         $validator.focusInvalid();
-            //         return false;
-            //     }
-            // },
             onTabClick(tab, navigation, currentIndex, clickedIndex) {
+                // only allow going backwards in the wizard by clicking the tabs on top
                 if (clickedIndex < currentIndex) {
                     return true;
                 }
 
                 return false;
             },
-            // 'onTabChange': function (tab, navigation, currentIndex, clickedIndex) {
-            //     console.log('shown!'+ currentIndex);
-            //     for (var i = 0; i <= currentIndex; i++) {
-            //         me.options.wizardElement.bootstrapWizard('enable', i);
-            //     }
-            //     for (i = currentIndex + 1; i <= me.options.wizardElement.bootstrapWizard('navigationLength'); i++) {
-            //         me.options.wizardElement.bootstrapWizard('disable', i);
-            //     }
-            // }
         });
         me.options.wizardElement.bootstrapWizard();
     }
@@ -223,13 +206,6 @@ class GitHubWizard {
 
             $('#commit-list').html('');
             response.data.forEach((commit) => {
-                // console.log(commit);
-                // $('#commit-list').append(`<a href="#" class="list-group-item commit-item" data-sha="${commit.sha}">` +
-                //     '<img src="' + (commit.author ? `${commit.author.avatar_url}` : `https://www.gravatar.com/avatar/${hash(commit.commit.author.email, {algorithm: 'md5'})}?s=50&d=identicon`) + '" alt="" class="pull-left avatar">' +
-                //     `<p><b class="list-group-item-heading">${_.escape(commit.commit.message)}</b><br/>` +
-                //     `<small class="list-group-item-text">${commit.commit.author.name} <code>&lt;${commit.commit.author.email}&gt;</code> ${commit.commit.author.date}</small>` +
-                //     '</p></a>');
-
                 $('#commit-list').append(`<a href="#" class="list-group-item commit-item" data-sha="${commit.sha}">${
                     GitHubWizard.dataToCommitHTML(commit)
                 }</a>`);
@@ -260,7 +236,6 @@ class GitHubWizard {
             me.currentCommitsPage = 1;
 
             errorspan.text(`${me.selectedRepoString} exists and will be loaded`);
-            console.log(me.options);
             me.options.wizardElement.bootstrapWizard('show', 1);
 
             NProgress.done();
@@ -282,6 +257,7 @@ class GitHubWizard {
             } else {
                 // Something happened in setting up the request that triggered an Error
                 Utility.showError(error.message);
+                // eslint-disable-next-line no-console
                 console.error(error.message);
             }
         });
@@ -307,17 +283,18 @@ class GitHubWizard {
             me.selected.commit = response.data;
             me.selectedCommitSha = response.data.sha; // in case we sent an abbrivated version of the sha string, we fix it here to always work with the full once
 
-
             if (!append) {
                 $('#files-list').html('');
             }
 
+            // this filters based on the allowed file extension
             const filesSorted = _.filter(response.data.files, (o) => {
                 return o.filename.endsWith(me.options.allowedFileExt);
             });
+
             const omitted = response.data.files.length - filesSorted.length;
             if (filesSorted.length == 0) {
-                // no java files found, abort
+                // no allowed files found, abort
                 Utility.showWarning(`No ${_.upperCase(me.options.allowedFileExt)} files were found in this commit. Please select a different one.`);
 
                 NProgress.done();
@@ -330,6 +307,7 @@ class GitHubWizard {
             filesSorted.forEach((file) => {
                 const statuslabel = `<span class="label label-default ${file.status}">${file.status}</span>`;
                 const oldname = (file.previous_filename ? file.previous_filename : file.filename);
+                // this is really ugly, but idk how to improve this with jQuery only?
                 const fileshtml = `<a href="#" class="list-group-item file-item" data-name="${file.filename}" data-oldname="${oldname}" data-sha="${file.sha}">${
                     statuslabel
                 }<b class="list-group-item-heading">${
@@ -337,7 +315,6 @@ class GitHubWizard {
                 } ${file.filename}</b>${
                     file.additions > 0 ? ` <span class="label label-success">+${file.additions}</span>` : ''
                 }${file.deletions > 0 ? ` <span class="label label-danger">-${file.deletions}</span><br/>` : ''
-                // `<pre>${_.escape(file.patch)}</pre>` +
                 }</a>`;
                 $('#files-list').append(fileshtml);
             });
@@ -361,7 +338,6 @@ class GitHubWizard {
 
             NProgress.done();
         }).catch((error) => {
-            // console.error(error);
             Utility.showError(error);
             NProgress.done();
         });
@@ -372,7 +348,6 @@ class GitHubWizard {
         $('#wizard').modal('hide');
         me.diffObject =
         {
-            // 'id': hash(me.selectedCommitSha + me.selectedParentSha + me.selectedFileName),
             baseUrl: `https://github.com/${me.selectedRepoString}`,
             parentCommit: me.selectedParentSha,
             commit: me.selectedCommitSha,
@@ -390,8 +365,6 @@ class GitHubWizard {
                 url: `repos/${repo}/commits/${commitsha}`,
             },
         }).then((response) => {
-            // console.log(response);
-            // var commit = response.data.commit;
             const html = GitHubWizard.dataToCommitHTML(response.data);
             callback(html);
         }).catch((error) => {
@@ -425,27 +398,11 @@ class GitHubWizard {
         if (!linkHeader) {
             $('#paginationdiv').html('');
         }
-        // paginationdiv
+
         const parsed = parse(linkHeader);
         const maxCountLeft = 4;
         const maxCountRight = 4;
-        // <ul class="pagination">
-        //     <li class="disabled">
-        //         <a href="#" aria-label="Previous" id="commits-prev-page">
-        //   &laquo; previous page
-        // </a>
-        //     </li>
-        //     <li>
-        //         <a href="#">
-        //   <span id="currentCommitsPage">1</span>
-        // </a>
-        //     </li>
-        //     <li>
-        //         <a href="#" aria-label="Next" id="commits-next-page">
-        //   next page &raquo;
-        // </a>
-        //     </li>
-        // </ul>
+
         let paginationHTML = '<ul class="pagination">';
         if (parsed.prev) {
             paginationHTML += `<li><a href="#" aria-label="Previous" data-page="${parsed.prev.page}"> &laquo; </a>`;

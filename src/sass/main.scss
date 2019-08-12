@@ -24,10 +24,10 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import 'metadata';
 @import 'editor';
 
-.codebox::-webkit-scrollbar {
-    /* disable scrollbar for webkit browser because we can use perfect scrollbar instead which autohides */
-    // display: none;
-}
+// .codebox::-webkit-scrollbar {
+//     /* disable scrollbar for webkit browser because we can use perfect scrollbar instead which autohides */
+//     // display: none;
+// }
 
 .navbar {
     margin-bottom: 5px;
@@ -42,21 +42,6 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
     padding-top: 0;
 }
 
-// Ace editor modal
-#myModal .modal-dialog {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-#myModal .modal-content {
-    position: relative;
-    height: auto;
-    min-height: 100%;
-    border-radius: 0;
-}
-
 .panel-heading {
     cursor: pointer;
 }
@@ -65,7 +50,6 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
     overflow-y: scroll;
     overflow-x: hidden;
 }
-
 
 /* panel close fix */
 
@@ -90,7 +74,6 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 .glyphicon {
     font-weight: 100 !important;
 }
-
 
 mark {
     background: yellow;
@@ -118,12 +101,6 @@ mark.current {
 }
 
 .overInput {
-    // position: absolute;
-    // color: rgba(145, 145, 145, 0.6);
-    // z-index: 301;
-    // top: 10px;
-    // left: calc(100% - 170px);
-    // text-align: right;
     color: inherit !important;
 }
 
@@ -164,8 +141,3 @@ mark.current {
 .delete-set:hover {
     color: $brand-danger;
 }
-
-// .metadatacode {
-//     margin: 20px;
-//     padding-bottom: 10px;
-// }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* global require process */
 const express = require('express');
 const multer = require('multer');

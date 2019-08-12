@@ -1,6 +1,6 @@
 /* global $ hljs */
 /**
- * @file DOM manipulation that doesn't need context
+ * @file GUI related things and DOM maniplulation
  * @author Christoph Wedenig <christoph@wedenig.org>
  */
 
@@ -129,7 +129,7 @@ class GUI {
     }
 
     static toggleSidebar(forceHide) {
-        if(forceHide) {
+        if (forceHide) {
             $('#accordion').hide();
         } else {
             $('#accordion').toggle();
@@ -231,7 +231,7 @@ class GUI {
     }
 
     /**
-     * Forces the matcher to be updated
+     * Forces the matcher to be updated.
      */
     forceMatcherUpdate() {
         this.matcherSelector.change();
@@ -313,7 +313,8 @@ class GUI {
     }
 
     /**
-     * Enables id expanding for code header.
+     * Enables id expanding for DiffViewer header.
+     * For example: Clicking on a contracted hash will expand the view and show the full hash of the diff.
      */
     static enableIdExpanding() {
         $('#codeView').on('click', '.id-expand', function toggleExpand(e) {
@@ -345,7 +346,7 @@ class GUI {
     }
 
     /**
-     * Hides all codeviewers and shows the editor.
+     * Hides all codeviewers and overlays and shows the editor.
      */
     static switchToEditor() {
         $('.src').removeClass('codebox');
@@ -366,7 +367,7 @@ class GUI {
     }
 
     /**
-     * Scrolls src monaco to specific line.
+     * Scrolls src/left monaco editor to specific line.
      * @param {number} line - Line number to scroll to.
      */
     static srcEditorScrollTop(line) {
@@ -376,7 +377,7 @@ class GUI {
     }
 
     /**
-     * Scrolls dst monaco to specific line.
+     * Scrolls dst/right monaco editor to specific line.
      * @param {number} line - Line number to scroll to.
      */
     static dstEditorScrollTop(line) {
@@ -386,7 +387,7 @@ class GUI {
     }
 
     /**
-     * Hides all editors and shows the viewer.
+     * Hides all editors and editor overlays and shows the viewer.
      */
     static switchToViewer() {
         $('.src').addClass('codebox');
@@ -418,6 +419,9 @@ class GUI {
         }
     }
 
+    /**
+     * Removes all markers in the diff viewer.
+     */
     static clearMarkers() {
         $('span.scriptmarker', $('#src')).contents().unwrap();
         $('span.scriptmarker', $('#dst')).contents().unwrap();
