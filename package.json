@@ -11,7 +11,7 @@
   "dependencies": {
     "ajv": "^6.5.3",
     "animate.css": "^3.6.1",
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "body-parser": "^1.18.3",
     "bootbox": "^4.4.0",
     "bootstrap-menu": "^1.0.14",
