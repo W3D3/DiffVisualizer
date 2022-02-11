@@ -9,7 +9,7 @@
   "repository": "https://bitbucket.org/W3D3/diffvisualizer",
   "license": "MIT",
   "dependencies": {
-    "ajv": "^6.5.3",
+    "ajv": "^6.12.3",
     "animate.css": "^3.6.1",
     "axios": "^0.16.1",
     "body-parser": "^1.18.3",
